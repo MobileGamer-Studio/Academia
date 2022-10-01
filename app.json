@@ -1,15 +1,16 @@
 {
   "expo": {
     "name": "Academia-Remastered",
-    "slug": "Academia-Remastered",
+    "slug": "academia",
+    "owner": "mobilegamer",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./images/AppArt3.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#00FFD1"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -22,12 +23,18 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./images/AppArt3.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.mobilegamer.academia"
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./images/AppArt3.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "4c1b808a-7d3a-4f5d-a457-25ae00792d49"
+      }
     }
   }
 }
