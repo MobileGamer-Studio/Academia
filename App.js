@@ -20,17 +20,23 @@ import {users} from './constants/Data';
 
 
 const Stack = createNativeStackNavigator();
-
+function Start(){
+    users.forEach(element => {
+        saveData(element, "Users", element.name).then(r => console.log(r));
+    });
+    users.push.apply(users, getData("Users"));
+    console.log("Users: ", users);
+}
 export default function App() {
-  users.forEach(element => {
-    saveData(element, "Users", element.name);
-  });
-  users.push.apply(users, getData("Users"));
-  console.log("Users: ", users);
-
+    Start()
     return (
         <NavigationContainer>
             <Stack.Navigator>
+                <Stack.Screen
+                    name="Loading"
+                    component={LoadingScreen}
+                    options={{headerShown: false}}
+                />
                 <Stack.Screen
                     name="Landing"
                     component={LandingScreen}
@@ -83,11 +89,7 @@ export default function App() {
                     component={SignUpScreen}
                     options={{headerShown: false}}
                 />
-                <Stack.Screen
-                    name="Loading"
-                    component={LoadingScreen}
-                    options={{headerShown: false}}
-                />
+
             </Stack.Navigator>
         </NavigationContainer>
     );

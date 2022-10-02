@@ -32,6 +32,9 @@ export const images = {
     stationaries: require("../images/stationariesIcon.png"),
     homework: require("../images/homeworkIcon.png"),
     snacks: require("../images/sancksIcon.png"),
+    home: require("../images/HomeIcon-white.png"),
+    add: require("../images/AddIcon-white.png"),
+    settings: require("../images/SettingsIcon-white.png")
 };
 
 export const fonts = {
@@ -194,7 +197,7 @@ export const categories = [
 
 export const users = [];
 
-export const gottenUsers = [{
+export const testUsers = [{
     name: "Brandon",
     description: "........",
     profilePicture: require("../images/profile1.jpg"),
@@ -300,3 +303,25 @@ export const dataObject = {
     cart: cart,
     settings: settings,
 };
+
+export const defaultUser = {
+    name: "",
+    description: "",
+    profilePicture: images.defaultProfile,
+    followers: [],
+    following: [],
+    location: "----",
+    loginDetails: {
+        email: "",
+        password: "",
+    },
+    sellerInfo: {
+        rating: 0,
+        productList: [],
+        amountSelling: "0",
+    },
+    appInfo: {
+        settings: settings,
+    },
+    id: 0,
+}

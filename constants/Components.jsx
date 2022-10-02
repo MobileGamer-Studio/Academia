@@ -1,7 +1,6 @@
 import React from 'react';
 import {FlatList, Image, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
-import {colors, sizes} from "./Data"
-
+import {colors, images, sizes} from "./Data"
 
 
 export function RoundButton(props) {
@@ -259,7 +258,7 @@ export function CartItem(props) {
                     }}>
                         <Text style={{
                             fontSize: sizes.Small,
-                        }}>Cancle</Text>
+                        }}>Cancel</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={{
                         backgroundColor: colors.black,
@@ -270,7 +269,7 @@ export function CartItem(props) {
                         <Text style={{
                             color: colors.white,
                             fontSize: sizes.Small,
-                        }}>Cancle</Text>
+                        }}>Cancel</Text>
                     </TouchableOpacity>
                 </View>
             </TouchableOpacity>
@@ -345,33 +344,40 @@ export const SearchResult = (props) => {
     );
 }
 
-
-export const NavItems = (props) => {
-    return(
-        <View style={styles.navItem}>
-            <TouchableOpacity>
-                <Icon />
-            </TouchableOpacity>
-        </View>
-    );
-}
-
 export const NavBar = (props) => {
   return(
       <View style={styles.navBar} >
         <View style={styles.navItem}>
-            <TouchableOpacity>
-                
+            <TouchableOpacity
+                onPress={props.home}
+            >
+                <Image
+                    source={images.home}
+                    style={styles.navImages}
+                    resizeMode="contain"
+                />
             </TouchableOpacity>
         </View>
         <View style={styles.navItem}>
-            <TouchableOpacity>
-                
+            <TouchableOpacity
+                onPress={props.add}
+            >
+                <Image
+                    source={images.add}
+                    style={styles.navImages}
+                    resizeMode="contain"
+                />
             </TouchableOpacity>
         </View>
         <View style={styles.navItem}>
-            <TouchableOpacity>
-                
+            <TouchableOpacity
+                onPress={props.settings}
+            >
+                <Image
+                    source={images.settings}
+                    style={styles.navImages}
+                    resizeMode="contain"
+                />
             </TouchableOpacity>
         </View>
       </View>
@@ -435,11 +441,19 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "center",
         alignItems: "center",
+        position: "absolute",
+        alignSelf: "flex-end"
     },
 
     navItem: {
         
     },
+
+    navImages :{
+        height: sizes.Small,
+        width: sizes.Small,
+        flex: 1,
+    }
 
 })
 

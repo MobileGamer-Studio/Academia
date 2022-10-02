@@ -3,7 +3,7 @@
 
 
 import {initializeApp} from "firebase/app";
-import { signOut, createUserWithEmailAndPassword, getAuth, GoogleAuthProvider, signInWithEmailAndPassword } from 'firebase/auth';
+import { signOut, createUserWithEmailAndPassword, getAuth, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
 import { getFirestore, setDoc, collection, addDoc, getDocs, doc } from 'firebase/firestore';
 import { getStorage, ref, uploadBytes } from "firebase/storage";
 import { dataObject, users, User, images } from "./Data"
@@ -32,9 +32,9 @@ const firestore = getFirestore(app);
 const storage = getStorage(app, "gs://academia-c3d0e.appspot.com/");
 let data;
 
-// const providerGoogle = new GoogleAuthProvider();
-// providerGoogle.addScope('https://www.googleapis.com/auth/contacts.readonly');
-// auth.languageCode = 'it';
+const providerGoogle = new GoogleAuthProvider();
+providerGoogle.addScope('https://www.googleapis.com/auth/contacts.readonly');
+auth.languageCode = 'it';
 
 
 //Cloud Storage
@@ -48,23 +48,27 @@ export function saveFiles(ref, file) {
 
 
 //Firestore Database
-export async function saveData(data, path, id) {
+export async function saveData(data, collection, id) {
     try {
-        const docRef = await setDoc(doc(firestore, path, id), data);
+        const docRef = await setDoc(doc(firestore, collection, id), data);
         console.log("Document written with ID: ", docRef, "\n", id);
     } catch (e) {
         console.error("Error adding document: ", e);
     }
 }
 
-export async function getData(path) {
+export async function setData(data, collection, id = ""){
+    await setDoc(doc(firestore, collection, id), data);
+}
+
+export async function getData(collection, id = "") {
     data = [];
-    const querySnapshot = await getDocs(collection(firestore, path));
+    const querySnapshot = await getDocs(collection(firestore, collection, id));
     querySnapshot.forEach((doc) => {
         console.log(`${doc.id} => ${doc.data()}`);
-        data.push(doc.data());
+        data = doc.data();
     });
-    return doc.data();
+    return data;
 }
 
 export function readData(ref, callback) {
@@ -118,10 +122,10 @@ export const SignUp = (email, password, username) => {
                     productList: [],
                     amountSelling: "0",
                 },
-                id: userId,
-            },);
+                id: userId
+            });
             users.forEach(element => {
-                saveData(element, "Users", element.name);
+                saveData(element, "Users", element.name).then(r => console.log(r));
             });
             // ...
 
@@ -132,10 +136,37 @@ export const SignUp = (email, password, username) => {
         });
 }
 
+const SignUp_Google = () => {
+
+}
+
+const SignIn_Google = () => {
+    signInWithPopup(auth, providerGoogle)
+        .then((result) => {
+            // This gives you a Google Access Token. You can use it to access the Google API.
+            const credential = GoogleAuthProvider.credentialFromResult(result);
+            const token = credential.accessToken;
+            // The signed-in user info.
+            const user = result.user;
+            // ...
+        }).catch((error) => {
+        // Handle Errors here.
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // The email of the user's account used.
+        const email = error.customData.email;
+        // The AuthCredential type that was used.
+        const credential = GoogleAuthProvider.credentialFromError(error);
+        // ...
+    });
+}
+
 export const logOut = () => {
     signOut(auth).then(() => {
         // Sign-out successful.
+        console.log(" Sign-out successful.");
     }).catch((error) => {
         // An error happened.
+        console.log(error);
     });
 }

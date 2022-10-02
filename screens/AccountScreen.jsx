@@ -41,7 +41,7 @@ function AccountScreen({route, navigation}) {
             <UserProfile
                 name={user.name}
                 description={user.description}
-                followers={user.followers}
+                followers={user.followers.length}
                 image={user.profilePicture}
             />
             <View style={{

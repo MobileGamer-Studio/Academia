@@ -10,15 +10,33 @@ const LoadingScreen = ({route, navigation}) => {
         if (user) {
             // User is signed in, see docs for a list of available properties
             // https://firebase.google.com/docs/reference/js/firebase.User
-            navigation.navigate("Home", {user})
+            console.log(users)
             users.forEach((item) => {
-                console.log(item);
                 if (item.loginDetails.email === user.email) {
                     currentUser = item
                     console.log("it worked")
-                    navigation.navigate("Home", {user})
+                    navigation.navigate("Home", {currentUser})
                 }
             });
+            currentUser = {
+                name: "",
+                description: "",
+                profilePicture: images.defaultProfile,
+                followers: [],
+                following: [],
+                location: "----",
+                sellerInfo: {
+                    rating: 0,
+                    productList: [],
+                    amountSelling: "0",
+                },
+                loginDetails: {
+                    email: user.email,
+                    password: "",
+                },
+                id: user.uid,
+            }
+            navigation.navigate("Home", {currentUser})
 
         } else {
             navigation.navigate("Landing");

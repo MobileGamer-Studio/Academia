@@ -1,33 +1,19 @@
 import React from 'react';
 import {FlatList, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {categories, colors, sizes, suggestedProducts, topSellers, users} from '../constants/Data';
-import { ProductCategory, ProductMax, RoundButton, SearchBar, UserProfileMin} from '../constants/Components';
-import {FaHome} from "react-icons/fa"
-
-const homeIMG = FaHome;
-
-const NavBar = () => {
-    return(
-        <View style= {{
-            backgroundColor: colors.white,
-        }}>
-            <FaHome />
-        </View>
-    )
-}
+import { ProductCategory, ProductMax, RoundButton, SearchBar, UserProfileMin, NavBar} from '../constants/Components';
 
 function HomeScreen({route, navigation}) {
-    // const currentUser = route.params.user;
-    const currentUser = users[0]
+    const currentUser = route.params.currentUser;
     console.log(currentUser);
 
     return (
         <View style={styles.container}>
-            <View style= {{
-            backgroundColor: colors.white,
-            }}>
-                <Image source={homeIMG}/>
-            </View>
+            <NavBar
+                home = {()=> navigation.navigate("Home", {currentUser})}
+                add = {()=> navigation.navigate("UploadProduct")}
+                settings = {()=> navigation.navigate("Settings")}
+            />
             <View style={{
                 flexDirection: "row",
                 justifyContent: "space-evenly",
@@ -36,7 +22,7 @@ function HomeScreen({route, navigation}) {
             }}>
                 <SearchBar/>
                 <RoundButton
-                    // image={currentUser.profilePicture}
+                    image={currentUser.profilePicture}
                     height={45}
                     width={45}
                     color={colors.white}
