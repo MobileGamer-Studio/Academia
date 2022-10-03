@@ -33,26 +33,33 @@ const MyAccountScreen = ({route, navigation}) => {
         <View style={styles.container}>
             <View style={{
                 flexDirection: "row",
-                alignItems: "center"
+                justifyContent: "space-evenly",
+                margin: 5,
             }}
             >
                 <View style={{
                     flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
                 }}>
                     <ProfilePicture image={user.profilePicture} color={colors.white}/>
                     <Text>{user.name}</Text>
                 </View>
-                <View>
+                <View style = {{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "space-between"
+                }}>
                     <View>
                         <Clickable value={user.following.length} title={"Following"} methods={() => {
                         }}/>
                     </View>
                     <View>
-                        <Clickable value={user.followers} title={"Followers"} methods={() => {
+                        <Clickable value={user.followers.length} title={"Followers"} methods={() => {
                         }}/>
                     </View>
                     <View>
-                        <Clickable value={user.productList.length} title={"Products"} methods={() => {
+                        <Clickable value={user.sellerInfo.productList.length} title={"Products"} methods={() => {
 
                         }}/>
                     </View>
@@ -114,7 +121,7 @@ const MyAccountScreen = ({route, navigation}) => {
                                             alignItems: "flex-start",
                                         }}>
                                             <TouchableOpacity
-                                                //onPress={navigation.navigate("Product", { item })}
+                                                onPress={navigation.navigate("Product", { item })}
                                             >
                                                 <Text style={{
                                                     fontSize: sizes.Small
@@ -132,12 +139,17 @@ const MyAccountScreen = ({route, navigation}) => {
             <View>
                 <TouchableOpacity style={{
                     backgroundColor: colors.black,
+                    borderRadius: sizes.ExtraLarge,
+                    width: 150,
+                    alignItems: 'center',
+                    padding: 5,
+                    margin: 5,
                 }}>
                     <Text style={{
                         fontSize: sizes.Medium,
                         color: colors.white,
                     }}>
-                        add product
+                        Add Product
                     </Text>
                 </TouchableOpacity>
             </View>
@@ -149,9 +161,8 @@ export default MyAccountScreen;
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: colors.defaultBG2,
+        backgroundColor: colors.white,
         flex: 1,
-        alignItems: 'center',
         justifyContent: "flex-start",
         paddingTop: sizes.ExtraLarge,
     },

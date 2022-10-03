@@ -1,6 +1,7 @@
 import React, {useState}from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {InitialState} from '../constants/Data'
+import {logOut} from "../constants/Sever"
 
 
 function SettingScreen({navigation}) {
@@ -11,6 +12,9 @@ function SettingScreen({navigation}) {
             <Text>
                 Setting Screen
             </Text>
+            <TouchableOpacity onPress={() => logOut()}>
+                <Text>Log Out</Text>
+            </TouchableOpacity>
         </View>
     );
 }

@@ -1,6 +1,6 @@
-import React, {useState} from 'react'
-import {FlatList, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native'
-import {colors, sizes} from '../constants/Data'
+import React, { useState, useEffect } from 'react'
+import { FlatList, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { colors, sizes } from '../constants/Data'
 
 
 const InfoInput = (props) => {
@@ -27,103 +27,159 @@ const InfoInput = (props) => {
 }
 
 const Item = (props) => {
-    return(
+    return (
         <View>
             <View style={{
                 backgroundColor: colors.white,
                 flexDirection: "row",
             }}>
                 <Text>{props.itemName}</Text>
-                <TouchableOpacity>
-                    <View>
-                        <Image/>
-                    </View>
-                </TouchableOpacity>
             </View>
         </View>
     );
 }
 
-const UploadProduct = () => {
+const Tag = (props) => {
+    return (
+        <View style={{
+            backgroundColor: colors.defaultBG4,
+            marginHorizontal: 10,
+            height: 25,
+            borderRadius: sizes.ExtraLarge,
+            paddingHorizontal: 10
+        }}>
+            <Text style={{
+                color: colors.white,
+                fontSize: sizes.Small + 2,
+            }}>{"#" + props.tagName + ", "}</Text>
+        </View>
+    );
+}
+
+const UploadProduct = ({route, navigation}) => {
     let tagsList = [];
 
-    const [title, setTitle] = useState("Product name");
-    const [description, setDescription] = useState("about the product");
-    const [price, setPrice] = useState("10000");
-    const [category, setCategory] = useState("Snacks");
-    const [tags, setTags] = useState(tagsList);
-    const [tag, setTag] = useState("");
+    const [title, setTitle] = useState("");
+    const [description, setDescription] = useState("");
+    const [price, setPrice] = useState("0");
+    const [category, setCategory] = useState("");
+    const [tags, setTags] = useState([]);
+    const [tag, setTag] = useState("....");
 
     const addTag = (val) => {
-        tagsList.push(val);
-        setTags(tagsList);
-        console.log(tagsList);
+        //tagsList.push(val);
+        tags.push(val)
+        console.log(tags);
     }
 
     return (
         <ScrollView style={styles.container}>
             <View>
                 <View>
+                    <Text>{"Product: " + title}</Text>
                     <InfoInput
                         method={(val) => setTitle(val)}
+                        placeholder={"product name"}
                     />
-                    <Text>{title}</Text>
+
                 </View>
                 <View>
+                    <Text>{"Description: " + description}</Text>
                     <InfoInput
                         method={(val) => setDescription(val)}
+                        placeholder={"description"}
                     />
-                    <Text>{description}</Text>
+
                 </View>
                 <View>
+                    <Text>{"Naira " + price}</Text>
                     <InfoInput
                         method={(val) => setPrice(val)}
+                        placeholder={"price"}
                     />
-                    <Text>{"Naira " + price}</Text>
+
                 </View>
                 <View>
+                    <Text>{"Category: " + category}</Text>
                     <InfoInput
                         method={(val) => setCategory(val)}
+                        placeholder={"category"}
                     />
-                    <Text>{category}</Text>
+
                 </View>
                 <View>
-                    <InfoInput
-                        method={(val) => setTag(val)}
-                    />
-                    <TouchableOpacity
-                        onPress={() => addTag(tag)}
-                        style = {{
-                            borderRadius: sizes.ExtraSmall,
-                            borderWidth: 1,
-                            width: 200,
-                        }}
-                    >
-                        <Text>Add Tag</Text>
-                    </TouchableOpacity>
-                    <View>
+                    <View style={{
+                        flexDirection: "row"
+                    }}>
+                        <Text>{"Tags: "}</Text>
                         <FlatList
                             horizontal
                             showsHorizontalScrollIndicator={false}
-                            keyExtractor={(item) => item.id}
+                            // keyExtractor={(item) => item.id}
                             data={tags}
-                            renderItem={({item}) => {
+                            renderItem={({ item }) => {
                                 return (
-                                    <Item item = {item}/>
+                                    <Tag tagName={item} />
                                 );
                             }}
                         />
                     </View>
+                    <InfoInput
+                        method={(val) => setTag(val)}
+                        placeholder={"tag"}
+                    />
+
+                    <View style={{
+                        justifyContent: "flex-end",
+                        flexDirection: 'row'
+                    }}>
+                        <TouchableOpacity
+                            onPress={() => addTag(tag)}
+                            style={{
+                                borderRadius: sizes.Small,
+                                padding: 5,
+                                backgroundColor: colors.defaultBG4,
+                                margin: 5,
+                                width: 100,
+                                alignItems: "center",
+
+                            }}
+                        >
+                            <Text style={{ color: colors.white }}>Add Tag</Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
             </View>
             <View style={{
-                flexDirection: "row"
+                flexDirection: "row",
+                bottom: 0,
+                alignItems: "center",
+                justifyContent: "space-evenly"
             }}>
-                <TouchableOpacity style = {styles.button}>
-                    <Text>Upload</Text>
+                <TouchableOpacity style={{
+                    borderRadius: sizes.ExtraLarge,
+                    padding: 5,
+                    backgroundColor: colors.defaultBG4,
+                    marginHorizontal: 5,
+                    marginTop: 20,
+                    width: 150,
+                    alignItems: "center",
+                }}>
+                    <Text style={{ color: colors.white, fontSize: sizes.Medium }}>Upload</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style = {styles.button}>
-                    <Text>Cancel</Text>
+                <TouchableOpacity style={{
+                    borderRadius: sizes.ExtraLarge,
+                    padding: 5,
+                    borderColor: colors.defaultBG4,
+                    borderWidth: 2,
+                    marginHorizontal: 5,
+                    marginTop: 20,
+                    width: 150,
+                    alignItems: "center",
+                }}
+                onPress = {() => navigation.navigate("Home")}
+                >
+                    <Text style={{ color: colors.defaultBG4, fontSize: sizes.Medium }}>Cancel</Text>
                 </TouchableOpacity>
             </View>
         </ScrollView>
@@ -141,8 +197,12 @@ const styles = StyleSheet.create({
     },
 
     button: {
-        borderRadius: sizes.ExtraSmall,
-        borderWidth: 1,
-        padding: sizes.ExtraSmall,
+        borderRadius: sizes.ExtraLarge,
+        padding: 5,
+        backgroundColor: colors.defaultBG4,
+        marginHorizontal: 5,
+        marginTop: 20,
+        width: 150,
+        alignItems: "center",
     }
 })

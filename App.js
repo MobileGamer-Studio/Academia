@@ -1,6 +1,7 @@
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {firestore} from "./constants/Sever";
 
 //Screens
 import LoadingScreen from './screens/LoadingScreen';
@@ -17,20 +18,29 @@ import SignUpScreen from "./screens/SignUpScreen";
 import SignInScreen from "./screens/SignInScreen";
 import {getData, saveData} from './constants/Sever';
 import {users} from './constants/Data';
+import {collection, getDocs} from "firebase/firestore";
 
 
 const Stack = createNativeStackNavigator();
 
-function Start(){
+async function Start(){
     users.forEach(element => {
         saveData(element, "Users", element.name).then(r => console.log(r));
     });
-    users.push.apply(users, getData("Users"));
+    console.log(getData("Users"));
+    const querySnapshot = await getDocs(collection(firestore, "Users"));
+    querySnapshot.forEach((doc) => {
+        if(!users.includes(doc.data())){
+            users.push(doc.data());
+        }else{
+            console.log("User is already added")
+        }
+    });
     console.log("Users: ", users);
 }
 
 export default function App() {
-    Start();
+    Start().then(r => console.log(r));
     return (
         <NavigationContainer>
             <Stack.Navigator>

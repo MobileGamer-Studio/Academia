@@ -34,7 +34,7 @@ const LoadingScreen = ({route, navigation}) => {
                     email: user.email,
                     password: "",
                 },
-                id: user.uid,
+                id: "0",
             }
             navigation.navigate("Home", {currentUser})
 

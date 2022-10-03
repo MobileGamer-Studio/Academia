@@ -22,6 +22,7 @@ function HomeScreen({route, navigation}) {
                     width={45}
                     color={colors.white}
                     method={() => {
+                        currentUser;
                         navigation.navigate("UserAccount", {currentUser});
                     }}
                 />

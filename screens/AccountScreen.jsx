@@ -38,11 +38,11 @@ function AccountScreen({route, navigation}) {
 
     return (
         <View style={styles.container}>
-            <UserProfile
+            {/* <UserProfile
                 name={user.name}
                 description={user.description}
                 image={user.profilePicture}
-            />
+            /> */}
             <View style={{
                 flexDirection: "column",
                 alignItems: "center",

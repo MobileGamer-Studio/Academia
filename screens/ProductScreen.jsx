@@ -69,21 +69,26 @@ function ProductScreen({route, navigation}) {
                 <View style={{
                     flexDirection: "row",
                     justifyContent: 'space-between',
-                    padding: sizes.ExtraSmall,
-                    alignItems: "center"
+                    paddingVertical: 5,
+                    paddingHorizontal: 10,
+                    alignItems: "center",
+                    backgroundColor: colors.white,
+                    borderRadius: sizes.ExtraLarge,
+                    marginHorizontal: sizes.ExtraSmall,
+                    marginVertical: sizes.Small,
                 }}>
                     <Text
                         style={{
                             fontSize: sizes.Large,
-                            color: colors.white,
+                            color: colors.defaultBG4,
                         }}>{product.price + " Naira"}
                     </Text>
 
                     <TouchableOpacity
                         style={{
-                            borderRadius: sizes.Small,
+                            borderRadius: sizes.ExtraLarge,
                             borderColor: colors.white,
-                            // backgroundColor: colors.white,
+                            backgroundColor: colors.defaultBG4,
                             flexDirection: "row",
                             justifyContent: "space-between",
                             padding: sizes.ExtraSmall,

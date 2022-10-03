@@ -6,7 +6,7 @@ import {initializeApp} from "firebase/app";
 import { signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword, getAuth, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { getFirestore, setDoc, getDocs, doc, collection, ref } from 'firebase/firestore';
 import { getStorage, uploadBytes } from "firebase/storage";
-import { users, images } from "./Data"
+import { users, images, User } from "./Data"
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -28,8 +28,8 @@ export const firebaseConfig = {
 // Initialize Firebase
 export const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
-const firestore = getFirestore(app);
-const storage = getStorage(app, "gs://academia-c3d0e.appspot.com/");
+export const firestore = getFirestore(app);
+export const storage = getStorage(app, "gs://academia-c3d0e.appspot.com/");
 let data;
 
 const providerGoogle = new GoogleAuthProvider();
@@ -41,7 +41,7 @@ auth.languageCode = 'it';
 export function saveFiles(ref, file) {
     const storageRef = ref(storage, ref);
     uploadBytes(storageRef, file).then((snapshot) => {
-        console.log('Uploaded a blob or file!');
+        console.log('Uploaded a file!');
     });
 }
 
@@ -106,28 +106,20 @@ export const SignUp = (email, password, username) => {
         .then((userCredential) => {
             // Signed up
             const user = userCredential.user;
-            let userId = user.uid;
-            users.push({
-                name: username,
-                description: "",
-                profilePicture: images.defaultProfile,
-                loginDetails: {
-                    email: email,
-                    password: password,
-                },
-                followers: "0",
-                following: [],
-                location: "----",
-                sellerInfo: {
-                    rating: 0,
-                    productList: [],
-                    amountSelling: "0",
-                },
-                id: userId
-            });
-            users.forEach(element => {
-                saveData(element, "Users", element.name).then(r => console.log(r));
-            });
+            let userId = users.length + 1
+            let newUser  = User
+
+            newUser.name = username;
+            newUser.loginDetails.email = user.email;
+            newUser.loginDetails.password = password;
+            newUser.id = userId.toString();
+
+
+            users.push(newUser);
+            saveData(newUser, "Users", newUser.name).then(r => console.log("new user created: "+ r));
+            // users.forEach(element => {
+            //     saveData(element, "Users", element.name).then(r => console.log(r));
+            // });
             // ...
 
         })

@@ -49,21 +49,177 @@ export const sizes = {
     ExtraLarge: 50,
 };
 
-export class Product {
-    constructor(title, description, price, category, seller, image, tags) {
-        this.title = title;
-        this.description = description;
-        this.price = price;
-        this.category = category;
-        this.seller = seller;
-        this.image = image;
-        this.tag = tags;
 
-        this.tag.push(this.title);
-        this.tag.push(this.seller);
-    }
+export const settings = {
+    currency: " naira",
+};
+
+
+
+//Objects
+export const User = {
+    name: "",
+    description: "",
+    profilePicture: images.defaultProfile,
+    followers: [],
+    following: [],
+    location: "----",
+    loginDetails: {
+        email: "",
+        password: "",
+    },
+    sellerInfo: {
+        rating: 0,
+        productList: [],
+        amountSelling: "0",
+    },
+    appInfo: {
+        settings: settings,
+    },
+    id: "0",
 }
 
+export const Category = {
+    name: "",
+    image: "",
+    id: "0",
+}
+
+export const Product = {
+    title: "",
+    description: "",
+    price: "",
+    seller: "",
+    image: "",
+    tags: [],
+    id: "0",
+}
+
+
+
+// Users
+export let users = [];
+
+export const testUsers = [{
+    name: "Brandon",
+    description: "........",
+    profilePicture: require("../images/profile1.jpg"),
+    loginDetails: {
+        email: "durulego@gmail",
+        password: "123456",
+    },
+    followers: "1M",
+    following: [
+        "Nicky", "Ricky", "Dicky", "Dawn", "Amy"
+    ],
+    location: "----",
+    sellerInfo: {
+        rating: 5,
+        productList: suggestedProducts,
+        amountSelling: "500",
+    },
+    id: "1",
+},
+{
+    name: "Nick",
+    description: "Game Developer and UI designer",
+    profilePicture: require("../images/profile2.png"),
+    loginDetails: {
+        email: "example@gmail.com",
+        password: "example",
+    },
+    followers: "10K",
+    following: [
+        "Nicky", "Ricky", "Dicky", "Dawn", "Amy"
+    ],
+    location: "----",
+    sellerInfo: {
+        rating: 5,
+        productList: suggestedProducts,
+        amountSelling: "500",
+    },
+    id: "2",
+},
+{
+    name: "Amy",
+    description: "School supplies distributor",
+    profilePicture: require("../images/profile2.jpg"),
+    loginDetails: {
+        email: "----",
+        password: "----",
+    },
+    followers: "1K",
+    location: "----",
+    sellerInfo: {
+        rating: 5,
+        productList: [
+            {
+                title: "Pens",
+                description: "Stationaries",
+                price: "50",
+                seller: "----",
+                image: require("../images/othersIcon.png"),
+                id: "1",
+            },
+            {
+                title: "Ruller",
+                description: "Stationaries",
+                price: "100",
+                seller: "----",
+                image: require("../images/othersIcon.png"),
+                id: "2",
+            },
+        ],
+        amountSelling: "500",
+    },
+    id: "3",
+}
+];
+
+export const suggestedUsers = [];
+
+
+//Category
+export const categories = [
+    {
+        name: "Stationaries",
+        image: images.stationaries,
+        id: "1",
+    },
+
+    {
+        name: "Snacks",
+        image: images.snacks,
+        id: "2",
+    },
+
+    {
+        name: "Homework",
+        image: images.homework,
+        id: "3",
+    },
+
+    {
+        name: "Drinks",
+        image: images.homework,
+        id: "4",
+    },
+
+    {
+        name: "Books",
+        image: images.homework,
+        id: "5",
+    },
+
+    {
+        name: "Games",
+        image: images.homework,
+        id: "6",
+    },
+];
+
+
+//Products
 export const products = [
     {
         title: "Oreo's",
@@ -157,128 +313,6 @@ export const topSellers = [
 
 ]
 
-export const categories = [
-    {
-        name: "Stationaries",
-        image: images.stationaries,
-        id: "1",
-    },
-
-    {
-        name: "Snacks",
-        image: images.snacks,
-        id: "2",
-    },
-
-    {
-        name: "Homework",
-        image: images.homework,
-        id: "3",
-    },
-
-    {
-        name: "Drinks",
-        image: images.homework,
-        id: "4",
-    },
-
-    {
-        name: "Books",
-        image: images.homework,
-        id: "5",
-    },
-
-    {
-        name: "Games",
-        image: images.homework,
-        id: "6",
-    },
-];
-
-export let users = [];
-
-export const testUsers = [{
-    name: "Brandon",
-    description: "........",
-    profilePicture: require("../images/profile1.jpg"),
-    loginDetails: {
-        email: "durulego@gmail",
-        password: "123456",
-    },
-    followers: "1M",
-    following: [
-        "Nicky", "Ricky", "Dicky", "Dawn", "Amy"
-    ],
-    location: "----",
-    sellerInfo: {
-        rating: 5,
-        productList: suggestedProducts,
-        amountSelling: "500",
-    },
-    id: "1",
-},
-    {
-        name: "Nick",
-        description: "Game Developer and UI designer",
-        profilePicture: require("../images/profile2.png"),
-        loginDetails: {
-            email: "example@gmail.com",
-            password: "example",
-        },
-        followers: "10K",
-        following: [
-            "Nicky", "Ricky", "Dicky", "Dawn", "Amy"
-        ],
-        location: "----",
-        sellerInfo: {
-            rating: 5,
-            productList: suggestedProducts,
-            amountSelling: "500",
-        },
-        id: "2",
-    },
-    {
-        name: "Amy",
-        description: "School supplies distributor",
-        profilePicture: require("../images/profile2.jpg"),
-        loginDetails: {
-            email: "----",
-            password: "----",
-        },
-        followers: "1K",
-        location: "----",
-        sellerInfo: {
-            rating: 5,
-            productList: [
-                {
-                    title: "Pens",
-                    description: "Stationaries",
-                    price: "50",
-                    seller: "----",
-                    image: require("../images/othersIcon.png"),
-                    id: "1",
-                },
-                {
-                    title: "Ruller",
-                    description: "Stationaries",
-                    price: "100",
-                    seller: "----",
-                    image: require("../images/othersIcon.png"),
-                    id: "2",
-                },
-            ],
-            amountSelling: "500",
-        },
-        id: "3",
-    }
-];
-
-export const suggestedUsers = [];
-
-export const bestSellers = [
-    products[0],
-    products[2],
-]
 
 export const cart = [];
 
@@ -286,9 +320,7 @@ export const orders = [
     [products[0], products[2], products[3]], [products[1], products[4], products[5]]
 ];
 
-export const settings = {
-    currency: " naira",
-};
+
 
 export const InitialState = {
     currentUser: users[0],
@@ -303,25 +335,3 @@ export const dataObject = {
     cart: cart,
     settings: settings,
 };
-
-export const defaultUser = {
-    name: "",
-    description: "",
-    profilePicture: images.defaultProfile,
-    followers: [],
-    following: [],
-    location: "----",
-    loginDetails: {
-        email: "",
-        password: "",
-    },
-    sellerInfo: {
-        rating: 0,
-        productList: [],
-        amountSelling: "0",
-    },
-    appInfo: {
-        settings: settings,
-    },
-    id: 0,
-}
