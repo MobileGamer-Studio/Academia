@@ -27,7 +27,7 @@ const Clickable = (props) => {
 
 
 const MyAccountScreen = ({route, navigation}) => {
-    const user = route.params.item;
+    const user = route.params.currentUser;
 
     return (
         <View style={styles.container}>

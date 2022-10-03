@@ -436,23 +436,24 @@ const styles = StyleSheet.create({
     },
 
     navBar: {
-        backgroundColor: colors.black,
+        backgroundColor: colors.defaultBG4,
         borderRadius: sizes.ExtraLarge,
         flexDirection: "row",
         justifyContent: "center",
         alignItems: "center",
         position: "absolute",
-        alignSelf: "flex-end"
-    },
-
-    navItem: {
-        
+        alignSelf: "center",
+        paddingHorizontal: 10,
+        paddingVertical: 5,
+        bottom: 20,
     },
 
     navImages :{
-        height: sizes.Small,
-        width: sizes.Small,
+        height: sizes.Large,
+        width: sizes.Large,
         flex: 1,
+        marginHorizontal: 20,
+        marginVertical: 5,
     }
 
 })

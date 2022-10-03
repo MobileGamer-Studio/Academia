@@ -8,8 +8,14 @@ const InfoInput = (props) => {
         <View>
             <TextInput
                 style={{
-                    height: 40,
-                    backfaceVisibility: colors.white,
+                    borderRadius: sizes.ExtraSmall,
+                    borderWidth: 1,
+                    margin: sizes.ExtraSmall,
+                    paddingHorizontal: sizes.Small,
+                    backgroundColor: colors.white,
+                    height: 50,
+                    width: 350,
+                    borderColor: colors.defaultBG4,
                 }}
                 onChangeText={props.method}
                 placeholder={props.placeholder}
@@ -41,10 +47,10 @@ const Item = (props) => {
 const UploadProduct = () => {
     let tagsList = [];
 
-    const [title, setTitle] = useState("");
-    const [description, setDescription] = useState("");
-    const [price, setPrice] = useState("");
-    const [category, setCategory] = useState("");
+    const [title, setTitle] = useState("Product name");
+    const [description, setDescription] = useState("about the product");
+    const [price, setPrice] = useState("10000");
+    const [category, setCategory] = useState("Snacks");
     const [tags, setTags] = useState(tagsList);
     const [tag, setTag] = useState("");
 
@@ -58,40 +64,40 @@ const UploadProduct = () => {
         <ScrollView style={styles.container}>
             <View>
                 <View>
-                    //Title
                     <InfoInput
                         method={(val) => setTitle(val)}
                     />
                     <Text>{title}</Text>
                 </View>
                 <View>
-                    //Description
                     <InfoInput
                         method={(val) => setDescription(val)}
                     />
                     <Text>{description}</Text>
                 </View>
                 <View>
-                    //Price
                     <InfoInput
                         method={(val) => setPrice(val)}
                     />
                     <Text>{"Naira " + price}</Text>
                 </View>
                 <View>
-                    //Category
                     <InfoInput
                         method={(val) => setCategory(val)}
                     />
                     <Text>{category}</Text>
                 </View>
                 <View>
-                    //tags
                     <InfoInput
                         method={(val) => setTag(val)}
                     />
                     <TouchableOpacity
                         onPress={() => addTag(tag)}
+                        style = {{
+                            borderRadius: sizes.ExtraSmall,
+                            borderWidth: 1,
+                            width: 200,
+                        }}
                     >
                         <Text>Add Tag</Text>
                     </TouchableOpacity>
@@ -113,10 +119,10 @@ const UploadProduct = () => {
             <View style={{
                 flexDirection: "row"
             }}>
-                <TouchableOpacity style={{}}>
+                <TouchableOpacity style = {styles.button}>
                     <Text>Upload</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={{}}>
+                <TouchableOpacity style = {styles.button}>
                     <Text>Cancel</Text>
                 </TouchableOpacity>
             </View>
@@ -130,6 +136,13 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         paddingVertical: sizes.ExtraLarge,
-        backgroundColor: colors.defaultBG2,
+        backgroundColor: colors.white,
+        padding: sizes.ExtraSmall,
+    },
+
+    button: {
+        borderRadius: sizes.ExtraSmall,
+        borderWidth: 1,
+        padding: sizes.ExtraSmall,
     }
 })

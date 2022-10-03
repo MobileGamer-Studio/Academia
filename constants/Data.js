@@ -195,7 +195,7 @@ export const categories = [
     },
 ];
 
-export const users = [];
+export let users = [];
 
 export const testUsers = [{
     name: "Brandon",

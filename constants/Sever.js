@@ -3,10 +3,10 @@
 
 
 import {initializeApp} from "firebase/app";
-import { signOut, createUserWithEmailAndPassword, getAuth, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
-import { getFirestore, setDoc, collection, addDoc, getDocs, doc } from 'firebase/firestore';
-import { getStorage, ref, uploadBytes } from "firebase/storage";
-import { dataObject, users, User, images } from "./Data"
+import { signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword, getAuth, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { getFirestore, setDoc, getDocs, doc, collection, ref } from 'firebase/firestore';
+import { getStorage, uploadBytes } from "firebase/storage";
+import { users, images } from "./Data"
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -61,18 +61,19 @@ export async function setData(data, collection, id = ""){
     await setDoc(doc(firestore, collection, id), data);
 }
 
-export async function getData(collection, id = "") {
+export async function getData(path) {
     data = [];
-    const querySnapshot = await getDocs(collection(firestore, collection, id));
+    const querySnapshot = await getDocs(collection(firestore, path));
     querySnapshot.forEach((doc) => {
         console.log(`${doc.id} => ${doc.data()}`);
-        data = doc.data();
+        data.push.apply(data, doc.data())
     });
+    console.log("Data gotten: "+ data)
     return data;
 }
 
-export function readData(ref, callback) {
-    const docRef = ref(firestore, ref);
+export function readData(reference, callback) {
+    const docRef = ref(firestore, reference);
     docRef.get().then((doc) => {
         if (doc.exists) {
             callback(doc.data());
@@ -136,10 +137,6 @@ export const SignUp = (email, password, username) => {
         });
 }
 
-const SignUp_Google = () => {
-
-}
-
 const SignIn_Google = () => {
     signInWithPopup(auth, providerGoogle)
         .then((result) => {
@@ -148,6 +145,7 @@ const SignIn_Google = () => {
             const token = credential.accessToken;
             // The signed-in user info.
             const user = result.user;
+            console.log(user)
             // ...
         }).catch((error) => {
         // Handle Errors here.

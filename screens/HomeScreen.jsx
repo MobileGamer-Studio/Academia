@@ -9,11 +9,6 @@ function HomeScreen({route, navigation}) {
 
     return (
         <View style={styles.container}>
-            <NavBar
-                home = {()=> navigation.navigate("Home", {currentUser})}
-                add = {()=> navigation.navigate("UploadProduct")}
-                settings = {()=> navigation.navigate("Settings")}
-            />
             <View style={{
                 flexDirection: "row",
                 justifyContent: "space-evenly",
@@ -27,8 +22,7 @@ function HomeScreen({route, navigation}) {
                     width={45}
                     color={colors.white}
                     method={() => {
-                        let item = currentUser;
-                        navigation.navigate("UserAccount", {item});
+                        navigation.navigate("UserAccount", {currentUser});
                     }}
                 />
             </View>
@@ -151,6 +145,11 @@ function HomeScreen({route, navigation}) {
                     />
                 </View>
             </ScrollView>
+            <NavBar
+                home = {()=> navigation.navigate("Home", {currentUser})}
+                add = {()=> navigation.navigate("UploadProduct")}
+                settings = {()=> navigation.navigate("Settings")}
+            />
         </View>
     );
 }
