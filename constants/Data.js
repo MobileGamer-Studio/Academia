@@ -81,6 +81,7 @@ export const User = {
 
 export const Category = {
     name: "",
+    description: "",
     image: "",
     id: "0",
 }
@@ -92,6 +93,8 @@ export const Product = {
     seller: "",
     image: "",
     tags: [],
+    amountAvailable: 0,
+    ratings: 0,
     id: "0",
 }
 
@@ -100,7 +103,8 @@ export const Product = {
 // Users
 export let users = [];
 
-export const testUsers = [{
+export const testUsers = [
+    {
     name: "Brandon",
     description: "........",
     profilePicture: require("../images/profile1.jpg"),
@@ -220,7 +224,8 @@ export const categories = [
 
 
 //Products
-export const products = [
+export const products = []
+export const testProducts = [
     {
         title: "Oreo's",
         description: "dark creamy chocolate biscuits, so sweat that you wont want anything else",
@@ -270,11 +275,11 @@ export const products = [
 ];
 
 export const suggestedProducts = [
-    products[0],
-    products[3],
-    products[1],
-    products[2],
-    products[4],
+    testProducts[0],
+    testProducts[3],
+    testProducts[1],
+    testProducts[2],
+    testProducts[4],
 ]
 
 export const topSellers = [

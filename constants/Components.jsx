@@ -346,40 +346,42 @@ export const SearchResult = (props) => {
 
 export const NavBar = (props) => {
   return(
-      <View style={styles.navBar} >
-        <View style={styles.navItem}>
-            <TouchableOpacity
-                onPress={props.home}
-            >
-                <Image
-                    source={images.home}
-                    style={styles.navImages}
-                    resizeMode="contain"
-                />
-            </TouchableOpacity>
-        </View>
-        <View style={styles.navItem}>
-            <TouchableOpacity
-                onPress={props.add}
-            >
-                <Image
-                    source={images.add}
-                    style={styles.navImages}
-                    resizeMode="contain"
-                />
-            </TouchableOpacity>
-        </View>
-        <View style={styles.navItem}>
-            <TouchableOpacity
-                onPress={props.settings}
-            >
-                <Image
-                    source={images.settings}
-                    style={styles.navImages}
-                    resizeMode="contain"
-                />
-            </TouchableOpacity>
-        </View>
+      <View style={styles.navContainer}>
+          <View style={styles.navBar} >
+              <View style={styles.navItem}>
+                  <TouchableOpacity
+                      onPress={props.home}
+                  >
+                      <Image
+                          source={images.home}
+                          style={styles.navImages}
+                          resizeMode="contain"
+                      />
+                  </TouchableOpacity>
+              </View>
+              <View style={styles.navItem}>
+                  <TouchableOpacity
+                      onPress={props.add}
+                  >
+                      <Image
+                          source={images.add}
+                          style={styles.navImages}
+                          resizeMode="contain"
+                      />
+                  </TouchableOpacity>
+              </View>
+              <View style={styles.navItem}>
+                  <TouchableOpacity
+                      onPress={props.settings}
+                  >
+                      <Image
+                          source={images.settings}
+                          style={styles.navImages}
+                          resizeMode="contain"
+                      />
+                  </TouchableOpacity>
+              </View>
+          </View>
       </View>
   );
 }
@@ -435,18 +437,21 @@ const styles = StyleSheet.create({
         margin: sizes.Small,
     },
 
+    navContainer: {
+        position: "absolute",
+        bottom: 20,
+        // elevation: 5,
+    },
+
     navBar: {
         backgroundColor: colors.defaultBG4,
         borderRadius: sizes.ExtraLarge,
         flexDirection: "row",
         justifyContent: "center",
         alignItems: "center",
-        position: "absolute",
         alignSelf: "center",
         paddingHorizontal: 10,
         paddingVertical: 5,
-        bottom: 20,
-        elevation: 5,
     },
 
     navImages :{
@@ -455,7 +460,11 @@ const styles = StyleSheet.create({
         flex: 1,
         marginHorizontal: 20,
         marginVertical: 5,
-    }
+    },
+
+    navItem: {
+
+    },
 
 })
 

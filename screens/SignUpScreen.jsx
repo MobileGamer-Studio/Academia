@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import {StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native";
 import {colors, sizes} from "../constants/Data";
-import {SignUp} from "../constants/Sever"
+import {SignUp, SignIn_Google} from "../constants/Sever"
 
 
 const SignUpScreen = ({navigation}) => {
@@ -58,6 +58,29 @@ const SignUpScreen = ({navigation}) => {
                         }}
                     >
                         SignUp
+                    </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={{
+                        backgroundColor: colors.defaultBG4,
+                        height: 50,
+                        width: 350,
+                        alignItems: "center",
+                        justifyContent: "center",
+                        borderRadius: sizes.ExtraLarge,
+                    }}
+                    onPress={() => {
+                        SignIn_Google()
+                        navigation.navigate("Loading")
+                    }}
+                >
+                    <Text
+                        style={{
+                            fontSize: sizes.Medium,
+                            color: colors.white,
+                        }}
+                    >
+                        SignUp with Google
                     </Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => navigation.navigate("SignIn")}>

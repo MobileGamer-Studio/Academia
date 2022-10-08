@@ -1,7 +1,7 @@
 import React from 'react';
 import {FlatList, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {categories, colors, sizes, suggestedProducts, topSellers, users} from '../constants/Data';
-import { ProductCategory, ProductMax, RoundButton, SearchBar, UserProfileMin, NavBar} from '../constants/Components';
+import {NavBar, ProductCategory, ProductMax, RoundButton, SearchBar, UserProfileMin} from '../constants/Components';
 
 function HomeScreen({route, navigation}) {
     const currentUser = route.params.currentUser;
@@ -124,16 +124,17 @@ function HomeScreen({route, navigation}) {
                                     }}>
                                         {item.title}
                                     </Text>
-                                    <TouchableOpacity style={{
+                                    <TouchableOpacity
+                                        style={{
                                         backgroundColor: colors.white,
                                         alignItems: "center",
                                         alignSelf: "flex-end",
                                         padding: 5,
                                         margin: 5,
                                         borderRadius: sizes.ExtraSmall,
-                                    }}
-
-                                                      onPress={() => navigation.navigate("Product", {item})}>
+                                        }}
+                                        onPress={() => navigation.navigate("Product", {item})}
+                                    >
                                         <Text style={{
                                             fontSize: sizes.Medium,
                                         }}>
@@ -147,9 +148,9 @@ function HomeScreen({route, navigation}) {
                 </View>
             </ScrollView>
             <NavBar
-                home = {()=> navigation.navigate("Home", {currentUser})}
-                add = {()=> navigation.navigate("UploadProduct")}
-                settings = {()=> navigation.navigate("Settings")}
+                home={() => navigation.navigate("Home", {currentUser})}
+                add={() => navigation.navigate("UploadProduct")}
+                settings={() => navigation.navigate("Settings")}
             />
         </View>
     );

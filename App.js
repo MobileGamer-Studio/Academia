@@ -27,7 +27,7 @@ async function Start(){
     users.forEach(element => {
         saveData(element, "Users", element.name).then(r => console.log(r));
     });
-    console.log(getData("Users"));
+
     const querySnapshot = await getDocs(collection(firestore, "Users"));
     querySnapshot.forEach((doc) => {
         if(!users.includes(doc.data())){

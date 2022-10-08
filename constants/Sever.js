@@ -30,7 +30,6 @@ export const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const firestore = getFirestore(app);
 export const storage = getStorage(app, "gs://academia-c3d0e.appspot.com/");
-let data;
 
 const providerGoogle = new GoogleAuthProvider();
 providerGoogle.addScope('https://www.googleapis.com/auth/contacts.readonly');
@@ -48,25 +47,28 @@ export function saveFiles(ref, file) {
 
 
 //Firestore Database
-export async function saveData(data, collection, id) {
+export async function saveData(data, ref, id) {
     try {
-        const docRef = await setDoc(doc(firestore, collection, id), data);
+        const docRef = await setDoc(doc(firestore, ref, id), data);
         console.log("Document written with ID: ", docRef, "\n", id);
     } catch (e) {
         console.error("Error adding document: ", e);
     }
 }
 
-export async function setData(data, collection, id = ""){
+export async function setData(data, collection, id){
     await setDoc(doc(firestore, collection, id), data);
 }
 
 export async function getData(path) {
-    data = [];
+    let data = [];
     const querySnapshot = await getDocs(collection(firestore, path));
     querySnapshot.forEach((doc) => {
-        console.log(`${doc.id} => ${doc.data()}`);
-        data.push.apply(data, doc.data())
+        if(!data.includes(doc.data())){
+            data.push(doc.data());
+        }else{
+            console.log("User is already added")
+        }
     });
     console.log("Data gotten: "+ data)
     return data;
@@ -93,6 +95,7 @@ export const SignIn = (email, password) => {
         .then((userCredential) => {
             // Signed in
             const userCred = userCredential.user;
+            console.log("Sign in successful")
         })
         .catch((error) => {
             const errorCode = error.code;
@@ -129,7 +132,7 @@ export const SignUp = (email, password, username) => {
         });
 }
 
-const SignIn_Google = () => {
+export const SignIn_Google = () => {
     signInWithPopup(auth, providerGoogle)
         .then((result) => {
             // This gives you a Google Access Token. You can use it to access the Google API.
@@ -138,6 +141,18 @@ const SignIn_Google = () => {
             // The signed-in user info.
             const user = result.user;
             console.log(user)
+
+
+            let userId = users.length + 1
+            let newUser  = User
+
+            newUser.name = user.displayName;
+            newUser.loginDetails.email = user.email;
+            newUser.loginDetails.password = "";
+            newUser.id = userId.toString();
+
+            users.push(newUser);
+            saveData(newUser, "Users", newUser.name).then(r => console.log("new user created: "+ r));
             // ...
         }).catch((error) => {
         // Handle Errors here.

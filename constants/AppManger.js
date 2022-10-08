@@ -1,4 +1,5 @@
 import * as data from "./Data"
+import {products} from "./Data";
 
 
 const Users = data.users;
@@ -21,12 +22,14 @@ function ManageSuggestedUsers(){
 
 }
 
-function ManageSuggestedProducts(){
+export function ManageSuggestedProducts(){
     let suggestedProducts;
 
-    for (const products in Products) {
-
-    }
+    products.forEach(product => {
+        if(suggestedProducts.length <= 20){
+            console.log(product)
+        }
+    })
 
 }
 
