@@ -1,3 +1,4 @@
+
 export const colors = {
     //
     black: "black",
@@ -20,21 +21,54 @@ export const colors = {
     defaultBG2: "#f6f6f6",
     defaultBG3: "#f6e5e5",
     defaultBG4: "#00FFD1",
+    defaultBG4_Selected: "#198B76",
     defaultTC: "black",
+
 };
 
+const themeData = {
+    dark: {
+        appBG: "#c4d8dd",
+        defaultColor: "#00FFD1",
+        defaultColor2: "#00d9ff",
+        textColor: "white",
+    },
+    light: {
+        appBG: "#c4d8dd",
+        defaultColor: "#00FFD1",
+        defaultColor2: "#00d9ff",
+        textColor: "black",
+    }
+}
+
 export const images = {
-    logo: require("../images/AppArt3.png"),
+
+    //
+    logo: require("../images/Logo.png"),
     academia: require("../images/Academia.png"),
     defaultProfile: require("../images/profileIcon.png"),
-    cartBlack: require("../images/ShopingCartBlackIcon.png"),
-    cartWhite: require("../images/ShopingCartWhiteIcon.png"),
-    stationaries: require("../images/stationariesIcon.png"),
+    cart: require("../images/Cart-white.png"),
+
+    //
+    stationary: require("../images/stationariesIcon.png"),
     homework: require("../images/homeworkIcon.png"),
     snacks: require("../images/sancksIcon.png"),
-    home: require("../images/HomeIcon-white.png"),
-    add: require("../images/AddIcon-white.png"),
-    settings: require("../images/SettingsIcon-white.png")
+    home: require("../images/HomeIcon-colouured.png"),
+    add: require("../images/AddIcon-coloured.png"),
+    settings: require("../images/SettingsIcon-coloured.png"),
+
+
+    //
+    google: require("../images/GoogleIcon.png"),
+
+    //
+    icons: {
+        home: require("../images/HomeIcon-colouured.png"),
+        add: require("../images/AddIcon-coloured.png"),
+        settings: require("../images/SettingsIcon-coloured.png"),
+        search: require("../images/SearchIcon-coloured.png"),
+        cart: require("../images/Cart-coloured.png"),
+    },
 };
 
 export const fonts = {
@@ -42,6 +76,8 @@ export const fonts = {
 };
 
 export const sizes = {
+    Micro: 2.5,
+    Mini: 5,
     ExtraSmall: 10,
     Small: 15,
     Medium: 20,
@@ -72,6 +108,14 @@ export const User = {
         rating: 0,
         productList: [],
         amountSelling: "0",
+    },
+    userInfo: {
+        cart: [],
+        orders: [],
+        rating: 0,
+        amountSpent: "0",
+        suggestedProducts: [],
+        suggestedUsers: [],
     },
     appInfo: {
         settings: settings,
@@ -186,8 +230,8 @@ export const suggestedUsers = [];
 //Category
 export const categories = [
     {
-        name: "Stationaries",
-        image: images.stationaries,
+        name: "Stationary",
+        image: images.stationary,
         id: "1",
     },
 

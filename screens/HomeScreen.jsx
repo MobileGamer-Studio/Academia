@@ -1,10 +1,11 @@
 import React from 'react';
 import {FlatList, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {categories, colors, sizes, suggestedProducts, topSellers, users} from '../constants/Data';
+import {categories, colors, sizes, suggestedProducts, topSellers} from '../constants/Data';
 import {NavBar, ProductCategory, ProductMax, RoundButton, SearchBar, UserProfileMin} from '../constants/Components';
+import {currentUser} from './LoadingScreen';
 
 function HomeScreen({route, navigation}) {
-    const currentUser = route.params.currentUser;
+    //const currentUser = route.params.currentUser;
     console.log(currentUser);
 
     return (
@@ -86,7 +87,7 @@ function HomeScreen({route, navigation}) {
                         horizontal
                         showsHorizontalScrollIndicator={false}
                         keyExtractor={(item) => item.id}
-                        data={users}
+                        data={currentUser.following}
                         renderItem={({item}) => {
                             return (
                                 <UserProfileMin
@@ -126,12 +127,12 @@ function HomeScreen({route, navigation}) {
                                     </Text>
                                     <TouchableOpacity
                                         style={{
-                                        backgroundColor: colors.white,
-                                        alignItems: "center",
-                                        alignSelf: "flex-end",
-                                        padding: 5,
-                                        margin: 5,
-                                        borderRadius: sizes.ExtraSmall,
+                                            backgroundColor: colors.white,
+                                            alignItems: "center",
+                                            alignSelf: "flex-end",
+                                            padding: 5,
+                                            margin: 5,
+                                            borderRadius: sizes.ExtraSmall,
                                         }}
                                         onPress={() => navigation.navigate("Product", {item})}
                                     >
@@ -148,8 +149,10 @@ function HomeScreen({route, navigation}) {
                 </View>
             </ScrollView>
             <NavBar
-                home={() => navigation.navigate("Home", {currentUser})}
+                home={() => navigation.navigate("Home")}
+                search={() => navigation.navigate("Search", {search : ""})}
                 add={() => navigation.navigate("UploadProduct")}
+                cart={() => navigation.navigate("Cart")}
                 settings={() => navigation.navigate("Settings")}
             />
         </View>

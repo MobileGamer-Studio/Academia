@@ -1,43 +1,78 @@
 import React, {useState} from 'react'
 import {FlatList, Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
-import {categories, colors, products, sizes} from '../constants/Data';
+import {colors, sizes, testProducts} from '../constants/Data';
 import {ProductCategory, SearchBar} from '../constants/Components';
 
+
+const Product = ({props}) => {
+    return (
+        <View>
+            <TouchableOpacity
+                style={{
+                    backgroundColor: colors.white,
+                    marginVertical: sizes.ExtraSmall,
+                    marginHorizontal: 5,
+                    borderRadius: 10,
+                    padding: sizes.ExtraSmall,
+                    flexDirection: "column",
+                }}
+
+                onPress={props.method}
+            >
+                <View style={{
+                    height: 100,
+                    width: 100,
+                }}>
+                    <Image
+                        style={{
+                            flex: 1,
+                        }}
+                        resizeMode="contain"
+                        source={props.image}
+                    />
+                </View>
+                <View style={{
+                    flexDirection: "column",
+                }}>
+                    <Text>{props.title}</Text>
+                </View>
+            </TouchableOpacity>
+        </View>
+    );
+}
+
 export default function SearchScreen({navigation, route}) {
-    let items = [];
-    const [searchResult, setSearchResult] = useState(products)
+
+    const [searchResult, setSearchResult] = useState([])
+    const [relatedTags, setRelatedTags] = useState([])
 
     const searchText = route.params.search;
 
     const Search = (val) => {
-        if (!val.length) return setSearchResult(products);
+        if (!val.length) return setSearchResult(testProducts);
         val = val.toLowerCase();
-        for (let i = 0; i < products.length; i++) {
-            let item = products[i].tags
-            for (let x = 0; x < item.length; x++) {
-                if (item[x].toLowerCase().includes(val)) {
-                    items.push(products[i])
-                } else {
-
-                }
+        testProducts.forEach(product => {
+            if (product.tags.includes(val)) {
+                console.log("found one")
+                searchResult.push(product)
             }
-        }
-        setSearchResult(items)
-        console.log(val, "\n", searchResult);
+        })
+        console.log(val, ": ", searchResult);
+
+        searchResult.forEach(result => {
+            result.tags.forEach(tag => {
+                if (!relatedTags.includes(tag)) {
+                    let id = relatedTags.length.toString()
+                    relatedTags.push({
+                        Tag: tag,
+                        Id: id,
+                    })
+                }
+            })
+        })
     }
 
-    const goThroughData = (val) => {
-        if (!val.length) return setSearchResult(products);
-
-        const filterData = products.filter(item => item.tags.filter(tag => tag.toLowerCase().includes(val)));
-
-        if (filterData.length) {
-            setSearchResult(filterData)
-        }
-        console.log(filterData, "\n", searchResult);
-    }
-
-    //Search(searchText);
+    Search(searchText);
     return (
         <View style={styles.container}>
             <View>
@@ -49,13 +84,13 @@ export default function SearchScreen({navigation, route}) {
                 <FlatList
                     horizontal
                     showsHorizontalScrollIndicator={false}
-                    keyExtractor={(item) => item.id}
-                    data={categories}
+                    keyExtractor={(item) => item.Id}
+                    data={relatedTags}
                     renderItem={({item}) => {
                         return (
                             <ProductCategory
-                                text={item.name}
-                                method={() => navigation.navigate("Search", {search: item.name})}
+                                text={item.Tag}
+                                method={() => Search(item.Tag)}//navigation.navigate("Search", {search: item.name})}
                             />
                         );
                     }}
@@ -68,38 +103,11 @@ export default function SearchScreen({navigation, route}) {
                     data={searchResult}
                     renderItem={({item}) => {
                         return (
-                            <TouchableOpacity
-                                style={{
-                                    backgroundColor: colors.white,
-                                    marginVertical: sizes.ExtraSmall,
-                                    marginHorizontal: 5,
-                                    borderRadius: 10,
-                                    padding: sizes.ExtraSmall,
-                                    flexDirection: "row",
-                                    height: 200,
-                                }}
-
-                                onPress={() => console.log(item)}
-                            >
-                                <View style={{
-                                    height: 100,
-                                    width: 100,
-                                }}>
-                                    <Image
-                                        style={{
-                                            flex: 1,
-                                        }}
-                                        resizeMode="contain"
-                                        source={item.image}
-                                    />
-                                </View>
-                                <View style={{
-                                    flexDirection: "column",
-                                }}>
-                                    <Text>{item.title}</Text>
-                                    <Text>{item.description}</Text>
-                                </View>
-                            </TouchableOpacity>
+                            <Product
+                                title={item.title}
+                                image={item.image}
+                                method={() => navigation.navigate("Product", {item})}
+                            />
                         );
                     }}
                 />

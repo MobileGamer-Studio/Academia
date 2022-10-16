@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
-import {StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
-import {colors, sizes} from '../constants/Data';
-import {SignIn} from "../constants/Sever"
+import {Image, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
+import {colors, images, sizes} from '../constants/Data';
+import {SignIn, SignIn_Google} from "../constants/Sever"
 
 
 const SignInScreen = ({route, navigation}) => {
@@ -50,6 +50,46 @@ const SignInScreen = ({route, navigation}) => {
                         fontSize: sizes.Medium,
                         color: colors.white,
                     }}>SignIn</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={{
+                        backgroundColor: colors.white,
+                        height: 50,
+                        width: 350,
+                        alignItems: "center",
+                        justifyContent: "space-evenly",
+                        borderRadius: sizes.ExtraLarge,
+                        borderColor: colors.black,
+                        borderWidth: 1,
+                        marginVertical: sizes.Small,
+                        flexDirection: "row",
+                        paddingHorizontal: sizes.ExtraLarge,
+                    }}
+                    onPress={() => {
+                        SignIn_Google()
+                        navigation.navigate("Loading")
+                    }}
+                >
+                    <View>
+                        <Image
+                            style={{
+                                flex: 1,
+                                alignSelf: "center",
+                                height: sizes.Large,
+                                width: sizes.Large,
+                            }}
+                            resizeMode="contain"
+                            source={images.google}
+                        />
+                    </View>
+                    <Text
+                        style={{
+                            fontSize: sizes.Medium,
+                            color: colors.black,
+                        }}
+                    >
+                        SignIn with Google
+                    </Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => navigation.navigate("SignUp")}>
                     <Text style={{

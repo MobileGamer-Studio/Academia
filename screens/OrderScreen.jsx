@@ -1,7 +1,8 @@
 import React from 'react'
 import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
-import {colors, orders, sizes} from '../constants/Data'
+import {colors, sizes} from '../constants/Data'
 import {ProductMax} from '../constants/Components'
+import {currentUser} from "./LoadingScreen";
 
 const OrderScreen = ({navigation}) => {
     return (
@@ -12,7 +13,7 @@ const OrderScreen = ({navigation}) => {
                     vaertical
                     showsHorizontalScrollIndicator={false}
                     keyExtractor={(item) => item.id}
-                    data={orders}
+                    data={currentUser.userInfo.orders}
                     renderItem={({item}) => {
                         return (
                             <View>

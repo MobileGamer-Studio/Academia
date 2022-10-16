@@ -1,20 +1,24 @@
-import { onAuthStateChanged } from 'firebase/auth';
+import {onAuthStateChanged} from 'firebase/auth';
 import React from 'react'
 import {Image, StyleSheet, View} from 'react-native'
 import {colors, images, users} from '../constants/Data';
 import {auth} from "../constants/Sever";
 
+
+//passed data
+export let currentUser;
+
 const LoadingScreen = ({route, navigation}) => {
-    let currentUser;
     onAuthStateChanged(auth, (user) => {
         if (user) {
             // User is signed in, see docs for a list of available properties
             // https://firebase.google.com/docs/reference/js/firebase.User
-            console.log(users)
+            console.log("Now Loading")
             users.forEach((item) => {
                 if (item.loginDetails.email === user.email) {
                     currentUser = item
-                    console.log("it worked")
+                    console.log("First Test Passed")
+                    // navigation.navigate("Home")
                     navigation.navigate("Home", {currentUser})
                 }
             });
@@ -36,6 +40,7 @@ const LoadingScreen = ({route, navigation}) => {
                 },
                 id: "0",
             }
+            //navigation.navigate("Home")
             navigation.navigate("Home", {currentUser})
 
         } else {

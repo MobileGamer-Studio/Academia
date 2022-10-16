@@ -5,6 +5,8 @@ import {products} from "./Data";
 const Users = data.users;
 const Products = data.products;
 
+let newList = []
+
 function ManageProducts() {
     for (const user in  Users) {
         for (const product in user.sellerInfo.productList) {

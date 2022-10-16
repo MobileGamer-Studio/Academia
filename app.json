@@ -5,10 +5,10 @@
     "owner": "mobilegamer",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./images/AppArt3.png",
+    "icon": "./images/Logo.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./images/AppArt3.png",
+      "image": "./images/Logo.png",
       "resizeMode": "contain",
       "backgroundColor": "#FFFFFF"
     },
@@ -23,7 +23,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./images/AppArt3.png",
+        "foregroundImage": "./images/Logo.png",
         "backgroundColor": "#FFFFFF"
       },
       "package": "com.mobilegamer.academia"

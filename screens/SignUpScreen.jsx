@@ -1,7 +1,7 @@
 import React, {useState} from "react";
-import {StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native";
-import {colors, sizes} from "../constants/Data";
-import {SignUp, SignIn_Google} from "../constants/Sever"
+import {Image, StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native";
+import {colors, images, sizes} from "../constants/Data";
+import {SignIn_Google, SignUp} from "../constants/Sever"
 
 
 const SignUpScreen = ({navigation}) => {
@@ -62,22 +62,39 @@ const SignUpScreen = ({navigation}) => {
                 </TouchableOpacity>
                 <TouchableOpacity
                     style={{
-                        backgroundColor: colors.defaultBG4,
+                        backgroundColor: colors.white,
                         height: 50,
                         width: 350,
                         alignItems: "center",
-                        justifyContent: "center",
+                        justifyContent: "space-evenly",
                         borderRadius: sizes.ExtraLarge,
+                        borderColor: colors.black,
+                        borderWidth: 1,
+                        marginVertical: sizes.Small,
+                        flexDirection: "row",
+                        paddingHorizontal: sizes.ExtraLarge,
                     }}
                     onPress={() => {
                         SignIn_Google()
                         navigation.navigate("Loading")
                     }}
                 >
+                    <View>
+                        <Image
+                            style={{
+                                flex: 1,
+                                alignSelf: "center",
+                                height: sizes.Large,
+                                width: sizes.Large,
+                            }}
+                            resizeMode="contain"
+                            source={images.google}
+                        />
+                    </View>
                     <Text
                         style={{
                             fontSize: sizes.Medium,
-                            color: colors.white,
+                            color: colors.black,
                         }}
                     >
                         SignUp with Google

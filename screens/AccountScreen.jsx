@@ -1,7 +1,7 @@
 import React from 'react';
-import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {FlatList, StyleSheet, Text, View} from 'react-native';
 import {colors, sizes} from '../constants/Data';
-import {ProductMin, ProfilePicture, Button} from '../constants/Components';
+import {Button, ProductMin, ProfilePicture} from '../constants/Components';
 
 function Follow() {
 
@@ -27,7 +27,7 @@ function UserProfile(props) {
                     fontSize: sizes.Small,
                 }}>{props.followers + " followers"}</Text>
             </View>
-            <Button title = {"follow"} method = {Follow}/>
+            <Button title={"follow"} method={Follow}/>
         </View>
     );
 }

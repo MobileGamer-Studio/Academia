@@ -1,40 +1,14 @@
-import React, { useState, useEffect } from 'react'
-import { FlatList, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
-import { colors, sizes } from '../constants/Data'
+import React, {useState} from 'react'
+import {FlatList, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {Button, InfoInput} from '../constants/Components';
+import {colors, sizes} from '../constants/Data'
+import * as ImagePicker from "expo-image-picker"
 
 
-const InfoInput = (props) => {
+const ImageSample = (props) => {
     return (
         <View>
-            <TextInput
-                style={{
-                    borderRadius: sizes.ExtraSmall,
-                    borderWidth: 1,
-                    margin: sizes.ExtraSmall,
-                    paddingHorizontal: sizes.Small,
-                    backgroundColor: colors.white,
-                    height: 50,
-                    width: 350,
-                    borderColor: colors.defaultBG4,
-                }}
-                onChangeText={props.method}
-                placeholder={props.placeholder}
-                value={props.valueType}
-                keyboardType={props.keyboardType}
-            />
-        </View>
-    );
-}
-
-const Item = (props) => {
-    return (
-        <View>
-            <View style={{
-                backgroundColor: colors.white,
-                flexDirection: "row",
-            }}>
-                <Text>{props.itemName}</Text>
-            </View>
+            <Image/>
         </View>
     );
 }
@@ -51,13 +25,12 @@ const Tag = (props) => {
             <Text style={{
                 color: colors.white,
                 fontSize: sizes.Small + 2,
-            }}>{"#" + props.tagName + ", "}</Text>
+            }}>{"#" + props.tagName}</Text>
         </View>
     );
 }
 
 const UploadProduct = ({route, navigation}) => {
-    let tagsList = [];
 
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
@@ -65,6 +38,18 @@ const UploadProduct = ({route, navigation}) => {
     const [category, setCategory] = useState("");
     const [tags, setTags] = useState([]);
     const [tag, setTag] = useState("....");
+    const [selectedImage, setSelectedImage] = useState(null);
+
+
+    async function GetImage() {
+        let pickedImage = ImagePicker.launchImageLibraryAsync()
+        console.log(pickedImage);
+        if (pickedImage.cancelled === true) {
+            return;
+        }
+
+        setSelectedImage({localUri: pickedImage.uri});
+    }
 
     const addTag = (val) => {
         //tagsList.push(val);
@@ -75,7 +60,7 @@ const UploadProduct = ({route, navigation}) => {
     return (
         <ScrollView style={styles.container}>
             <View>
-                <View>
+                <View style={styles.field}>
                     <Text>{"Product: " + title}</Text>
                     <InfoInput
                         method={(val) => setTitle(val)}
@@ -83,7 +68,7 @@ const UploadProduct = ({route, navigation}) => {
                     />
 
                 </View>
-                <View>
+                <View style={styles.field}>
                     <Text>{"Description: " + description}</Text>
                     <InfoInput
                         method={(val) => setDescription(val)}
@@ -91,7 +76,7 @@ const UploadProduct = ({route, navigation}) => {
                     />
 
                 </View>
-                <View>
+                <View style={styles.field}>
                     <Text>{"Naira " + price}</Text>
                     <InfoInput
                         method={(val) => setPrice(val)}
@@ -99,7 +84,7 @@ const UploadProduct = ({route, navigation}) => {
                     />
 
                 </View>
-                <View>
+                <View style={styles.field}>
                     <Text>{"Category: " + category}</Text>
                     <InfoInput
                         method={(val) => setCategory(val)}
@@ -107,7 +92,7 @@ const UploadProduct = ({route, navigation}) => {
                     />
 
                 </View>
-                <View>
+                <View style={styles.field}>
                     <View style={{
                         flexDirection: "row"
                     }}>
@@ -117,9 +102,9 @@ const UploadProduct = ({route, navigation}) => {
                             showsHorizontalScrollIndicator={false}
                             // keyExtractor={(item) => item.id}
                             data={tags}
-                            renderItem={({ item }) => {
+                            renderItem={({item}) => {
                                 return (
-                                    <Tag tagName={item} />
+                                    <Tag tagName={item}/>
                                 );
                             }}
                         />
@@ -145,8 +130,42 @@ const UploadProduct = ({route, navigation}) => {
 
                             }}
                         >
-                            <Text style={{ color: colors.white }}>Add Tag</Text>
+                            <Text style={{color: colors.white}}>Add Tag</Text>
                         </TouchableOpacity>
+                    </View>
+                </View>
+                <View>
+                    <View style={{
+                        flexDirection: "row"
+                    }}>
+                        {/* <FlatList
+                            horizontal
+                            showsHorizontalScrollIndicator={false}
+                            // keyExtractor={(item) => item.id}
+                            data={tags}
+                            renderItem={({ item }) => {
+                                return (
+                                    <ImageSample/>
+                                );
+                            }}
+                        /> */}
+                        <ImageSample image={selectedImage}/>
+                    </View>
+                    <View>
+                        <Button
+                            style={{
+                                borderRadius: sizes.ExtraLarge,
+                                padding: 5,
+                                backgroundColor: colors.defaultBG4,
+                                marginHorizontal: 5,
+                                marginTop: 20,
+                                width: 150,
+                                alignItems: "center",
+                            }}
+                            method={() => GetImage}
+                            text={"Upload"}
+                            textStyle={{color: colors.white, fontSize: sizes.Medium}}
+                        />
                     </View>
                 </View>
             </View>
@@ -156,31 +175,36 @@ const UploadProduct = ({route, navigation}) => {
                 alignItems: "center",
                 justifyContent: "space-evenly"
             }}>
-                <TouchableOpacity style={{
-                    borderRadius: sizes.ExtraLarge,
-                    padding: 5,
-                    backgroundColor: colors.defaultBG4,
-                    marginHorizontal: 5,
-                    marginTop: 20,
-                    width: 150,
-                    alignItems: "center",
-                }}>
-                    <Text style={{ color: colors.white, fontSize: sizes.Medium }}>Upload</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={{
-                    borderRadius: sizes.ExtraLarge,
-                    padding: 5,
-                    borderColor: colors.defaultBG4,
-                    borderWidth: 2,
-                    marginHorizontal: 5,
-                    marginTop: 20,
-                    width: 150,
-                    alignItems: "center",
-                }}
-                onPress = {() => navigation.navigate("Home")}
-                >
-                    <Text style={{ color: colors.defaultBG4, fontSize: sizes.Medium }}>Cancel</Text>
-                </TouchableOpacity>
+                <Button
+                    style={{
+                        borderRadius: sizes.ExtraLarge,
+                        padding: 5,
+                        backgroundColor: colors.defaultBG4,
+                        marginHorizontal: 5,
+                        marginTop: 20,
+                        width: 150,
+                        alignItems: "center",
+                    }}
+                    method={() => console.log("Uploaded")}
+                    text={"Upload"}
+                    textStyle={{color: colors.white, fontSize: sizes.Medium}}
+                />
+
+                <Button
+                    style={{
+                        borderRadius: sizes.ExtraLarge,
+                        padding: 5,
+                        backgroundColor: colors.defaultBG4,
+                        marginHorizontal: 5,
+                        marginTop: 20,
+                        width: 150,
+                        alignItems: "center",
+                    }}
+                    method={() => navigation.navigate("Home")}
+                    text={"Cancel"}
+                    textStyle={{color: colors.defaultBG4, fontSize: sizes.Medium}}
+                />
+
             </View>
         </ScrollView>
     )
@@ -204,5 +228,12 @@ const styles = StyleSheet.create({
         marginTop: 20,
         width: 150,
         alignItems: "center",
-    }
+    },
+
+    field: {
+        borderBottomWidth: 1,
+        borderBottomColor: colors.defaultBG4,
+        marginVertical: 5,
+        padding: 2.5,
+    },
 })

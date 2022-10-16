@@ -113,7 +113,7 @@ function ProductScreen({route, navigation}) {
                                     flex: 1,
                                 }}
                                 resizeMode="contain"
-                                source={images.cartWhite}
+                                source={images.cart}
                             />
                         </View>
                     </TouchableOpacity>
