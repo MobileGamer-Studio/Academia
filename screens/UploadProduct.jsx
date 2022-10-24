@@ -8,7 +8,7 @@ import * as ImagePicker from "expo-image-picker"
 const ImageSample = (props) => {
     return (
         <View>
-            <Image/>
+            <Image source={props.image}/>
         </View>
     );
 }
@@ -48,18 +48,19 @@ const UploadProduct = ({route, navigation}) => {
             return;
         }
 
-        setSelectedImage({localUri: pickedImage.uri});
+        setSelectedImage(pickedImage.uri);
+        console.log(selectedImage);
     }
 
     const addTag = (val) => {
         //tagsList.push(val);
-        tags.push(val)
+        tags.push(val);
         console.log(tags);
     }
 
     return (
-        <ScrollView style={styles.container}>
-            <View>
+        <View style={styles.container}>
+            <ScrollView>
                 <View style={styles.field}>
                     <Text>{"Product: " + title}</Text>
                     <InfoInput
@@ -136,39 +137,19 @@ const UploadProduct = ({route, navigation}) => {
                 </View>
                 <View>
                     <View style={{
-                        flexDirection: "row"
+                        flexDirection: "column",
                     }}>
-                        {/* <FlatList
-                            horizontal
-                            showsHorizontalScrollIndicator={false}
-                            // keyExtractor={(item) => item.id}
-                            data={tags}
-                            renderItem={({ item }) => {
-                                return (
-                                    <ImageSample/>
-                                );
-                            }}
-                        /> */}
                         <ImageSample image={selectedImage}/>
                     </View>
                     <View>
                         <Button
-                            style={{
-                                borderRadius: sizes.ExtraLarge,
-                                padding: 5,
-                                backgroundColor: colors.defaultBG4,
-                                marginHorizontal: 5,
-                                marginTop: 20,
-                                width: 150,
-                                alignItems: "center",
-                            }}
-                            method={() => GetImage}
-                            text={"Upload"}
-                            textStyle={{color: colors.white, fontSize: sizes.Medium}}
+                            method={() => GetImage()}
+                            text={"Get Image"}
+                            textStyle={{color: colors.defaultBG4, fontSize: sizes.Small}}
                         />
                     </View>
                 </View>
-            </View>
+            </ScrollView>
             <View style={{
                 flexDirection: "row",
                 bottom: 0,
@@ -176,37 +157,21 @@ const UploadProduct = ({route, navigation}) => {
                 justifyContent: "space-evenly"
             }}>
                 <Button
-                    style={{
-                        borderRadius: sizes.ExtraLarge,
-                        padding: 5,
-                        backgroundColor: colors.defaultBG4,
-                        marginHorizontal: 5,
-                        marginTop: 20,
-                        width: 150,
-                        alignItems: "center",
-                    }}
+                    style={styles.button}
                     method={() => console.log("Uploaded")}
                     text={"Upload"}
                     textStyle={{color: colors.white, fontSize: sizes.Medium}}
                 />
 
                 <Button
-                    style={{
-                        borderRadius: sizes.ExtraLarge,
-                        padding: 5,
-                        backgroundColor: colors.defaultBG4,
-                        marginHorizontal: 5,
-                        marginTop: 20,
-                        width: 150,
-                        alignItems: "center",
-                    }}
+                    style={styles.button_outline}
                     method={() => navigation.navigate("Home")}
                     text={"Cancel"}
                     textStyle={{color: colors.defaultBG4, fontSize: sizes.Medium}}
                 />
 
             </View>
-        </ScrollView>
+        </View>
     )
 }
 
@@ -224,6 +189,17 @@ const styles = StyleSheet.create({
         borderRadius: sizes.ExtraLarge,
         padding: 5,
         backgroundColor: colors.defaultBG4,
+        marginHorizontal: 5,
+        marginTop: 20,
+        width: 150,
+        alignItems: "center",
+    },
+
+    button_outline: {
+        borderRadius: sizes.ExtraLarge,
+        borderWidth: 1,
+        padding: 5,
+        borderColor: colors.defaultBG4,
         marginHorizontal: 5,
         marginTop: 20,
         width: 150,

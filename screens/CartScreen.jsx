@@ -1,16 +1,14 @@
 import React from 'react';
 import {FlatList, Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {colors, sizes} from '../constants/Data';
-import {currentUser} from "./LoadingScreen"
-import {Button} from "../constants/Components"
-
-
-function RemoveItem(item) {
-    let index = currentUser.userInfo.cart.indexOf(item);
-    currentUser.userInfo.cart.slice(index)
-}
+import {Button} from "../constants/Components";
+import { GetUserData } from '../constants/AppManger';
 
 function CartItem(props) {
+    
+    function RemoveItem() {
+        
+    }
     return (
         <View style={{
             elevation: sizes.ExtraSmall,
@@ -84,6 +82,15 @@ function CartItem(props) {
 }
 
 function CartScreen({route, navigation}) {
+    const userId = route.params.id;
+    const user = GetUserData(userId)
+
+
+    function RemoveItem(item) {
+        let index = user.userInfo.cart.indexOf(item);
+        user.userInfo.cart.slice(index)
+    }
+
     return (
         <View style={styles.container}>
             <View>
@@ -91,7 +98,7 @@ function CartScreen({route, navigation}) {
                     vertical
                     showsHorizontalScrollIndicator={false}
                     keyExtractor={(item) => item.id}
-                    data={currentUser.userInfo.cart}
+                    data={user.userInfo.cart}
                     renderItem={({item}) => {
                         return (
                             <CartItem

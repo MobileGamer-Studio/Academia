@@ -39,7 +39,7 @@ function ProductScreen({route, navigation}) {
                 }}>{product.description}</Text>
                 <View>
                     <FlatList
-                        horizontal
+                        vertical
                         showsHorizontalScrollIndicator={false}
                         data={product.tags}
                         renderItem={({item}) => {

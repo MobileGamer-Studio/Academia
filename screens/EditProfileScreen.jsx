@@ -1,15 +1,19 @@
 import React, {useState} from "react"
-import {Text, View} from "react-native"
+import {Text, View, StyleSheet, TouchableOpacity, ScrollView, ListView} from "react-native"
 import {InfoInput, ProfilePicture} from "../constants/Components";
-import * as ImagePicker from "expo-image-picker"
+import * as ImagePicker from "expo-image-picker";
 import {colors, sizes} from "../constants/Data";
-import {currentUser} from "./LoadingScreen";
+import {GetUserData} from "../constants/AppManger";
 
-function EditProfileScreen({navigation}) {
-    const [name, setName] = useState(currentUser.name);
-    const [description, setDescription] = useState(currentUser.description);
-    const [location, setLocation] = useState(currentUser.location);
-    const [profilePicture, setProfilePicture] = useState(currentUser.profilePicture);
+function EditProfileScreen({route, navigation}) {
+    const userId = route.params.id;
+    const user = GetUserData(userId);
+
+    //Variables
+    const [name, setName] = useState(user.name);
+    const [description, setDescription] = useState(user.description);
+    const [location, setLocation] = useState(user.location);
+    const [profilePicture, setProfilePicture] = useState(user.profilePicture);
 
     async function GetImage() {
         let pickedImage = ImagePicker.launchImageLibraryAsync()
@@ -17,7 +21,7 @@ function EditProfileScreen({navigation}) {
         if (pickedImage.cancelled === true) {
             return;
         }
-        currentUser.profilePicture = pickedImage.url
+        currentUser.profilePicture = pickedImage.url;
     }
 
 
@@ -33,20 +37,20 @@ function EditProfileScreen({navigation}) {
                 <View style={styles.field}>
                     <Text>{"Username: " + name}</Text>
                     <InfoInput
-                        method={(val) => currentUser.name = val}
+                        method={(val) => user.name = val}
                         placeholder={"username"}
                     />
                 </View>
                 <View style={styles.field}>
                     <Text>{"Description: " + name}</Text>
                     <InfoInput
-                        method={(val) => currentUser.description = val}
+                        method={(val) => user.description = val}
                         placeholder={"description"}
                     />
                 </View><View style={styles.field}>
                 <Text>{"Location: " + name}</Text>
                 <InfoInput
-                    method={(val) => currentUser.loacation = val}
+                    method={(val) => user.location = val}
                     placeholder={"Whitesands, Medowhall"}
                 />
             </View>

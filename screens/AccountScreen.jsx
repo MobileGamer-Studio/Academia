@@ -1,11 +1,22 @@
 import React from 'react';
 import {FlatList, StyleSheet, Text, View} from 'react-native';
-import {colors, sizes} from '../constants/Data';
+import {colors, sizes, users} from '../constants/Data';
 import {Button, ProductMin, ProfilePicture} from '../constants/Components';
+import {GetUserData} from "../constants/AppManger";
 
-function Follow() {
-
-}
+// function GetUserData(id) {
+//     let user;
+//     users.forEach((item) => {
+//         if (item.id === id) {
+//             console.log("from function: ")
+//             console.log("UserId: " + item.id + ", User Data: " + item + ",item");
+//             user = item;
+//             console.log("UserId: " + item.id + ", User Data: " + user + ", user");
+//         }
+//     })
+//     return user;
+//     // console.log("error in getting user")
+// }
 
 function UserProfile(props) {
     return (
@@ -27,22 +38,30 @@ function UserProfile(props) {
                     fontSize: sizes.Small,
                 }}>{props.followers + " followers"}</Text>
             </View>
-            <Button title={"follow"} method={Follow}/>
+            <Button title={"follow"} method={props.follow}/>
         </View>
     );
 }
 
 function AccountScreen({route, navigation}) {
 
-    const user = route.params.item;
+    const userId = route.params.id;
+    const user = GetUserData(userId)
+
+
+
+    function Follow() {
+        console.log("")
+    }
 
     return (
         <View style={styles.container}>
-            {/* <UserProfile
+            <UserProfile
                 name={user.name}
                 description={user.description}
                 image={user.profilePicture}
-            /> */}
+                follow={() => Follow()}
+            />
             <View style={{
                 flexDirection: "column",
                 alignItems: "center",

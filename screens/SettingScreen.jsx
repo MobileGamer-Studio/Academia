@@ -5,7 +5,7 @@ import {logOut} from "../constants/Sever"
 
 
 function SettingScreen({navigation}) {
-    const [settings, setsettings] = useState(InitialState.setting)
+    const [settings, setSettings] = useState(InitialState.setting)
     const [isDarkMode, setDarkMode] = useState(false)
     function changeMode() {
         if(isDarkMode === false){
@@ -19,7 +19,10 @@ function SettingScreen({navigation}) {
             <Text>
                 Setting Screen
             </Text>
-            <TouchableOpacity onPress={() => logOut()}>
+            <TouchableOpacity onPress={() => {
+                logOut()
+                navigation.navigate("Loading");
+            }}>
                 <Text>Log Out</Text>
             </TouchableOpacity>
             <Switch

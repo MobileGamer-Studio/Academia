@@ -1,8 +1,8 @@
 import React from 'react'
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
-import {colors, sizes} from '../constants/Data'
-import {ProfilePicture} from "../constants/Components";
-import {currentUser} from './LoadingScreen';
+import {Image, StyleSheet, Text, TouchableOpacity, View, ScrollView} from 'react-native'
+import {colors, sizes, users} from '../constants/Data'
+import {Button, ProfilePicture} from "../constants/Components";
+import {GetUserData} from "../constants/AppManger";
 
 const Clickable = (props) => {
     return (
@@ -30,7 +30,7 @@ const Clickable = (props) => {
 
 const Products = ({props}) => {
     return (
-        <View>
+        <ScrollView>
             <TouchableOpacity style={{
                 height: 300,
                 width: 200,
@@ -75,59 +75,33 @@ const Products = ({props}) => {
                     </TouchableOpacity>
                 </View>
             </TouchableOpacity>
-        </View>
+        </ScrollView>
     )
 }
 
+const UserAccount = ({route, navigation}) => {
+    const userId = route.params.id;
+    const user = GetUserData(userId)
 
-const MyAccountScreen = ({route, navigation}) => {
-    // const user = route.params.currentUser;
 
     return (
         <View style={styles.container}>
-            <View style={{
-                backgroundColor: colors.defaultBG4,
-                alignItems: "center",
-            }}>
-                <View style={{
-                    alignItems: "center"
-                }}>
-                    <ProfilePicture image={currentUser.profilePicture} color={colors.white}/>
-                    <Text style={{color: colors.white, fontSize: sizes.Medium}}>{currentUser.name}</Text>
+            <View>
+                <View>
+                    <ProfilePicture image = {user.profilePicture}/>
+                    <Text>{user.name}</Text>
                 </View>
                 <View>
-                    <View style={{
-                        justifyContent: "row",
-                        alignItems: "center",
-                    }}>
-                        <Clickable value={currentUser.followers.length} title={"followers"}/>
-                        <Clickable value={currentUser.following.length} title={"followers"}/>
-                        <Clickable value={currentUser.sellerInfo.productList.length} title={"products"}/>
-                    </View>
-                </View>
-                <TouchableOpacity onPress={() => {
-                    navigation.navigate("EditProfile")
-                }}>
-                    <Text style={{color: colors.white, fontSize: sizes.Small}}>Edit</Text>
-                </TouchableOpacity>
-            </View>
-            <View style={{
-                backgroundColor: colors.white,
-                borderTopRightRadius: sizes.Medium + 10,
-                borderTopLeftRadius: sizes.Medium + 10,
-            }}>
-                <View>
-
-                </View>
-                <View>
-
+                    <Clickable value={user.followers.length} title={"Followers"}/>
+                    <Clickable value={user.following.length} title={"Following"}/>
+                    <Clickable value={user.sellerInfo.productList.length} title={"Posts"}/>
                 </View>
             </View>
         </View>
     );
 }
 
-export default MyAccountScreen;
+export default UserAccount;
 
 const styles = StyleSheet.create({
     container: {
@@ -136,4 +110,9 @@ const styles = StyleSheet.create({
         justifyContent: "flex-start",
         paddingTop: sizes.ExtraLarge,
     },
+
+    section: {
+        borderTopWidth: 1,
+        borderColor: colors.grey,
+    }
 });

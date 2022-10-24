@@ -1,8 +1,8 @@
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {firestore} from "./constants/Sever";
-
+import {getData, saveData} from './constants/Sever';
+import { ManageAppData } from './constants/AppManger';
 //Screens
 import LoadingScreen from './screens/LoadingScreen';
 import HomeScreen from './screens/HomeScreen';
@@ -12,35 +12,19 @@ import ProductScreen from './screens/ProductScreen';
 import SettingScreen from './screens/SettingScreen';
 import SearchScreen from './screens/SearchScreen';
 import LandingScreen from './screens/LandingScreen';
-import MyAccountScreen from './screens/MyAccountScreen';
+import UserAccount from './screens/UserAccount';
 import UploadProduct from "./screens/UploadProduct";
 import SignUpScreen from "./screens/SignUpScreen";
 import SignInScreen from "./screens/SignInScreen";
-import {getData, saveData} from './constants/Sever';
-import {users} from './constants/Data';
-import {collection, getDocs} from "firebase/firestore";
+import EditProfileScreen from './screens/EditProfileScreen';
+import OrderScreen from './screens/OrderScreen';
+import ProductListScreen from './screens/ProductListScreen';
 
 
 const Stack = createNativeStackNavigator();
 
-async function Start(){
-    users.forEach(element => {
-        saveData(element, "Users", element.name).then(r => console.log(r));
-    });
-
-    const querySnapshot = await getDocs(collection(firestore, "Users"));
-    querySnapshot.forEach((doc) => {
-        if(!users.includes(doc.data())){
-            users.push(doc.data());
-        }else{
-            console.log("User is already added")
-        }
-    });
-    console.log("Users: ", users);
-}
-
 export default function App() {
-    Start().then(r => console.log(r));
+    ManageAppData();
     return (
         <NavigationContainer>
             <Stack.Navigator>
@@ -48,6 +32,7 @@ export default function App() {
                     name="Loading"
                     component={LoadingScreen}
                     options={{headerShown: false}}
+                    
                 />
                 <Stack.Screen
                     name="Landing"
@@ -65,7 +50,7 @@ export default function App() {
                 />
                 <Stack.Screen
                     name="UserAccount"
-                    component={MyAccountScreen}
+                    component={UserAccount}
                     options={{headerShown: false}}
                 />
                 <Stack.Screen
@@ -81,6 +66,21 @@ export default function App() {
                     name="UploadProduct"
                     component={UploadProduct}
                     options={{headerShown: false}}
+                />
+                <Stack.Screen
+                    name="EditProfile"
+                    component={EditProfileScreen}
+                    options={{headerShown: false}}
+                />
+                <Stack.Screen
+                    name="ProductList"
+                    component={ProductListScreen}
+                    options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                    name="Orders"
+                    component={OrderScreen}
+                    options={{ headerShown: false }}
                 />
                 <Stack.Screen
                     name="Settings"

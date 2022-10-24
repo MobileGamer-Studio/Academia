@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import {FlatList, Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {FlatList, Image, StyleSheet, Text, TouchableOpacity, View, ScrollView} from 'react-native'
 import {colors, sizes, testProducts} from '../constants/Data';
 import {ProductCategory, SearchBar} from '../constants/Components';
 
@@ -49,7 +49,7 @@ export default function SearchScreen({navigation, route}) {
     const searchText = route.params.search;
 
     const Search = (val) => {
-        if (!val.length) return setSearchResult(testProducts);
+        if (val ==- "null") return setSearchResult(testProducts);
         val = val.toLowerCase();
         testProducts.forEach(product => {
             if (product.tags.includes(val)) {
@@ -57,7 +57,7 @@ export default function SearchScreen({navigation, route}) {
                 searchResult.push(product)
             }
         })
-        console.log(val, ": ", searchResult);
+        console.log(val, "found in: ", searchResult);
 
         searchResult.forEach(result => {
             result.tags.forEach(tag => {
@@ -80,38 +80,54 @@ export default function SearchScreen({navigation, route}) {
                     method={(val) => Search(val)}
                 />
             </View>
-            <View>
-                <FlatList
-                    horizontal
-                    showsHorizontalScrollIndicator={false}
-                    keyExtractor={(item) => item.Id}
-                    data={relatedTags}
-                    renderItem={({item}) => {
-                        return (
-                            <ProductCategory
-                                text={item.Tag}
-                                method={() => Search(item.Tag)}//navigation.navigate("Search", {search: item.name})}
-                            />
-                        );
-                    }}
-                />
-            </View>
-            <View>
-                <FlatList
-                    vertical
-                    showsVerticalScrollIndicator={false}
-                    data={searchResult}
-                    renderItem={({item}) => {
-                        return (
-                            <Product
-                                title={item.title}
-                                image={item.image}
-                                method={() => navigation.navigate("Product", {item})}
-                            />
-                        );
-                    }}
-                />
-            </View>
+            <ScrollView>
+                <View>
+                    <FlatList
+                        horizontal
+                        showsHorizontalScrollIndicator={false}
+                        keyExtractor={(item) => item.Id}
+                        data={relatedTags}
+                        renderItem={({ item }) => {
+                            return (
+                                <ProductCategory
+                                    text={item.Tag}
+                                    method={() => Search(item.Tag)}//navigation.navigate("Search", {search: item.name})}
+                                />
+                            );
+                        }}
+                    />
+                </View>
+                <View>
+                    <FlatList
+                        vertical
+                        numColumns={2}
+                        showsVerticalScrollIndicator={false}
+                        data={searchResult}
+                        renderItem={({ item }) => {
+                            return (
+                                <Product
+                                    title={item.title}
+                                    image={item.image}
+                                    method={() => navigation.navigate("Product", { item })}
+                                />
+                            );
+                        }}
+                    />
+                </View>
+                <View>
+                    <Text>Suggested</Text>
+                    <View>
+                        <FlatList
+                            renderItem={({item}) => {
+                                return  (
+                                   <View/> 
+                                );
+                            }}
+                        />
+                    </View>
+                </View>
+            </ScrollView>
+
         </View>
     )
 }

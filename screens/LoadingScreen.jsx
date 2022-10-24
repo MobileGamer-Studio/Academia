@@ -2,49 +2,38 @@ import {onAuthStateChanged} from 'firebase/auth';
 import React from 'react'
 import {Image, StyleSheet, View} from 'react-native'
 import {colors, images, users} from '../constants/Data';
-import {auth} from "../constants/Sever";
+import {auth, firestore, saveData} from "../constants/Sever";
+import { collection, getDocs } from "firebase/firestore";
+import { ManageAppData } from '../constants/AppManger';
 
+// async function Start() {
+//     users.forEach(element => {
+//         saveData(element, "Users", element.name).then(r => console.log(r));
+//     });
 
-//passed data
-export let currentUser;
+//     const querySnapshot = await getDocs(collection(firestore, "Users"));
+//     querySnapshot.forEach((doc) => {
+//         if (users.includes(doc.data()) === false) {
+//             users.push(doc.data());
+//         } else {
+//             console.log("User is already added")
+//         }
+//     });
+//     users.forEach(user => {
+//         console.log("User: " + user);
+//     })
+// }
+
 
 const LoadingScreen = ({route, navigation}) => {
+    ManageAppData();
     onAuthStateChanged(auth, (user) => {
         if (user) {
-            // User is signed in, see docs for a list of available properties
-            // https://firebase.google.com/docs/reference/js/firebase.User
-            console.log("Now Loading")
-            users.forEach((item) => {
-                if (item.loginDetails.email === user.email) {
-                    currentUser = item
-                    console.log("First Test Passed")
-                    // navigation.navigate("Home")
-                    navigation.navigate("Home", {currentUser})
-                }
-            });
-            currentUser = {
-                name: "",
-                description: "",
-                profilePicture: images.defaultProfile,
-                followers: [],
-                following: [],
-                location: "----",
-                sellerInfo: {
-                    rating: 0,
-                    productList: [],
-                    amountSelling: "0",
-                },
-                loginDetails: {
-                    email: user.email,
-                    password: "",
-                },
-                id: "0",
-            }
-            //navigation.navigate("Home")
-            navigation.navigate("Home", {currentUser})
-
+            navigation.navigate("Home", { id : user.uid });
         } else {
+            console.log("No user logged in")
             navigation.navigate("Landing");
+
         }
     })
 

@@ -1,13 +1,23 @@
 import React from 'react';
-import {FlatList, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {categories, colors, sizes, suggestedProducts, topSellers} from '../constants/Data';
+import {FlatList, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {categories, colors, sizes, suggestedProducts, testUsers, topSellers} from '../constants/Data';
 import {NavBar, ProductCategory, ProductMax, RoundButton, SearchBar, UserProfileMin} from '../constants/Components';
-import {currentUser} from './LoadingScreen';
+import {GetAppData, GetData, GetUserData} from "../constants/AppManger";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function HomeScreen({route, navigation}) {
-    //const currentUser = route.params.currentUser;
-    console.log(currentUser);
+    //Getting Users and logged in user
+    const userId = route.params.id;
+    const data = AsyncStorage.getItem("Users")
+    const users = JSON.parse(data)
+    const user = GetData(userId, users);
 
+    //
+
+
+    //
+
+    //const user = testUsers[0];
     return (
         <View style={styles.container}>
             <View style={{
@@ -18,14 +28,11 @@ function HomeScreen({route, navigation}) {
             }}>
                 <SearchBar/>
                 <RoundButton
-                    image={currentUser.profilePicture}
+                    image={user.profilePicture}
                     height={45}
                     width={45}
                     color={colors.white}
-                    method={() => {
-                        currentUser;
-                        navigation.navigate("UserAccount", {currentUser});
-                    }}
+                    method={() => navigation.navigate("UserAccount", {id: userId})}
                 />
             </View>
             <ScrollView showsVerticalScrollIndicator={false}>
@@ -77,7 +84,7 @@ function HomeScreen({route, navigation}) {
                                     method={() => navigation.navigate("Product", {item})}
                                 />
                             )
-                        }}
+                        }}new 
                     />
                 </View>
                 <View style={{
@@ -87,14 +94,14 @@ function HomeScreen({route, navigation}) {
                         horizontal
                         showsHorizontalScrollIndicator={false}
                         keyExtractor={(item) => item.id}
-                        data={currentUser.following}
+                        data={user.following}
                         renderItem={({item}) => {
                             return (
                                 <UserProfileMin
                                     user={item}
                                     color={item.colors}
                                     image={item.profilePicture}
-                                    method={() => navigation.navigate("Account", {item})}
+                                    method={() => navigation.navigate("Account", {id : item.id})}
                                 />
                             )
                         }}
@@ -149,11 +156,11 @@ function HomeScreen({route, navigation}) {
                 </View>
             </ScrollView>
             <NavBar
-                home={() => navigation.navigate("Home")}
-                search={() => navigation.navigate("Search", {search : ""})}
-                add={() => navigation.navigate("UploadProduct")}
-                cart={() => navigation.navigate("Cart")}
-                settings={() => navigation.navigate("Settings")}
+                home={() => navigation.navigate("Home", {id: userId})}
+                search={() => navigation.navigate("Search", {search : "null"})}
+                add={() => navigation.navigate("UploadProduct" , {id: userId})}
+                cart={() => navigation.navigate("Cart" , {id: userId})}
+                settings={() => navigation.navigate("Settings" , {id: userId})}
             />
         </View>
     );

@@ -29,8 +29,8 @@ export const colors = {
 const themeData = {
     dark: {
         appBG: "#c4d8dd",
-        defaultColor: "#00FFD1",
-        defaultColor2: "#00d9ff",
+        defaultColor: "#ff00fb",
+        defaultColor2: "#9900ff",
         textColor: "white",
     },
     light: {
@@ -88,8 +88,8 @@ export const sizes = {
 
 export const settings = {
     currency: " naira",
+    theme: themeData.light,
 };
-
 
 
 //Objects
@@ -107,15 +107,18 @@ export const User = {
     sellerInfo: {
         rating: 0,
         productList: [],
+        orders: [],
         amountSelling: "0",
     },
     userInfo: {
         cart: [],
-        orders: [],
         rating: 0,
         amountSpent: "0",
-        suggestedProducts: [],
-        suggestedUsers: [],
+        suggested: {
+            suggestedProducts: [],
+            suggestedUsers: [],
+        },
+        list: [],
     },
     appInfo: {
         settings: settings,
@@ -142,10 +145,14 @@ export const Product = {
     id: "0",
 }
 
-
+export const Order = {
+    user: User,
+    date: "dd/mm/yr",
+    products: [],
+}
 
 // Users
-export let users = [];
+export const suggestedUsers = [];
 
 export const testUsers = [
     {
@@ -163,7 +170,7 @@ export const testUsers = [
     location: "----",
     sellerInfo: {
         rating: 5,
-        productList: suggestedProducts,
+        productList: testProducts,
         amountSelling: "500",
     },
     id: "1",
@@ -224,11 +231,9 @@ export const testUsers = [
 }
 ];
 
-export const suggestedUsers = [];
-
 
 //Category
-export const categories = [
+export let categories = [
     {
         name: "Stationary",
         image: images.stationary,
@@ -268,7 +273,6 @@ export const categories = [
 
 
 //Products
-export const products = []
 export const testProducts = [
     {
         title: "Oreo's",
@@ -316,6 +320,15 @@ export const testProducts = [
         tags: ["game", "ps4", "console", "black controller"],
         id: "5",
     },
+    {
+        title: "PS4 Controller",
+        description: "Working PS4 Dualshock controller",
+        price: "1,000",
+        seller: "----",
+        image: require("../images/ps4gamepad.png"),
+        tags: ["game", "ps4", "console", "black controller"],
+        id: "6",
+    },
 ];
 
 export const suggestedProducts = [
@@ -362,25 +375,12 @@ export const topSellers = [
 
 ]
 
-
-export const cart = [];
-
-export const orders = [
-    [products[0], products[2], products[3]], [products[1], products[4], products[5]]
-];
-
-
-
 export const InitialState = {
-    currentUser: users[0],
-    setting: settings,
-
+    currentUser: {},
 };
 
-export const dataObject = {
-    users: users,
-    products: [products, suggestedProducts],
-    categories: categories,
-    cart: cart,
-    settings: settings,
-};
+export const appData = {
+    users: [],
+    products: [],
+    categories: []
+}

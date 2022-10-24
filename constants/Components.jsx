@@ -136,8 +136,8 @@ export const ProfilePicture = (props) => {
     return (
         <View style={{
             backgroundColor: props.color,
-            height: 100,
-            width: 100,
+            height: 75,
+            width: 75,
             borderRadius: sizes.ExtraLarge,
             marginEnd: sizes.ExtraSmall,
             alignItems: "center",
@@ -146,8 +146,8 @@ export const ProfilePicture = (props) => {
             <Image
                 source={props.image}
                 style={{
-                    height: 100,
-                    width: 100,
+                    height: 75,
+                    width: 75,
                     flex: 1,
                     borderRadius: sizes.ExtraLarge,
                 }}
