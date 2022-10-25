@@ -2,15 +2,25 @@ import React from 'react';
 import {FlatList, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import {categories, colors, sizes, suggestedProducts, testUsers, topSellers} from '../constants/Data';
 import {NavBar, ProductCategory, ProductMax, RoundButton, SearchBar, UserProfileMin} from '../constants/Components';
-import {GetAppData, GetData, GetUserData} from "../constants/AppManger";
+import {GetAppData, GetData} from "../constants/AppManger";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
+
+async function GetUserData(id) {
+    const data =await AsyncStorage.getItem('Users');
+    const users = JSON.parse(data);
+
+    console.log("Users: " + users +"\n Data: "+ data);
+    const user = await GetData(id, users);
+    return user;
+}
 
 function HomeScreen({route, navigation}) {
     //Getting Users and logged in user
     const userId = route.params.id;
-    const data = AsyncStorage.getItem("Users")
-    const users = JSON.parse(data)
-    const user = GetData(userId, users);
+    const user = GetUserData(userId).then(r => console.log(r))
+    console.log("User: " + user + " \n From Home Screen");
+    
 
     //
 

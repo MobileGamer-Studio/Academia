@@ -1,8 +1,8 @@
-import React from 'react';
-import {FlatList, StyleSheet, Text, View} from 'react-native';
-import {colors, sizes, users} from '../constants/Data';
+import React, {useState} from 'react';
+import {FlatList, ScrollView, StyleSheet, Text, View} from 'react-native';
+import {colors, sizes, testUsers} from '../constants/Data';
 import {Button, ProductMin, ProfilePicture} from '../constants/Components';
-import {GetUserData} from "../constants/AppManger";
+import {GetData} from "../constants/AppManger";
 
 // function GetUserData(id) {
 //     let user;
@@ -17,6 +17,68 @@ import {GetUserData} from "../constants/AppManger";
 //     return user;
 //     // console.log("error in getting user")
 // }
+
+
+function AccountScreen({route, navigation}) {
+
+    const userId = route.params.id;
+    const user = GetData(userId, testUsers)
+    const [isFollowing, setIsFollowing] = useState(false)
+
+
+    function Follow() {
+        console.log("")
+    }
+
+    function UnFollow(){
+        console.log("")
+    }
+
+    return (
+        <View style={styles.container}>
+            <UserProfile
+                name={user.name}
+                description={user.description}
+                image={user.profilePicture}
+                follow={() => Follow()}
+            />
+            <ScrollView>
+                <View style={{
+                    flexDirection: "column",
+                    alignItems: "center",
+                }}>
+                    <Text style={{
+                        fontSize: sizes.Medium,
+                        alignSelf: "flex-start",
+                        margin: sizes.ExtraSmall,
+                    }}>Products</Text>
+                    <View>
+                        <FlatList
+                            horizontal
+                            showsHorizontalScrollIndicator={false}
+                            keyExtractor={(item) => item.id}
+                            data={user.sellerInfo.productList}
+                            renderItem={({item}) => {
+                                return (
+                                    <ProductMin
+                                        product={item}
+                                        title={item.title}
+                                        price={item.price}
+                                        image={item.image}
+                                        method={() => navigation.navigate("Product", {item})}
+                                    />
+                                )
+                            }}
+                        />
+                    </View>
+                </View>
+                <View>
+
+                </View>
+            </ScrollView>
+        </View>
+    );
+}
 
 function UserProfile(props) {
     return (
@@ -39,56 +101,6 @@ function UserProfile(props) {
                 }}>{props.followers + " followers"}</Text>
             </View>
             <Button title={"follow"} method={props.follow}/>
-        </View>
-    );
-}
-
-function AccountScreen({route, navigation}) {
-
-    const userId = route.params.id;
-    const user = GetUserData(userId)
-
-
-
-    function Follow() {
-        console.log("")
-    }
-
-    return (
-        <View style={styles.container}>
-            <UserProfile
-                name={user.name}
-                description={user.description}
-                image={user.profilePicture}
-                follow={() => Follow()}
-            />
-            <View style={{
-                flexDirection: "column",
-                alignItems: "center",
-            }}>
-                <Text style={{
-                    fontSize: sizes.Medium,
-                    alignSelf: "flex-start",
-                    margin: sizes.ExtraSmall,
-                }}>Products</Text>
-                <FlatList
-                    horizontal
-                    showsHorizontalScrollIndicator={false}
-                    keyExtractor={(item) => item.id}
-                    data={user.sellerInfo.productList}
-                    renderItem={({item}) => {
-                        return (
-                            <ProductMin
-                                product={item}
-                                title={item.title}
-                                price={item.price}
-                                image={item.image}
-                                method={() => navigation.navigate("Product", {item})}
-                            />
-                        )
-                    }}
-                />
-            </View>
         </View>
     );
 }

@@ -21,9 +21,9 @@ export async function SaveAppData() {
 
 
         //
-        console.log(users + " test 1")
-        console.log(products + " test 1")
-        console.log(categories + " test 1")
+        console.log(users + " test users")
+        console.log(products + " test products")
+        console.log(categories + " test categories")
 
 
         //
@@ -67,18 +67,20 @@ export async function GetAppData() {
 
 export function GetData(id, data) {
     console.log("Getting data..... STEP 3")
+    console.log(data)
     data.forEach((user) => {
-        console.log(user);
+        console.log("checking users" + user);
         if (id === user.id) {
             console.log("user gotten: " + user);
             return user;
         }
     })
-    return User;
+    console.log("user not found");
+    //return null;
 }
 
 export function ManageAppData() {
-    SaveAppData()
     GetAppData()
+    SaveAppData()
 }
 

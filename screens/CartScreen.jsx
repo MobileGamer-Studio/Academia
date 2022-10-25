@@ -1,14 +1,47 @@
 import React from 'react';
 import {FlatList, Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {colors, sizes} from '../constants/Data';
+import {colors, sizes, testUsers} from '../constants/Data';
 import {Button} from "../constants/Components";
-import { GetUserData } from '../constants/AppManger';
+import {GetData} from "../constants/AppManger";
+
+function CartScreen({route, navigation}) {
+    const userId = route.params.id;
+
+    const user = testUsers[0];
+
+
+    function RemoveItem(item) {
+        let index = user.userInfo.cart.indexOf(item);
+        user.userInfo.cart.slice(index)
+    }
+
+    return (
+        <View style={styles.container}>
+            <View>
+                <FlatList
+                    vertical
+                    numColumns={2}
+                    showsHorizontalScrollIndicator={false}
+                    keyExtractor={(item) => item.id}
+                    data={user.userInfo.cart}
+                    renderItem={({item}) => {
+                        return (
+                            <CartItem
+                                item={item}
+                                image={item.image}
+                                title={item.title}
+                                description={item.description}
+                            />
+                        );
+                    }}
+                />
+            </View>
+        </View>
+    );
+}
 
 function CartItem(props) {
-    
-    function RemoveItem() {
-        
-    }
+
     return (
         <View style={{
             elevation: sizes.ExtraSmall,
@@ -79,40 +112,6 @@ function CartItem(props) {
             </TouchableOpacity>
         </View>
     )
-}
-
-function CartScreen({route, navigation}) {
-    const userId = route.params.id;
-    const user = GetUserData(userId)
-
-
-    function RemoveItem(item) {
-        let index = user.userInfo.cart.indexOf(item);
-        user.userInfo.cart.slice(index)
-    }
-
-    return (
-        <View style={styles.container}>
-            <View>
-                <FlatList
-                    vertical
-                    showsHorizontalScrollIndicator={false}
-                    keyExtractor={(item) => item.id}
-                    data={user.userInfo.cart}
-                    renderItem={({item}) => {
-                        return (
-                            <CartItem
-                                item={item}
-                                image={item.image}
-                                title={item.title}
-                                description={item.description}
-                            />
-                        );
-                    }}
-                />
-            </View>
-        </View>
-    );
 }
 
 const styles = StyleSheet.create({

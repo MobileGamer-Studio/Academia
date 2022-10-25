@@ -2,9 +2,9 @@ import React from 'react'
 import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {colors, sizes} from '../constants/Data'
 import {ProductMax} from '../constants/Components'
-import {currentUser} from "./LoadingScreen";
 
 const OrderScreen = ({navigation}) => {
+    let user = User;
     return (
         <View style={styles.container}>
 
@@ -13,13 +13,14 @@ const OrderScreen = ({navigation}) => {
                     vaertical
                     showsHorizontalScrollIndicator={false}
                     keyExtractor={(item) => item.id}
-                    data={currentUser.userInfo.orders}
+                    data={user.sellerInfo.orders}
                     renderItem={({item}) => {
                         return (
                             <View>
                                 <FlatList
-                                    horizontal
-                                    showsHorizontalScrollIndicator={false}
+                                    vertical
+                                    numColumns={2}
+                                    showsVerticalScrollIndicator={false}
                                     keyExtractor={(item1) => item1.id}
                                     data={item}
                                     renderItem={({item1}) => {

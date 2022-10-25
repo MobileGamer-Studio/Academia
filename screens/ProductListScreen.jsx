@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { View, TouchableOpacity, Text, StyleSheet, FlatList, Image } from "react-native";
 import { colors, sizes } from "../constants/Data";
 import { Button } from "../constants/Components";
-import { GetUserData } from "../constants/AppManger";
 
 const Product = (props) => {
     const product = props.product
@@ -63,7 +62,8 @@ function ProductListScreen({route, navigation}) {
             </View>
             <View>
                 <FlatList
-                    horizontal
+                    vertical
+                    numColumns={2}
                     showsHorizontalScrollIndicator={false}
                     keyExtractor={(item) => item.id}
                     data={user.sellerInfo.productList}

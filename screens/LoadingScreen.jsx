@@ -1,32 +1,28 @@
 import {onAuthStateChanged} from 'firebase/auth';
 import React from 'react'
 import {Image, StyleSheet, View} from 'react-native'
-import {colors, images, users} from '../constants/Data';
+import {colors, images} from '../constants/Data';
 import {auth, firestore, saveData} from "../constants/Sever";
-import { collection, getDocs } from "firebase/firestore";
-import { ManageAppData } from '../constants/AppManger';
+import {collection, doc, getDocs, setDoc} from "firebase/firestore";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-// async function Start() {
-//     users.forEach(element => {
-//         saveData(element, "Users", element.name).then(r => console.log(r));
-//     });
-
-//     const querySnapshot = await getDocs(collection(firestore, "Users"));
-//     querySnapshot.forEach((doc) => {
-//         if (users.includes(doc.data()) === false) {
-//             users.push(doc.data());
-//         } else {
-//             console.log("User is already added")
-//         }
-//     });
-//     users.forEach(user => {
-//         console.log("User: " + user);
-//     })
-// }
-
+async function GetData(){
+    let users = [];
+    try {
+        users = await getDocs(collection(firestore, "Users"));
+        if (users === null){
+            console.log("No data gotten from firebase")
+        }else{
+            console.log("data was gotten from firebase: "+ users);
+            await AsyncStorage.setItem("Users", JSON.stringify(users));
+        }
+    }catch (err) {
+        console.log(err)
+    }
+}
 
 const LoadingScreen = ({route, navigation}) => {
-    ManageAppData();
+    GetData().then(r => console.log("Getting Data..... "+ r))
     onAuthStateChanged(auth, (user) => {
         if (user) {
             navigation.navigate("Home", { id : user.uid });

@@ -2,7 +2,10 @@ import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {getData, saveData} from './constants/Sever';
-import { ManageAppData } from './constants/AppManger';
+import { collection, getDocs } from "firebase/firestore";
+import { firestore } from './constants/Sever';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 //Screens
 import LoadingScreen from './screens/LoadingScreen';
 import HomeScreen from './screens/HomeScreen';
@@ -19,12 +22,33 @@ import SignInScreen from "./screens/SignInScreen";
 import EditProfileScreen from './screens/EditProfileScreen';
 import OrderScreen from './screens/OrderScreen';
 import ProductListScreen from './screens/ProductListScreen';
+import CheckOutScreen from "./screens/CheckOutScreen";
+import FollowingListScreen from './screens/FollowingListScreen';
+import FollowersListScreen from './screens/FollowersListScreen';
 
 
 const Stack = createNativeStackNavigator();
 
-export default function App() {
-    ManageAppData();
+async function SetData(){
+    let users = []
+    try {
+        const ans = await AsyncStorage.getItem("Users")
+        if (ans === null){
+            console.log("No data gotten from async storage")
+        }else{
+            console.log("data was gotten from async storage: "+ ans)
+            users = JSON.parse(ans)
+            users.forEach((user) => {
+                saveData(user, "Users", user.name).then(r => console.log(r));
+            })
+        }
+    }catch (err) {
+        console.log(err)
+    }
+}
+
+function App() {
+    SetData().then(r => console.log(r))
     return (
         <NavigationContainer>
             <Stack.Navigator>
@@ -40,48 +64,71 @@ export default function App() {
                     options={{headerShown: false}}
                 />
                 <Stack.Screen
+                    name="SignIn"
+                    component={SignInScreen}
+                    options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                    name="SignUp"
+                    component={SignUpScreen}
+                    options={{ headerShown: false }}
+                />
+                <Stack.Screen
                     name="Home"
                     component={HomeScreen}
                     options={{headerShown: false}}
                 />
-                <Stack.Screen
-                    name="Account"
-                    component={AccountScreen}
-                />
+
+                {/* Accounts */}
                 <Stack.Screen
                     name="UserAccount"
                     component={UserAccount}
-                    options={{headerShown: false}}
+                    options={{ headerShown: false }}
                 />
                 <Stack.Screen
-                    name="Cart"
-                    component={CartScreen}
-                />
-                <Stack.Screen
-                    name="Product"
-                    component={ProductScreen}
-                    options={{headerShown: false}}
-                />
-                <Stack.Screen
-                    name="UploadProduct"
-                    component={UploadProduct}
-                    options={{headerShown: false}}
+                    name="Account"
+                    component={AccountScreen}
+                    options={{ headerShown: false }}
                 />
                 <Stack.Screen
                     name="EditProfile"
                     component={EditProfileScreen}
-                    options={{headerShown: false}}
+                    options={{ headerShown: false }}
+                />
+
+                {/* Products */}
+                <Stack.Screen
+                    name="Product"
+                    component={ProductScreen}
+                    options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                    name="UploadProduct"
+                    component={UploadProduct}
+                    options={{ headerShown: false }}
                 />
                 <Stack.Screen
                     name="ProductList"
                     component={ProductListScreen}
                     options={{ headerShown: false }}
                 />
+
+                <Stack.Screen
+                    name="Checkout"
+                    component={CheckOutScreen}
+                />
+                <Stack.Screen
+                    name="Cart"
+                    component={CartScreen}
+                />                
                 <Stack.Screen
                     name="Orders"
                     component={OrderScreen}
                     options={{ headerShown: false }}
                 />
+
+
+                {/*  */}
                 <Stack.Screen
                     name="Settings"
                     component={SettingScreen}
@@ -91,18 +138,9 @@ export default function App() {
                     component={SearchScreen}
                     options={{headerShown: false}}
                 />
-                <Stack.Screen
-                    name="SignIn"
-                    component={SignInScreen}
-                    options={{headerShown: false}}
-                />
-                <Stack.Screen
-                    name="SignUp"
-                    component={SignUpScreen}
-                    options={{headerShown: false}}
-                />
-
             </Stack.Navigator>
         </NavigationContainer>
     );
 }
+
+export default App;

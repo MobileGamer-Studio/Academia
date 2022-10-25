@@ -48,31 +48,43 @@ export default function SearchScreen({navigation, route}) {
 
     const searchText = route.params.search;
 
-    const Search = (val) => {
-        if (val ==- "null") return setSearchResult(testProducts);
+    function GetRelatedTags() {
+        let tags = []
+        searchResult.forEach(result => {
+            result.tags.forEach(tag => {
+                tags.push.apply(tags, tag)
+            })
+
+            tags.forEach(tag => {
+                let id = relatedTags.length.toString()
+                relatedTags.push({
+                    Tag: tag,
+                    Id: id
+                })
+            })
+        })
+
+    }
+
+    function Search(val) {
+        if (val === "null") {
+            return setSearchResult(testProducts);
+        }
         val = val.toLowerCase();
+        setSearchResult([])
         testProducts.forEach(product => {
-            if (product.tags.includes(val)) {
+            if (product.tags.includes(val) === false) {
                 console.log("found one")
                 searchResult.push(product)
             }
         })
         console.log(val, "found in: ", searchResult);
 
-        searchResult.forEach(result => {
-            result.tags.forEach(tag => {
-                if (!relatedTags.includes(tag)) {
-                    let id = relatedTags.length.toString()
-                    relatedTags.push({
-                        Tag: tag,
-                        Id: id,
-                    })
-                }
-            })
-        })
+        GetRelatedTags()
     }
 
     Search(searchText);
+
     return (
         <View style={styles.container}>
             <View>

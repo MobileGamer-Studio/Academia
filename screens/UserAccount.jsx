@@ -1,8 +1,8 @@
 import React from 'react'
 import {Image, StyleSheet, Text, TouchableOpacity, View, ScrollView} from 'react-native'
-import {colors, sizes, users} from '../constants/Data'
+import {colors, sizes, testUsers, users} from '../constants/Data'
 import {Button, ProfilePicture} from "../constants/Components";
-import {GetUserData} from "../constants/AppManger";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Clickable = (props) => {
     return (
@@ -79,9 +79,19 @@ const Products = ({props}) => {
     )
 }
 
+async function GetUserData(id) {
+    const data = await AsyncStorage.getItem('Users');
+    const users = JSON.parse(data);
+
+    console.log("Users: " + users + "\n Data: " + data);
+    const user = await GetData(id, users);
+    return user;
+}
+
 const UserAccount = ({route, navigation}) => {
     const userId = route.params.id;
-    const user = GetUserData(userId)
+    const user = GetUserData(userId);
+    console.log("User: " + user + " \n From Account Screen");
 
 
     return (
@@ -92,9 +102,9 @@ const UserAccount = ({route, navigation}) => {
                     <Text>{user.name}</Text>
                 </View>
                 <View>
-                    <Clickable value={user.followers.length} title={"Followers"}/>
+                    {/* <Clickable value={user.followers.length} title={"Followers"}/>
                     <Clickable value={user.following.length} title={"Following"}/>
-                    <Clickable value={user.sellerInfo.productList.length} title={"Posts"}/>
+                    <Clickable value={user.sellerInfo.productList.length} title={"Posts"}/> */}
                 </View>
             </View>
         </View>
