@@ -29,26 +29,7 @@ import FollowersListScreen from './screens/FollowersListScreen';
 
 const Stack = createNativeStackNavigator();
 
-async function SetData(){
-    let users = []
-    try {
-        const ans = await AsyncStorage.getItem("Users")
-        if (ans === null){
-            console.log("No data gotten from async storage")
-        }else{
-            console.log("data was gotten from async storage: "+ ans)
-            users = JSON.parse(ans)
-            users.forEach((user) => {
-                saveData(user, "Users", user.name).then(r => console.log(r));
-            })
-        }
-    }catch (err) {
-        console.log(err)
-    }
-}
-
 function App() {
-    SetData().then(r => console.log(r))
     return (
         <NavigationContainer>
             <Stack.Navigator>

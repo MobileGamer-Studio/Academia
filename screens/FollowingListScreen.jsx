@@ -4,6 +4,16 @@ import {ProfilePicture} from "../constants/Components";
 import {sizes} from "../constants/Data";
 
 
+
+function FollowingListScreen() {
+    return (
+        <View style = {styles.container}>
+
+        </View>
+    );
+}
+
+
 function User(props) {
     return (
         <View>
@@ -14,13 +24,6 @@ function User(props) {
     );
 }
 
-function FollowingListScreen() {
-    return (
-        <View style = {styles.container}>
-
-        </View>
-    );
-}
 
 export default FollowingListScreen;
 

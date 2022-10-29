@@ -3,6 +3,40 @@ import { View, TouchableOpacity, Text, StyleSheet, FlatList, Image } from "react
 import { colors, sizes } from "../constants/Data";
 import { Button } from "../constants/Components";
 
+
+function ProductListScreen({route, navigation}) {
+    const userId = route.params.id;
+    const user = GetUserData(userId);
+
+
+    return (
+        <View style={styles.container}>
+            <Text>
+                Products
+            </Text>
+            <View>
+
+            </View>
+            <View>
+                <FlatList
+                    vertical
+                    numColumns={2}
+                    showsHorizontalScrollIndicator={false}
+                    keyExtractor={(item) => item.id}
+                    data={user.sellerInfo.productList}
+                    renderItem={({ item }) => {
+                        return (
+                            <Product
+                                product={item}
+                            />
+                        )
+                    }}
+                />
+            </View>
+        </View>
+    );
+}
+
 const Product = (props) => {
     const product = props.product
     return (
@@ -43,40 +77,6 @@ const Product = (props) => {
                 </View>
             </View>
         </TouchableOpacity>
-    );
-}
-
-
-function ProductListScreen({route, navigation}) {
-    const userId = route.params.id;
-    const user = GetUserData(userId);
-
-
-    return (
-        <View style={styles.container}>
-            <Text>
-                Products
-            </Text>
-            <View>
-
-            </View>
-            <View>
-                <FlatList
-                    vertical
-                    numColumns={2}
-                    showsHorizontalScrollIndicator={false}
-                    keyExtractor={(item) => item.id}
-                    data={user.sellerInfo.productList}
-                    renderItem={({ item }) => {
-                        return (
-                            <Product
-                                product={item}
-                            />
-                        )
-                    }}
-                />
-            </View>
-        </View>
     );
 }
 

@@ -1,13 +1,25 @@
 import React, {useState} from "react"
-import {Text, View, StyleSheet, TouchableOpacity, ScrollView, ListView} from "react-native"
-import {InfoInput, ProfilePicture} from "../constants/Components";
+import {Text, View, StyleSheet, TouchableOpacity, ScrollView} from "react-native"
+import {Button, InfoInput, ProfilePicture} from "../constants/Components";
 import * as ImagePicker from "expo-image-picker";
-import {colors, sizes} from "../constants/Data";
-import {GetUserData} from "../constants/AppManger";
+import {colors, images, sizes, User} from "../constants/Data";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+//Variables
+let users = [];
+
+async function GetUserData(id) {
+    const data = await AsyncStorage.getItem('Users');
+    users = JSON.parse(data);
+
+    console.log("Users: " + users + "\n Data: " + data);
+    const user = await GetData(id, users);
+    return user;
+}
 
 function EditProfileScreen({route, navigation}) {
     const userId = route.params.id;
-    const user = GetUserData(userId);
+    const user = GetUserData(userId).then(r => console.log(r));
 
     //Variables
     const [name, setName] = useState(user.name);
@@ -15,13 +27,19 @@ function EditProfileScreen({route, navigation}) {
     const [location, setLocation] = useState(user.location);
     const [profilePicture, setProfilePicture] = useState(user.profilePicture);
 
-    async function GetImage() {
+    const GetImage = async () => {
         let pickedImage = ImagePicker.launchImageLibraryAsync()
         console.log(pickedImage);
         if (pickedImage.cancelled === true) {
-            return;
+            return images.defaultProfile;
         }
         currentUser.profilePicture = pickedImage.url;
+    }
+
+    const UpdateProfile = async (newData) => {
+        let index = users.indexOf(user)
+        users[index] = newData;
+        await AsyncStorage.mergeItem("Users", JSON.stringify(users))
     }
 
 
@@ -55,6 +73,23 @@ function EditProfileScreen({route, navigation}) {
                 />
             </View>
             </ScrollView>
+            <View>
+                <Button
+                    style={styles.button}
+                    method={() => {
+                        let newData = User;
+                        newData.name = name;
+                        newData.description = description;
+                        newData.location = location;
+                        newData.profilePicture = profilePicture;
+
+
+                        UpdateProfile(newData);
+                    }}
+                    text={"Update"}
+                    textStyle={{ color: colors.white, fontSize: sizes.Medium }}
+                />
+            </View>
         </View>
     );
 }
@@ -75,4 +110,26 @@ const styles = StyleSheet.create({
         marginVertical: 5,
         padding: 2.5,
     },
+
+    button: {
+        borderRadius: sizes.ExtraLarge,
+        padding: 5,
+        backgroundColor: colors.defaultBG4,
+        marginHorizontal: 5,
+        marginTop: 20,
+        width: 150,
+        alignItems: "center",
+    },
+
+    button_outline: {
+        borderRadius: sizes.ExtraLarge,
+        borderWidth: 1,
+        padding: 5,
+        borderColor: colors.defaultBG4,
+        marginHorizontal: 5,
+        marginTop: 20,
+        width: 150,
+        alignItems: "center",
+    },
+
 })

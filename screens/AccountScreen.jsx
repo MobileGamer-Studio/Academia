@@ -1,47 +1,61 @@
 import React, {useState} from 'react';
 import {FlatList, ScrollView, StyleSheet, Text, View} from 'react-native';
 import {colors, sizes, testUsers} from '../constants/Data';
-import {Button, ProductMin, ProfilePicture} from '../constants/Components';
+import {Button, ProductSmall, ProfilePicture} from '../constants/Components';
 import {GetData} from "../constants/AppManger";
-
-// function GetUserData(id) {
-//     let user;
-//     users.forEach((item) => {
-//         if (item.id === id) {
-//             console.log("from function: ")
-//             console.log("UserId: " + item.id + ", User Data: " + item + ",item");
-//             user = item;
-//             console.log("UserId: " + item.id + ", User Data: " + user + ", user");
-//         }
-//     })
-//     return user;
-//     // console.log("error in getting user")
-// }
-
 
 function AccountScreen({route, navigation}) {
 
     const userId = route.params.id;
-    const user = GetData(userId, testUsers)
-    const [isFollowing, setIsFollowing] = useState(false)
+    const [users, setUsers] = useState([])
+
+    console.log("CHECK 1 \n User id: ${userId} \n Users: ${users}  \n User: ${user}")
+
+    async function getUsers() {
+        const querySnapshot = await getDocs(collection(firestore, "Users"));
+        let data = []
+        querySnapshot.forEach((doc) => {
+            data.push(doc.data())
+        });
+        setUsers(data)
 
 
-    function Follow() {
-        console.log("")
+
     }
 
-    function UnFollow(){
-        console.log("")
-    }
+    getUsers();
+
+    // getUser();
+    let user = {}
+    users.forEach((item) => {
+        if (item.id === userId) {
+            user = item
+            console.log("got user: ${user}")
+        }
+    })
 
     return (
         <View style={styles.container}>
-            <UserProfile
-                name={user.name}
-                description={user.description}
-                image={user.profilePicture}
-                follow={() => Follow()}
-            />
+            <View style = {styles.userProfile}>
+                <ProfilePicture color={colors.defaultBG2} image={user.profilePicture} />
+                <View style={{
+                    flexDirection: 'column',
+                }}>
+                    <Text style={{
+                        paddingHorizontal: 10,
+                        fontSize: sizes.Medium,
+                    }}>{user.name}</Text>
+                    <Text style={{
+                        paddingHorizontal: 10,
+                        fontSize: sizes.Small,
+                    }}>{user.description}</Text>
+                    <Text style={{
+                        paddingHorizontal: 10,
+                        fontSize: sizes.Small,
+                    }}>{user.followers + " followers"}</Text>
+                </View>
+                <Button title={"follow"} method={followButton} />
+            </View>
             <ScrollView>
                 <View style={{
                     flexDirection: "column",
@@ -60,7 +74,7 @@ function AccountScreen({route, navigation}) {
                             data={user.sellerInfo.productList}
                             renderItem={({item}) => {
                                 return (
-                                    <ProductMin
+                                    <ProductSmall
                                         product={item}
                                         title={item.title}
                                         price={item.price}
@@ -76,31 +90,6 @@ function AccountScreen({route, navigation}) {
 
                 </View>
             </ScrollView>
-        </View>
-    );
-}
-
-function UserProfile(props) {
-    return (
-        <View style={styles.userProfile}>
-            <ProfilePicture color={colors.defaultBG2} image={props.image}/>
-            <View style={{
-                flexDirection: 'column',
-            }}>
-                <Text style={{
-                    paddingHorizontal: 10,
-                    fontSize: sizes.Medium,
-                }}>{props.name}</Text>
-                <Text style={{
-                    paddingHorizontal: 10,
-                    fontSize: sizes.Small,
-                }}>{props.description}</Text>
-                <Text style={{
-                    paddingHorizontal: 10,
-                    fontSize: sizes.Small,
-                }}>{props.followers + " followers"}</Text>
-            </View>
-            <Button title={"follow"} method={props.follow}/>
         </View>
     );
 }

@@ -3,18 +3,7 @@ import {FlatList, StyleSheet, TouchableOpacity, View} from "react-native";
 import {sizes, testUsers} from "../constants/Data";
 
 
-function User(props) {
-    const user = props.user;
-    return (
-        <View>
-            <TouchableOpacity style = {{
-                flexDirection: "row",
-            }}>
 
-            </TouchableOpacity>
-        </View>
-    );
-}
 
 function FollowersListScreen() {
     return(
@@ -35,6 +24,22 @@ function FollowersListScreen() {
         </View>
     );
 }
+
+
+function User(props) {
+    const user = props.user;
+    return (
+        <View>
+            <TouchableOpacity style={{
+                flexDirection: "row",
+            }}>
+
+            </TouchableOpacity>
+        </View>
+    );
+}
+
+
 export default FollowersListScreen;
 
 const styles = StyleSheet.create({

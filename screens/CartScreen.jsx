@@ -1,16 +1,15 @@
 import React from 'react';
 import {FlatList, Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {colors, sizes, testUsers} from '../constants/Data';
-import {Button} from "../constants/Components";
+import {Button, CartItem} from "../constants/Components";
 import {GetData} from "../constants/AppManger";
 
 function CartScreen({route, navigation}) {
     const userId = route.params.id;
-
     const user = testUsers[0];
 
 
-    function RemoveItem(item) {
+    const RemoveItem = (item) => {
         let index = user.userInfo.cart.indexOf(item);
         user.userInfo.cart.slice(index)
     }
@@ -27,10 +26,10 @@ function CartScreen({route, navigation}) {
                     renderItem={({item}) => {
                         return (
                             <CartItem
-                                item={item}
-                                image={item.image}
-                                title={item.title}
-                                description={item.description}
+                                product = {item.product}
+                                item = {item}
+                                method = {() => {console.log()}}
+                                amount = {item.amountSellected}
                             />
                         );
                     }}
@@ -38,80 +37,6 @@ function CartScreen({route, navigation}) {
             </View>
         </View>
     );
-}
-
-function CartItem(props) {
-
-    return (
-        <View style={{
-            elevation: sizes.ExtraSmall,
-            marginVertical: sizes.ExtraSmall,
-        }}>
-            <TouchableOpacity
-                style={{
-                    flexDirection: "row",
-                    backgroundColor: colors.white,
-                    borderRadius: sizes.Small,
-                    height: 150,
-                    alignItems: 'flex-start',
-                    justifyContent: "flex-start",
-                    padding: 5,
-                }}
-
-                onPress={props.method}
-            >
-                <View style={{
-                    height: 100,
-                    alignSelf: "center",
-                    justifyContent: "center",
-                }}>
-                    <Image
-                        style={{
-                            flex: 1,
-                            alignSelf: "center",
-                        }}
-                        resizeMode="contain"
-                        source={props.image}/>
-                </View>
-                <View>
-                    <Text style={{fontSize: sizes.Medium, color: colors.black}}>{props.title}</Text>
-                    <Text style={{fontSize: sizes.Small, color: colors.grey}}>{props.description}</Text>
-                </View>
-                <View style={{
-                    flexDirection: "row",
-                    justifyContent: "flex-start"
-                }}>
-                    <Button
-                        style={{
-                            borderRadius: sizes.ExtraLarge,
-                            borderWidth: 1,
-                            borderColor: colors.defaultBG4,
-                            padding: 5,
-                            alignItems: "center",
-                            justifyContent: "center",
-                            marginHorizontal: 10,
-                        }}
-                        method={() => RemoveItem(props.item)}
-                        text={"Cancel"}
-                        textStyle={{fontSize: sizes.Small, color: colors.white}}
-                    /><Button
-                    style={{
-                        borderRadius: sizes.ExtraLarge,
-                        backgroundColor: colors.defaultBG4,
-                        padding: 5,
-                        alignItems: "center",
-                        justifyContent: "center",
-                        marginHorizontal: 10,
-                    }}
-                    method={() => RemoveItem(props.item)}
-                    text={"Edit"}
-                    textStyle={{fontSize: sizes.Small, color: colors.white}}
-                />
-
-                </View>
-            </TouchableOpacity>
-        </View>
-    )
 }
 
 const styles = StyleSheet.create({

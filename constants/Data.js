@@ -25,7 +25,7 @@ export const colors = {
 
 };
 
-const themeData = {
+export const themeData = {
     light: {
         appBG: "#c4d8dd",
         appBG2: "#ffffff",
@@ -147,16 +147,24 @@ export const Product = {
     id: "0",
 }
 
+export const Item = {
+    product: Product,
+    amountSellected: 0,
+    id: "0"
+}
+
 export const Order = {
     user: User,
     date: "dd/mm/yr",
     products: [],
+    id: "0",
 }
 
 export const List = {
     name: "",
     description: "",
     items: [],
+    id: "0",
 }
 
 export const testUsers = [
@@ -472,11 +480,90 @@ export const testUsers = [
                     id: "6",
                 },
             ],
-            orders: [],
-            amountSelling: "10",
+            orders: [
+                {
+                    user: User,
+                    date: "01/06/22",
+                    products: [
+                        {
+                            title: "PS4 Controller",
+                            description: "Working PS4 Dualshock controller",
+                            price: "1,000",
+                            seller: "----",
+                            image: require("../images/ps4gamepad.png"),
+                            tags: ["game", "ps4", "console", "black controller"],
+                            id: "5",
+                        },
+                        {
+                            title: "Oreo's",
+                            description: "dark creamy chocolate biscuits, so sweat that you wont want anything else",
+                            price: "100",
+                            seller: "Nick",
+                            image: require("../images/oreos.jpg"),
+                            tags: ["chocolate", "biscuits", "sweat", "wont want anything else"],
+                            id: "1",
+                        },
+
+                    ],
+                    id: "0",
+                },
+                {
+                    user: User,
+                    date: "03/06/22",
+                    products: [
+                        {
+                            title: "PS4 Controller",
+                            description: "Working PS4 Dualshock controller",
+                            price: "1,000",
+                            seller: "----",
+                            image: require("../images/ps4gamepad.png"),
+                            tags: ["game", "ps4", "console", "black controller"],
+                            id: "5",
+                        },
+                        {
+                            title: "Pencil",
+                            description: "Stationaries",
+                            price: "50",
+                            seller: "Rick",
+                            image: require("../images/othersIcon.png"),
+                            tags: ["stationaries", "pencil", "nataraj"],
+                            id: "3",
+                        },
+                    ],
+                    id: "1",
+                }
+            ],
+            amountSelling: "4",
         },
         userInfo: {
-            cart: [],
+            cart: [
+                {
+                    product: {
+                        title: "Oreo's",
+                        description: "dark creamy chocolate biscuits, so sweat that you wont want anything else",
+                        price: "100",
+                        seller: "Nick",
+                        image: require("../images/oreos.jpg"),
+                        tags: ["chocolate", "biscuits", "sweat", "wont want anything else"],
+                        id: "1",
+                    },
+                    amountSellected: 0,
+                    id: "0"
+                },
+                {
+                    product: {
+                        title: "Fanta",
+                        description: "Orange flavored soda, with a sweet taste and incredible ",
+                        price: "100",
+                        seller: "----",
+                        image: require("../images/fanta.jpg"),
+                        tags: ["soda", "sweet", "orange", "sweet taste"],
+                        id: "2",
+                    },
+                    amountSellected: 0,
+                    id: "1"
+                },
+            ],
             rating: 0,
             amountSpent: "0",
             suggested: {

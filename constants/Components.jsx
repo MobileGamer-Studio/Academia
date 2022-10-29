@@ -157,21 +157,11 @@ export const ProfilePicture = (props) => {
     );
 }
 
-export const Header = ({navigation}) => {
-    return (
-        <View style={styles.header}>
-            <View>
-
-            </View>
-        </View>
-    );
-}
-
 //Products and Users
-export function ProductMax(props) {
+export function ProductVertical(props) {
     return (
         <TouchableOpacity
-            style={styles.productMax}
+            style={styles.product_vertical}
             onPress={props.method}>
             <View styles={{
                 flexDirection: "row",
@@ -210,10 +200,10 @@ export function ProductMax(props) {
     );
 }
 
-export const ProductMin = (props) => {
+export const ProductHorizontal = (props) => {
     return (
         <TouchableOpacity
-            style={styles.productMin}
+            style={styles.product_horizontal}
             onPress={props.method}
         >
             <View style={{
@@ -266,10 +256,86 @@ export const ProductCategory = (props) => {
     );
 }
 
-export const UserProfileMin = (props) => {
+export function CartItem(props) {
+    const product = props.product;
+    const amount = props.amount
+
+    return (
+        <View style={{
+            elevation: sizes.ExtraSmall,
+            marginVertical: sizes.ExtraSmall,
+        }}>
+            <TouchableOpacity
+                style={{
+                    flexDirection: "row",
+                    backgroundColor: colors.white,
+                    borderRadius: sizes.Small,
+                    height: 150,
+                    alignItems: 'flex-start',
+                    justifyContent: "flex-start",
+                    padding: 5,
+                }}
+
+                onPress={props.method}
+            >
+                <View style={{
+                    height: 100,
+                    alignSelf: "center",
+                    justifyContent: "center",
+                }}>
+                    <Image
+                        style={{
+                            flex: 1,
+                            alignSelf: "center",
+                        }}
+                        resizeMode="contain"
+                        source={props.product.image} />
+                </View>
+                <View>
+                    <Text style={{ fontSize: sizes.Medium, color: colors.black }}>{props.title}</Text>
+                    <Text style={{ fontSize: sizes.Small, color: colors.grey }}>{props.description}</Text>
+                </View>
+                <View style={{
+                    flexDirection: "row",
+                    justifyContent: "flex-start"
+                }}>
+                    <Button
+                        style={{
+                            borderRadius: sizes.ExtraLarge,
+                            borderWidth: 1,
+                            borderColor: colors.defaultBG4,
+                            padding: 5,
+                            alignItems: "center",
+                            justifyContent: "center",
+                            marginHorizontal: 10,
+                        }}
+                        method={() => RemoveItem(props.item)}
+                        text={"Cancel"}
+                        textStyle={{ fontSize: sizes.Small, color: colors.white }}
+                    /><Button
+                        style={{
+                            borderRadius: sizes.ExtraLarge,
+                            backgroundColor: colors.defaultBG4,
+                            padding: 5,
+                            alignItems: "center",
+                            justifyContent: "center",
+                            marginHorizontal: 10,
+                        }}
+                        method={() => RemoveItem(props.item)}
+                        text={"Edit"}
+                        textStyle={{ fontSize: sizes.Small, color: colors.white }}
+                    />
+
+                </View>
+            </TouchableOpacity>
+        </View>
+    )
+}
+
+export const UserProfile = (props) => {
     const user = props.user
     return (
-        <View style={styles.userProfileMin}>
+        <View style={styles.userProfile}>
             <TouchableOpacity
                 onPress={props.method}
             >
@@ -285,12 +351,8 @@ export const UserProfileMin = (props) => {
             </View>
             <View>
                 <Button
-                    style = {{
-                        backgroundColor: colors.defaultBG4,
-                    }}
-                    textStyle = {{
-
-                    }}
+                    style = {styles.button}
+                    textStyle = {styles.textStyle}
                     method = {() => console.log("clicked")}
                     text = {"Follow"}
                 />
@@ -301,43 +363,6 @@ export const UserProfileMin = (props) => {
 
 
 //Other Components
-export const SearchResult = (props) => {
-    return (
-        <View>
-            <FlatList
-                Vertical
-                showsHorizontalScrollIndicator={false}
-                keyExtractor={(item) => item.id}
-                data={props.data}
-                renderItem={({item}) => {
-                    return (
-                        <TouchableOpacity
-                            style={{
-                                backgroundColor: colors.white,
-
-                            }}
-                        >
-                            <View style={{
-                                height: 100,
-                            }}>
-                                <Image
-                                    style={{
-                                        flex: 1,
-                                    }}
-                                    resizeMode="contain"
-                                    source={item.image}/>
-                            </View>
-                            <View>
-                                <Text>{item.title}</Text>
-                            </View>
-                        </TouchableOpacity>
-                    );
-                }}
-            />
-        </View>
-    );
-}
-
 export const NavBar = (props) => {
   return(
       <View style={styles.navContainer}>
@@ -427,7 +452,7 @@ const styles = StyleSheet.create({
         borderColor: "transparent",
     },
 
-    productMax: {
+    product_vertical: {
         flexDirection: "column",
         backgroundColor: colors.white,
         padding: sizes.ExtraSmall,
@@ -437,7 +462,7 @@ const styles = StyleSheet.create({
         justifyContent: "space-between"
     },
 
-    productMin: {
+    product_horizontal: {
         flexDirection: "row",
         backgroundColor: colors.white,
         padding: sizes.ExtraSmall,
@@ -453,7 +478,7 @@ const styles = StyleSheet.create({
         margin: sizes.ExtraSmall,
     },
 
-    userProfileMin: {
+    userProfile: {
         alignItems: "center",
         margin: sizes.Small,
     },
@@ -488,6 +513,17 @@ const styles = StyleSheet.create({
     navItem: {
 
     },
+
+    button: {
+        backgroundColor: colors.defaultBG4,
+        borderRadius: sizes.ExtraLarge,
+        padding: 2,
+
+    },
+
+    textStyle: {
+        fontSize: sizes.Medium,
+    }
 
 })
 

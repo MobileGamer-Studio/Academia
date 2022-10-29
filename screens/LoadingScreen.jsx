@@ -6,23 +6,10 @@ import {auth, firestore, saveData} from "../constants/Sever";
 import {collection, doc, getDocs, setDoc} from "firebase/firestore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-async function GetData(){
-    let users = [];
-    try {
-        users = await getDocs(collection(firestore, "Users"));
-        if (users === null){
-            console.log("No data gotten from firebase")
-        }else{
-            console.log("data was gotten from firebase: "+ users);
-            await AsyncStorage.setItem("Users", JSON.stringify(users));
-        }
-    }catch (err) {
-        console.log(err)
-    }
-}
 
+//
 const LoadingScreen = ({route, navigation}) => {
-    GetData().then(r => console.log("Getting Data..... "+ r))
+    
     onAuthStateChanged(auth, (user) => {
         if (user) {
             navigation.navigate("Home", { id : user.uid });

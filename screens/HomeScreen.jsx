@@ -1,33 +1,45 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {FlatList, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import {categories, colors, sizes, suggestedProducts, testUsers, topSellers} from '../constants/Data';
-import {NavBar, ProductCategory, ProductMax, RoundButton, SearchBar, UserProfileMin} from '../constants/Components';
-import {GetAppData, GetData} from "../constants/AppManger";
+import {categories, colors, sizes, suggestedProducts, testUsers, topSellers, User} from '../constants/Data';
+import {NavBar, ProductCategory, ProductVertical, RoundButton, SearchBar, UserProfile} from '../constants/Components';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
-
-async function GetUserData(id) {
-    const data =await AsyncStorage.getItem('Users');
-    const users = JSON.parse(data);
-
-    console.log("Users: " + users +"\n Data: "+ data);
-    const user = await GetData(id, users);
-    return user;
-}
+import {getData, saveData, firestore} from "../constants/Sever";
+import {GetData} from "../constants/AppManger"
+import {getDocs, collection, setDoc} from "firebase/firestore";
 
 function HomeScreen({route, navigation}) {
-    //Getting Users and logged in user
     const userId = route.params.id;
-    const user = GetUserData(userId).then(r => console.log(r))
-    console.log("User: " + user + " \n From Home Screen");
+    const [users, setUsers] = useState([])
+
+    console.log("CHECK 1 \n User id:"+ userId +"\n Users: " +users +"\n User: "+ user)
+
+    async function getUsers() {
+        const querySnapshot = await getDocs(collection(firestore, "Users"));
+        let data = []
+        querySnapshot.forEach((doc) => {
+            data.push(doc.data())
+        });
+        setUsers(data)
+    }
+
+    async function saveUsers() {
+        users.forEach(async (item) => {
+            await setDoc(doc(firestore, "Users", item.id), item);
+        })
+    }
+
+    saveUsers().then(r => console.log(r));
     
+    getUsers().then(r => console.log(r));
 
-    //
-
-
-    //
-
-    //const user = testUsers[0];
+    let user = {}
+    users.forEach((item) => {
+        if (item.id === userId) {
+            user = item
+            console.log("got user: ${user}")
+        }
+    })
+    console.log("CHECK 2\n User id: ${userId} \n Users: ${users}  \n User: ${user}")
     return (
         <View style={styles.container}>
             <View style={{
@@ -85,7 +97,7 @@ function HomeScreen({route, navigation}) {
                         data={suggestedProducts}
                         renderItem={({item}) => {
                             return (
-                                <ProductMax
+                                <ProductVertical
                                     product={item}
                                     title={item.title}
                                     price={item.price}
@@ -107,7 +119,7 @@ function HomeScreen({route, navigation}) {
                         data={user.following}
                         renderItem={({item}) => {
                             return (
-                                <UserProfileMin
+                                <UserProfile
                                     user={item}
                                     color={item.colors}
                                     image={item.profilePicture}

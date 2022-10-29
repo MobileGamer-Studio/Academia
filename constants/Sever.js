@@ -3,9 +3,9 @@
 
 
 import {initializeApp} from "firebase/app";
-import {signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword, getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, onAuthStateChanged, getRedirectResult} from 'firebase/auth';
-import { getFirestore, setDoc, getDocs, doc, collection} from 'firebase/firestore';
-import { getStorage, uploadBytes, ref } from "firebase/storage";
+import {signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword, getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult} from 'firebase/auth';
+import { getFirestore, setDoc, getDocs, doc, collection, addDoc} from 'firebase/firestore';
+import { getStorage, uploadBytes, ref} from "firebase/storage";
 import { users, User } from "./Data"
 
 // TODO: Add SDKs for Firebase products that you want to use
@@ -50,40 +50,35 @@ export function saveFiles(reference, file) {
 //Firestore Database
 export async function saveData(data, ref, id) {
     try {
-        const docRef = await setDoc(doc(firestore, ref, id), data);
+        const docRef = await setDoc(doc(firestore, ref, id), data)
         console.log("Document written with ID : ", docRef, ", ", id);
     } catch (e) {
         console.error("Error adding document: ", e);
     }
 }
 
-export async function getData(path, data) {
+export async function addData(data, ref, id) {
+    const docRef = await addDoc(doc(firestore, ref, id), data)
+}
+
+export async function getData(path) {
+    let data = []
     const querySnapshot = await getDocs(collection(firestore, path));
     querySnapshot.forEach((doc) => {
         data.push(doc.data());
+        console.log(doc.id, " => ", doc.data());
     });
-    console.log("Data gotten: "+ data)
+
+    console.log("Data Gotten: "+ data)
     return data;
 }
 
-export async function setData(data, collection, id){
-    await setDoc(doc(firestore, collection, id), data);
+export async function getUserData(path, id) { 
+    let data = [];
+    const querySnapshot = await getDocs(doc(firestore, path, id));
+    console.log("Data gotten: "+ data)
+    return data;
 }
-
-export function readData(reference, callback) {
-    const docRef = ref(storage, reference);
-    docRef.get().then((doc) => {
-        if (doc.exists) {
-            callback(doc.data());
-        } else {
-            console.log("No such document!");
-        }
-    }).catch((error) => {
-        console.log("Error getting document:", error);
-    });
-}
-
-
 
 //Authentication
 export const SignIn = (email, password) => {
@@ -100,7 +95,7 @@ export const SignIn = (email, password) => {
         });
 }
 
-export const SignUp = (email, password, username) => {
+export const SignUp = (email, password, username) => { 
     createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
             // Signed up
@@ -112,14 +107,7 @@ export const SignUp = (email, password, username) => {
             newUser.loginDetails.password = password;
             newUser.id = user.uid;
 
-
-            users.push(newUser);
-            saveData(newUser, "Users", newUser.name).then(r => console.log("new user created: "+ r));
-            // users.forEach(element => {
-            //     saveData(element, "Users", element.name).then(r => console.log(r));
-            // });
-            // ...
-
+            saveData(newUser, "Users", newUser.id).then(r => console.log("new user created: "+ r));
         })
         .catch((error) => {
             const errorCode = error.code;
@@ -128,7 +116,7 @@ export const SignUp = (email, password, username) => {
         });
 }
 
-export const SignIn_Google = () => {
+export const SignIn_Google_Redirect = () => {
     signInWithRedirect(auth, providerGoogle);
     getRedirectResult(auth)
         .then((result) => {
@@ -141,14 +129,13 @@ export const SignIn_Google = () => {
 
             console.log(user)
 
-
-            let userId = user.uid
             let newUser  = User
+            user.
 
             newUser.name = user.displayName;
             newUser.loginDetails.email = user.email;
-            newUser.loginDetails.password = "";
-            newUser.id = userId.toString();
+            newUser.loginDetails.password = "google";
+            newUser.id = user.uid;
 
             users.push(newUser);
             saveData(newUser, "Users", newUser.name).then(r => console.log("new user created: "+ r));
@@ -162,37 +149,40 @@ export const SignIn_Google = () => {
             const credential = GoogleAuthProvider.credentialFromError(error);
             // ...
         });
-    // signInWithRedirect(auth, providerGoogle)
-    //     .then((result) => {
-    //         // This gives you a Google Access Token. You can use it to access the Google API.
-    //         const credential = GoogleAuthProvider.credentialFromResult(result);
-    //         const token = credential.accessToken;
-    //         // The signed-in user info.
-    //         const user = result.user;
-    //         console.log(user)
+}
 
 
-    //         let userId = users.length + 1
-    //         let newUser  = User
+export const SignIn_Google_PopUp = () => {
+    signInWithPopup(auth, providerGoogle)
+        .then((result) => {
+            // This gives you a Google Access Token. You can use it to access the Google API.
+            const credential = GoogleAuthProvider.credentialFromResult(result);
+            const token = credential.accessToken;
 
-    //         newUser.name = user.displayName;
-    //         newUser.loginDetails.email = user.email;
-    //         newUser.loginDetails.password = "";
-    //         newUser.id = userId.toString();
+            // The signed-in user info.
+            const user = result.user;
+            console.log(user)
 
-    //         users.push(newUser);
-    //         saveData(newUser, "Users", newUser.name).then(r => console.log("new user created: "+ r));
-    //         // ...
-    //     }).catch((error) => {
-    //     // Handle Errors here.
-    //     const errorCode = error.code;
-    //     const errorMessage = error.message;
-    //     // The email of the user's account used.
-    //     const email = error.customData.email;
-    //     // The AuthCredential type that was used.
-    //     const credential = GoogleAuthProvider.credentialFromError(error);
-    //     // ...
-    // });
+            let newUser  = User
+
+            newUser.name = user.displayName;
+            newUser.loginDetails.email = user.email;
+            newUser.loginDetails.password = "";
+            newUser.id = user.uid;
+
+            users.push(newUser);
+            saveData(newUser, "Users", newUser.name).then(r => console.log("new user created: "+ r));
+            // ...
+        }).catch((error) => {
+        // Handle Errors here.
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // The email of the user's account used.
+        const email = error.customData.email;
+        // The AuthCredential type that was used.
+        const credential = GoogleAuthProvider.credentialFromError(error);
+        // ...
+    });
 }
 
 export const logOut = () => {

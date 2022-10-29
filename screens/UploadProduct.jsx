@@ -5,31 +5,6 @@ import {colors, sizes} from '../constants/Data'
 import * as ImagePicker from "expo-image-picker"
 
 
-const ImageSample = (props) => {
-    return (
-        <View>
-            <Image source={props.image}/>
-        </View>
-    );
-}
-
-const Tag = (props) => {
-    return (
-        <View style={{
-            backgroundColor: colors.defaultBG4,
-            marginHorizontal: 10,
-            height: 25,
-            borderRadius: sizes.ExtraLarge,
-            paddingHorizontal: 10
-        }}>
-            <Text style={{
-                color: colors.white,
-                fontSize: sizes.Small + 2,
-            }}>{"#" + props.tagName}</Text>
-        </View>
-    );
-}
-
 const UploadProduct = ({route, navigation}) => {
 
     const [title, setTitle] = useState("");
@@ -173,6 +148,31 @@ const UploadProduct = ({route, navigation}) => {
             </View>
         </View>
     )
+}
+
+const ImageSample = (props) => {
+    return (
+        <View>
+            <Image source={props.image} />
+        </View>
+    );
+}
+
+const Tag = (props) => {
+    return (
+        <View style={{
+            backgroundColor: colors.defaultBG4,
+            marginHorizontal: 10,
+            height: 25,
+            borderRadius: sizes.ExtraLarge,
+            paddingHorizontal: 10
+        }}>
+            <Text style={{
+                color: colors.white,
+                fontSize: sizes.Small + 2,
+            }}>{"#" + props.tagName}</Text>
+        </View>
+    );
 }
 
 export default UploadProduct

@@ -1,9 +1,11 @@
-import react, { useState } from "react";
+import React , { useState } from "react";
 import { FlatList, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import {colors, testUsers} from "../constants/Data"
-import React from "react";
+import { CartItem } from "../constants/Components";
+
 
 function CheckOutScreen({route, navigation}) {
+    const userId = route.params.id;
     const user = testUsers[0];
 
     return (
@@ -17,17 +19,18 @@ function CheckOutScreen({route, navigation}) {
                     data={user.userInfo.cart}
                     renderItem={({item}) => {
                         return (
-                            <CartItem/>
+                            <CartItem
+                                product={item.product}
+                                item={item}
+                                method={() => console.log("") }
+                                amount={item.amountSellected}
+                            />
                         );
                     }}
                 />
             </View>
         </View>
     );
-}
-
-function CartItem(props){
-
 }
 
 export default CheckOutScreen;

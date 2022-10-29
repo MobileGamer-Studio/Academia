@@ -4,42 +4,7 @@ import {colors, sizes, testProducts} from '../constants/Data';
 import {ProductCategory, SearchBar} from '../constants/Components';
 
 
-const Product = ({props}) => {
-    return (
-        <View>
-            <TouchableOpacity
-                style={{
-                    backgroundColor: colors.white,
-                    marginVertical: sizes.ExtraSmall,
-                    marginHorizontal: 5,
-                    borderRadius: 10,
-                    padding: sizes.ExtraSmall,
-                    flexDirection: "column",
-                }}
 
-                onPress={props.method}
-            >
-                <View style={{
-                    height: 100,
-                    width: 100,
-                }}>
-                    <Image
-                        style={{
-                            flex: 1,
-                        }}
-                        resizeMode="contain"
-                        source={props.image}
-                    />
-                </View>
-                <View style={{
-                    flexDirection: "column",
-                }}>
-                    <Text>{props.title}</Text>
-                </View>
-            </TouchableOpacity>
-        </View>
-    );
-}
 
 export default function SearchScreen({navigation, route}) {
 
@@ -143,6 +108,45 @@ export default function SearchScreen({navigation, route}) {
         </View>
     )
 }
+
+
+const Product = ({ props }) => {
+    return (
+        <View>
+            <TouchableOpacity
+                style={{
+                    backgroundColor: colors.white,
+                    marginVertical: sizes.ExtraSmall,
+                    marginHorizontal: 5,
+                    borderRadius: 10,
+                    padding: sizes.ExtraSmall,
+                    flexDirection: "column",
+                }}
+
+                onPress={props.method}
+            >
+                <View style={{
+                    height: 100,
+                    width: 100,
+                }}>
+                    <Image
+                        style={{
+                            flex: 1,
+                        }}
+                        resizeMode="contain"
+                        source={props.image}
+                    />
+                </View>
+                <View style={{
+                    flexDirection: "column",
+                }}>
+                    <Text>{props.title}</Text>
+                </View>
+            </TouchableOpacity>
+        </View>
+    );
+}
+
 
 const styles = StyleSheet.create({
     container: {
