@@ -2,9 +2,7 @@ import {onAuthStateChanged} from 'firebase/auth';
 import React from 'react'
 import {Image, StyleSheet, View} from 'react-native'
 import {colors, images} from '../constants/Data';
-import {auth, firestore, saveData} from "../constants/Sever";
-import {collection, doc, getDocs, setDoc} from "firebase/firestore";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import {auth} from "../constants/Sever";
 
 
 //

@@ -1,5 +1,5 @@
 import React from 'react';
-import {FlatList, Image, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
+import {Image, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import {colors, images, sizes} from "./Data"
 
 
@@ -135,9 +135,9 @@ export const SearchBar = (props) => {
 export const ProfilePicture = (props) => {
     return (
         <View style={{
-            backgroundColor: props.color,
-            height: 75,
-            width: 75,
+            backgroundColor: colors.white,
+            height: props.height,
+            width: props.width,
             borderRadius: sizes.ExtraLarge,
             marginEnd: sizes.ExtraSmall,
             alignItems: "center",
@@ -146,8 +146,8 @@ export const ProfilePicture = (props) => {
             <Image
                 source={props.image}
                 style={{
-                    height: 75,
-                    width: 75,
+                    height: props.height,
+                    width: props.width,
                     flex: 1,
                     borderRadius: sizes.ExtraLarge,
                 }}
@@ -339,7 +339,7 @@ export const UserProfile = (props) => {
             <TouchableOpacity
                 onPress={props.method}
             >
-                <ProfilePicture color={colors.white} image={props.image}/>
+                <ProfilePicture color={colors.white} image={props.image} height = {100} width = {100}/>
             </TouchableOpacity>
             <View style={{
                 alignItems: "center",
@@ -347,7 +347,7 @@ export const UserProfile = (props) => {
                 <Text style={{
                     fontSize: sizes.Medium,
                 }}>{user.name}</Text>
-                <Text>{user.followers + " followers"}</Text>
+                <Text>{user.followers.length + " followers"}</Text>
             </View>
             <View>
                 <Button
@@ -459,7 +459,10 @@ const styles = StyleSheet.create({
         borderRadius: sizes.Medium,
         margin: sizes.Small,
         width: 150,
-        justifyContent: "space-between"
+        justifyContent: "space-between",
+        // borderRightWidth: 1,
+        // borderLeftWidth: 1,
+        // borderColor: colors.defaultBG4,
     },
 
     product_horizontal: {
@@ -481,6 +484,7 @@ const styles = StyleSheet.create({
     userProfile: {
         alignItems: "center",
         margin: sizes.Small,
+        
     },
 
     navContainer: {
@@ -515,10 +519,13 @@ const styles = StyleSheet.create({
     },
 
     button: {
-        backgroundColor: colors.defaultBG4,
         borderRadius: sizes.ExtraLarge,
-        padding: 2,
-
+        padding: 5,
+        backgroundColor: colors.defaultBG4,
+        marginHorizontal: 5,
+        marginTop: 5,
+        width: 150,
+        alignItems: "center",
     },
 
     textStyle: {

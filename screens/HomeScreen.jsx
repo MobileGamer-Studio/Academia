@@ -1,11 +1,9 @@
 import React, {useState} from 'react';
 import {FlatList, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import {categories, colors, sizes, suggestedProducts, testUsers, topSellers, User} from '../constants/Data';
+import {categories, colors, sizes, suggestedProducts, testUsers, topSellers} from '../constants/Data';
 import {NavBar, ProductCategory, ProductVertical, RoundButton, SearchBar, UserProfile} from '../constants/Components';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {getData, saveData, firestore} from "../constants/Sever";
-import {GetData} from "../constants/AppManger"
-import {getDocs, collection, setDoc} from "firebase/firestore";
+import {firestore} from "../constants/Sever";
+import {getDocs, collection, setDoc, doc} from "firebase/firestore";
 
 function HomeScreen({route, navigation}) {
     const userId = route.params.id;
@@ -23,9 +21,9 @@ function HomeScreen({route, navigation}) {
     }
 
     async function saveUsers() {
-        users.forEach(async (item) => {
+        for (const item of users) {
             await setDoc(doc(firestore, "Users", item.id), item);
-        })
+        }
     }
 
     saveUsers().then(r => console.log(r));
@@ -39,7 +37,9 @@ function HomeScreen({route, navigation}) {
             console.log("got user: ${user}")
         }
     })
-    console.log("CHECK 2\n User id: ${userId} \n Users: ${users}  \n User: ${user}")
+    
+    console.log("CHECK 2 \n User id:" + userId + "\n Users: " + users + "\n User: " + user)
+
     return (
         <View style={styles.container}>
             <View style={{
@@ -54,7 +54,7 @@ function HomeScreen({route, navigation}) {
                     height={45}
                     width={45}
                     color={colors.white}
-                    method={() => navigation.navigate("UserAccount", {id: userId})}
+                    method={() => navigation.navigate("UserAccount", {id: userId, user: user})}
                 />
             </View>
             <ScrollView showsVerticalScrollIndicator={false}>
@@ -91,7 +91,8 @@ function HomeScreen({route, navigation}) {
                         Suggested
                     </Text>
                     <FlatList
-                        horizontal
+                        vertical
+                        numColumns= {2}
                         showsHorizontalScrollIndicator={false}
                         keyExtractor={(item) => item.id}
                         data={suggestedProducts}
@@ -116,14 +117,14 @@ function HomeScreen({route, navigation}) {
                         horizontal
                         showsHorizontalScrollIndicator={false}
                         keyExtractor={(item) => item.id}
-                        data={user.following}
+                        data={testUsers}
                         renderItem={({item}) => {
                             return (
                                 <UserProfile
                                     user={item}
                                     color={item.colors}
                                     image={item.profilePicture}
-                                    method={() => navigation.navigate("Account", {id : item.id})}
+                                    method={() => navigation.navigate("Account", {user : item})}
                                 />
                             )
                         }}
@@ -182,7 +183,7 @@ function HomeScreen({route, navigation}) {
                 search={() => navigation.navigate("Search", {search : "null"})}
                 add={() => navigation.navigate("UploadProduct" , {id: userId})}
                 cart={() => navigation.navigate("Cart" , {id: userId})}
-                settings={() => navigation.navigate("Settings" , {id: userId})}
+                settings={() => navigation.navigate("Settings" , {user: user})}
             />
         </View>
     );

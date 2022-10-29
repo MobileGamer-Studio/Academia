@@ -49,6 +49,7 @@ export const images = {
     academia: require("../images/Academia.png"),
     defaultProfile: require("../images/profileIcon.png"),
     cart: require("../images/Cart-white.png"),
+    more: require("../images/othersIcon.png"),
 
     //
     stationary: require("../images/stationariesIcon.png"),

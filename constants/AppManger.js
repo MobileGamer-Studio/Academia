@@ -1,5 +1,4 @@
-import { User } from "./Data";
-import { firestore, getData, saveData } from "./Sever";
+import { firestore, saveData } from "./Sever";
 import { collection, getDocs } from "firebase/firestore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 

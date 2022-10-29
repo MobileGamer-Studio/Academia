@@ -1,8 +1,7 @@
 import React from 'react';
-import {FlatList, Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {colors, sizes, testUsers} from '../constants/Data';
-import {Button, CartItem} from "../constants/Components";
-import {GetData} from "../constants/AppManger";
+import {FlatList, StyleSheet, View} from 'react-native';
+import {colors, testUsers} from '../constants/Data';
+import {CartItem} from "../constants/Components";
 
 function CartScreen({route, navigation}) {
     const userId = route.params.id;

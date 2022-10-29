@@ -13,3 +13,9 @@ somto {
     url
     numeric
 }
+
+
+shopping-cart
+home
+search
+search

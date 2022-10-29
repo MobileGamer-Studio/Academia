@@ -1,8 +1,10 @@
 import React, {useState} from 'react'
-import {Image, StyleSheet, Text, TouchableOpacity, View, ScrollView} from 'react-native'
-import {colors, sizes, testUsers, users} from '../constants/Data'
-import {Button, ProfilePicture} from "../constants/Components";
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {StyleSheet, Text, TouchableOpacity, View, ScrollView} from 'react-native'
+import {colors, sizes} from '../constants/Data'
+import {RoundButton} from "../constants/Components";
+import { firestore } from "../constants/Sever";
+import { getDocs, collection } from "firebase/firestore";
+import { MaterialIcons, Entypo } from "@expo/vector-icons";
 
 
 
@@ -17,40 +19,107 @@ function UserAccount({route, navigation}) {
             data.push(doc.data())
         });
         setUsers(data)
-
-
-
     }
 
-    getUsers();
+    //getUsers().then(r => console.log("!"));
 
-    let user = {}
-    users.forEach((item) => {
-        if (item.id === userId) {
-            user = item
-            console.log("got user: ${user}")
-        }
-    })
+    // let user = {}
+    // users.forEach((item) => {
+    //     if (item.id === userId) {
+    //         user = item
+    //         console.log("got user: "+ user)
+    //     }
+    // })
+
+    const user = route.params.user
+
+
 
 
     return (
         <View style={styles.container}>
-            <View>
-                <View>
-                    <ProfilePicture image={user.profilePicture} />
-                    <Text>{user.name}</Text>
+            <View style = {{
+                flexDirection: 'column',
+                padding: sizes.Small,
+                justifyContent: 'space-between',
+                backgroundColor: colors.defaultBG4,
+                borderBottomLeftRadius: 75,
+                borderBottomRightRadius: 75,
+                paddingTop: 60,
+                paddingBottom: 50,
+            }}>
+                <View style = {{alignItems: "flex-end", marginBottom: 20}}>
+                    <TouchableOpacity onPress={() => navigation.navigate("", {id: userId})}>
+                        <Entypo name="dots-three-vertical" size={24} color={colors.white} />
+                    </TouchableOpacity>
                 </View>
-                <View>
-
+                <View style = {{
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    
+                }}>
+                    
+                    <RoundButton
+                        image={user.profilePicture}
+                        height={100}
+                        width={100}
+                        color={colors.white}
+                        method={() => navigation.navigate("EditProfile", { id: userId })}
+                    />
+                    <Text style = {{color: colors.white, fontSize: 20}}>{user.name}</Text>
+                </View>
+                <View style = {{
+                    flexDirection: 'column',
+                    justifyContent: 'space-evenly',
+                    alignItems: 'center',
+                    
+                }}>
+                    <View style = {{
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        marginVertical: 10,
+                    }}>
+                        <View style = {{
+                            alignItems: 'center',
+                            marginHorizontal: 10,
+                        }}>
+                            <Text style={{ color: colors.white }}>Following</Text>
+                            <Text style={{ color: colors.white }}>{10}</Text>
+                        </View>
+                        <View style={{
+                            alignItems: 'center',
+                            marginHorizontal: 10,
+                        }}>
+                            <Text style={{ color: colors.white }}>Followers</Text>
+                            <Text style={{ color: colors.white }}>10</Text>
+                        </View>
+                        <View style={{
+                            alignItems: 'center',
+                            marginHorizontal: 10,
+                        }}>
+                            <Text style={{ color: colors.white }}>Products</Text>
+                            <Text style={{ color: colors.white }}>10</Text>
+                        </View>
+                        
+                    </View>
+                    <View>
+                        <Text style={{ color: colors.white }}>{user.description}</Text>
+                    </View>
                 </View>
             </View>
+            <ScrollView style = {{
+                backgroundColor: colors.white,
+                bottom: 0,
+            }}>
+                
+            </ScrollView>
         </View>
     );
 }
 
 export default UserAccount;
 
-function Clikable(params) {
+function Clikable(props) {
     return (
         <View style={{
             flexDirection: "column",
@@ -79,7 +148,6 @@ const styles = StyleSheet.create({
         backgroundColor: colors.white,
         flex: 1,
         justifyContent: "flex-start",
-        paddingTop: sizes.ExtraLarge,
     },
 
     section: {

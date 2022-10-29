@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import { View, TouchableOpacity, Text, StyleSheet, FlatList, Image } from "react-native";
 import { colors, sizes } from "../constants/Data";
-import { Button } from "../constants/Components";
 
 
 function ProductListScreen({route, navigation}) {

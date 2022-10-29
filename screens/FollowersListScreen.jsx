@@ -1,24 +1,21 @@
 import React from 'react';
-import {FlatList, StyleSheet, TouchableOpacity, View} from "react-native";
-import {sizes, testUsers} from "../constants/Data";
+import { View, TouchableOpacity, StyleSheet, FlatList, Text } from "react-native";
+import { ProfilePicture, RoundButton } from '../constants/Components';
+import { colors, sizes, testUsers } from "../constants/Data";
 
 
 
-
-function FollowersListScreen() {
+function FollowersListScreen({route, navigation}) {
+    const user = route.params.user;
     return(
         <View style = {styles.container}>
             <View>
                 <FlatList
                     vertical
-                    showsVerticalScrollIndicator={false}
+                    showsHorizontalScrollIndicator={false}
                     keyExtractor={(item) => item.id}
-                    data={testUsers}
-                    renderItem={({ item }) => {
-                        return (
-                            <User/>
-                        )
-                    }}
+                    data={user.followers}
+                    renderItem={({ item }) => <User name={item.name} image={item.profilePicture} method={() => navigation.navigate("Account", { user: item })} />}
                 />
             </View>
         </View>
@@ -27,13 +24,20 @@ function FollowersListScreen() {
 
 
 function User(props) {
-    const user = props.user;
     return (
         <View>
             <TouchableOpacity style={{
-                flexDirection: "row",
-            }}>
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'flex-start',
+                borderBottomWidth: 1,
+                borderBottomColor: colors.defaultBG4,
+                padding: 10,
+            }}
 
+                onPress={props.method}>
+                <ProfilePicture color={colors.defaultBG2} image={props.image} height={40} width={40} />
+                <Text style={{ marginHorizontal: 10 }}>{props.name}</Text>
             </TouchableOpacity>
         </View>
     );
@@ -44,7 +48,6 @@ export default FollowersListScreen;
 
 const styles = StyleSheet.create({
     container: {
-        paddingVertical: sizes.ExtraLarge,
         flex: 1,
     }
 })

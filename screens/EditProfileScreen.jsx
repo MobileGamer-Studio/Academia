@@ -1,25 +1,35 @@
 import React, {useState} from "react"
-import {Text, View, StyleSheet, TouchableOpacity, ScrollView} from "react-native"
+import {Text, View, StyleSheet, ScrollView} from "react-native"
 import {Button, InfoInput, ProfilePicture} from "../constants/Components";
 import * as ImagePicker from "expo-image-picker";
 import {colors, images, sizes, User} from "../constants/Data";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
-//Variables
-let users = [];
-
-async function GetUserData(id) {
-    const data = await AsyncStorage.getItem('Users');
-    users = JSON.parse(data);
-
-    console.log("Users: " + users + "\n Data: " + data);
-    const user = await GetData(id, users);
-    return user;
-}
+import { firestore } from "../constants/Sever";
+import { getDocs, collection } from "firebase/firestore";
 
 function EditProfileScreen({route, navigation}) {
+
     const userId = route.params.id;
-    const user = GetUserData(userId).then(r => console.log(r));
+    const [users, setUsers] = useState([])
+
+    async function getUsers() {
+        const querySnapshot = await getDocs(collection(firestore, "Users"));
+        let data = []
+        querySnapshot.forEach((doc) => {
+            data.push(doc.data())
+        });
+        setUsers(data)
+    }
+
+    getUsers();
+
+    let user = {}
+    users.forEach((item) => {
+        if (item.id === userId) {
+            user = item
+            console.log("got user: " + user)
+        }
+    })
 
     //Variables
     const [name, setName] = useState(user.name);
@@ -33,7 +43,14 @@ function EditProfileScreen({route, navigation}) {
         if (pickedImage.cancelled === true) {
             return images.defaultProfile;
         }
-        currentUser.profilePicture = pickedImage.url;
+        // user.profilePicture = pickedImage.url;
+        setProfilePicture(pickedImage.url);
+    }
+
+    async function saveUsers() {
+        users.forEach(async (item) => {
+            await setDoc(doc(firestore, "Users", item.id), item);
+        })
     }
 
     const UpdateProfile = async (newData) => {
@@ -55,20 +72,20 @@ function EditProfileScreen({route, navigation}) {
                 <View style={styles.field}>
                     <Text>{"Username: " + name}</Text>
                     <InfoInput
-                        method={(val) => user.name = val}
+                        method={(val) => setName(val)}
                         placeholder={"username"}
                     />
                 </View>
                 <View style={styles.field}>
-                    <Text>{"Description: " + name}</Text>
+                    <Text>{"Description: " + description}</Text>
                     <InfoInput
-                        method={(val) => user.description = val}
+                        method={(val) => setDescription(val)}
                         placeholder={"description"}
                     />
                 </View><View style={styles.field}>
-                <Text>{"Location: " + name}</Text>
+                <Text>{"Location: " + location}</Text>
                 <InfoInput
-                    method={(val) => user.location = val}
+                    method={(val) => setLocation(val)}
                     placeholder={"Whitesands, Medowhall"}
                 />
             </View>

@@ -1,5 +1,5 @@
-import React , { useState } from "react";
-import { FlatList, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React  from "react";
+import { FlatList, StyleSheet, View } from 'react-native';
 import {colors, testUsers} from "../constants/Data"
 import { CartItem } from "../constants/Components";
 

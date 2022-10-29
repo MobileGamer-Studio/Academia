@@ -1,10 +1,6 @@
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {getData, saveData} from './constants/Sever';
-import { collection, getDocs } from "firebase/firestore";
-import { firestore } from './constants/Sever';
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 //Screens
 import LoadingScreen from './screens/LoadingScreen';
@@ -92,6 +88,16 @@ function App() {
                     name="ProductList"
                     component={ProductListScreen}
                     options={{ headerShown: false }}
+                />
+
+                <Stack.Screen
+                    name="Following"
+                    component={FollowingListScreen}
+                />
+
+                <Stack.Screen
+                    name="Followers"
+                    component={FollowersListScreen}
                 />
 
                 <Stack.Screen
