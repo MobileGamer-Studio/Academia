@@ -46,7 +46,7 @@ function HomeScreen({route, navigation}) {
                 flexDirection: "row",
                 justifyContent: "space-evenly",
                 alignItems: "center",
-                backgroundColor: colors.defaultBG2,
+                backgroundColor: colors.defaultBG4,
             }}>
                 <SearchBar/>
                 <RoundButton
@@ -181,8 +181,8 @@ function HomeScreen({route, navigation}) {
             <NavBar
                 home={() => navigation.navigate("Home", {id: userId})}
                 search={() => navigation.navigate("Search", {search : "null"})}
-                add={() => navigation.navigate("UploadProduct" , {id: userId})}
-                cart={() => navigation.navigate("Cart" , {id: userId})}
+                add={() => navigation.navigate("UploadProduct" , {user: user})}
+                cart={() => navigation.navigate("Cart" , {user: user})}
                 settings={() => navigation.navigate("Settings" , {user: user})}
             />
         </View>
@@ -192,7 +192,7 @@ function HomeScreen({route, navigation}) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: colors.defaultBG2,
+        backgroundColor: colors.defaultBG4,
         paddingVertical: sizes.ExtraLarge,
     },
 })

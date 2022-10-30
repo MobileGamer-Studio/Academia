@@ -139,6 +139,7 @@ export const Category = {
 export const Product = {
     title: "",
     description: "",
+    category: {},
     price: "",
     seller: "",
     image: "",

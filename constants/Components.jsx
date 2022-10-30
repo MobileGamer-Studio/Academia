@@ -118,9 +118,8 @@ export const SearchBar = (props) => {
             <TextInput
                 onChangeText={props.method}
                 style={{
-                    borderRadius: sizes.ExtraSmall,
-                    borderWidth: 1,
-                    marginHorizontal: sizes.ExtraSmall,
+                    borderRadius: sizes.ExtraLarge,
+                    marginHorizontal: 2.5,
                     paddingHorizontal: sizes.Small,
                     backgroundColor: colors.white,
                     height: 40,

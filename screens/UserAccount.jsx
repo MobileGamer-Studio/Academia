@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
-import {StyleSheet, Text, TouchableOpacity, View, ScrollView} from 'react-native'
+import {StyleSheet, Text, TouchableOpacity, View, ScrollView, FlatList} from 'react-native'
 import {colors, sizes} from '../constants/Data'
-import {RoundButton} from "../constants/Components";
+import {RoundButton, ProductVertical} from "../constants/Components";
 import { firestore } from "../constants/Sever";
 import { getDocs, collection } from "firebase/firestore";
 import { MaterialIcons, Entypo } from "@expo/vector-icons";
@@ -47,6 +47,7 @@ function UserAccount({route, navigation}) {
                 borderBottomRightRadius: 75,
                 paddingTop: 60,
                 paddingBottom: 50,
+                marginBottom: 10,
             }}>
                 <View style = {{alignItems: "flex-end", marginBottom: 20}}>
                     <TouchableOpacity onPress={() => navigation.navigate("", {id: userId})}>
@@ -111,7 +112,27 @@ function UserAccount({route, navigation}) {
                 backgroundColor: colors.white,
                 bottom: 0,
             }}>
-                
+                <View>
+                    <Text style={{ marginLeft: 15, marginTop: 15, fontSize: 25}}>Products</Text>
+                    <FlatList
+                        horizontal
+                        showsHorizontalScrollIndicator={false}
+                        keyExtractor={(item) => item.id}
+                        data={user.sellerInfo.productList}
+                        renderItem={({ item }) => {
+                            return (
+                                <ProductVertical
+                                    product={item}
+                                    title={item.title}
+                                    price={item.price}
+                                    image={item.image}
+                                    seller={item.seller}
+                                    method={() => navigation.navigate("Product", { item })}
+                                />
+                            )
+                        }}
+                    />
+                </View>
             </ScrollView>
         </View>
     );

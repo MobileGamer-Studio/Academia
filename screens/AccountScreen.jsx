@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {FlatList, ScrollView, StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import {colors, sizes, testUsers, testProducts} from '../constants/Data';
-import {Button, ProductSmall, ProfilePicture} from '../constants/Components';
+import {Button, ProductSmall, ProfilePicture, ProductVertical} from '../constants/Components';
 import { firestore } from "../constants/Sever";
 import { getDocs, collection} from "firebase/firestore";
 import { Entypo } from '@expo/vector-icons';
@@ -111,6 +111,28 @@ function AccountScreen({route, navigation}) {
                         />
                     </View>
                 </View>
+            </View>
+
+            <View>
+                <Text style={{ marginLeft: 15, marginTop: 15, fontSize: 25 }}>Products</Text>
+                <FlatList
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
+                    keyExtractor={(item) => item.id}
+                    data={user.sellerInfo.productList}
+                    renderItem={({ item }) => {
+                        return (
+                            <ProductVertical
+                                product={item}
+                                title={item.title}
+                                price={item.price}
+                                image={item.image}
+                                seller={item.seller}
+                                method={() => navigation.navigate("Product", { item })}
+                            />
+                        )
+                    }}
+                />
             </View>
             
         </View>

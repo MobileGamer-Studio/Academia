@@ -1,11 +1,16 @@
 import React, {useState} from 'react'
 import {FlatList, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {Button, InfoInput} from '../constants/Components';
-import {colors, sizes} from '../constants/Data'
+import {Category, colors, Product, sizes} from '../constants/Data'
 import * as ImagePicker from "expo-image-picker"
+import {MaterialIcons} from "@expo/vector-icons"
+import { firestore } from "../constants/Sever";
+import {setDoc, doc, collection } from "firebase/firestore";
 
 
 const UploadProduct = ({route, navigation}) => {
+
+    const user = route.params.user;
 
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
@@ -13,7 +18,7 @@ const UploadProduct = ({route, navigation}) => {
     const [category, setCategory] = useState("");
     const [tags, setTags] = useState([]);
     const [tag, setTag] = useState("....");
-    const [selectedImage, setSelectedImage] = useState(null);
+    const [selectedImage, setSelectedImage] = useState({uri: ""});
 
 
     async function GetImage() {
@@ -23,7 +28,7 @@ const UploadProduct = ({route, navigation}) => {
             return;
         }
 
-        setSelectedImage(pickedImage.uri);
+        setSelectedImage({ uri: pickedImage.uri });
         console.log(selectedImage);
     }
 
@@ -31,6 +36,26 @@ const UploadProduct = ({route, navigation}) => {
         //tagsList.push(val);
         tags.push(val);
         console.log(tags);
+    }
+
+    async function uploadProduct(){
+        const newProduct = Product;
+        newProduct.title = title;
+        newProduct.description = description;
+        newProduct.category = Category;
+        newProduct.category.name = category;
+        newProduct.price = price;
+        newProduct.seller = user.name;
+        newProduct.tags = tags;
+        newProduct.image = selectedImage.uri;
+        newProduct.id = user.id + "_" + newProduct.title 
+
+
+        user.sellerInfo.productList.push(newProduct);
+        await setDoc(doc(firestore, "Users", user.id), user);
+        await setDoc(doc(firestore, "Products", newProduct.id), newProduct);
+
+        console.log(newProduct +"\n"+ user)
     }
 
     return (
@@ -114,14 +139,18 @@ const UploadProduct = ({route, navigation}) => {
                     <View style={{
                         flexDirection: "column",
                     }}>
-                        <ImageSample image={selectedImage}/>
+                        <ImageSample image={selectedImage.uri}/>
                     </View>
-                    <View>
+                    <View style = {{
+                        flexDirection: "row"
+                    }}>
+                        <View style = {{marginHorizontal: 1}}><MaterialIcons name="image" size={24} color={colors.defaultBG4} /></View>
                         <Button
                             method={() => GetImage()}
                             text={"Get Image"}
                             textStyle={{color: colors.defaultBG4, fontSize: sizes.Small}}
                         />
+
                     </View>
                 </View>
             </ScrollView>
@@ -133,7 +162,7 @@ const UploadProduct = ({route, navigation}) => {
             }}>
                 <Button
                     style={styles.button}
-                    method={() => console.log("Uploaded")}
+                    method={() => uploadProduct()}
                     text={"Upload"}
                     textStyle={{color: colors.white, fontSize: sizes.Medium}}
                 />
@@ -152,8 +181,20 @@ const UploadProduct = ({route, navigation}) => {
 
 const ImageSample = (props) => {
     return (
-        <View>
-            <Image source={props.image} />
+        <View style = {{
+            backgroundColor: colors.white,
+            height: 50,
+            width: 50,
+            alignItems: "center",
+            alignSelf: "center",
+        }}>
+            <Image style={{
+                height: 50,
+                width: 50,
+                flex: 1,
+                borderRadius: sizes.ExtraLarge,
+            }} 
+            source={{uri: props.image}} />
         </View>
     );
 }
