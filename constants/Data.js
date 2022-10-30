@@ -106,6 +106,12 @@ export const User = {
         amountSelling: "0",
     },
     userInfo: {
+        chatInfo: {
+            chatList : [
+                
+            ],
+
+        },
         cart: [],
         rating: 0,
         amountSpent: "0",
@@ -160,6 +166,19 @@ export const Order = {
     date: "dd/mm/yr",
     products: [],
     id: "0",
+}
+
+export const Message = {
+    receiver : User,
+    sender: User,
+    date: "dd/mm/yr",
+    time: "mm:ss",
+    id: "0",
+}
+
+export const Chat = {
+    receiver: User,
+    messages: []
 }
 
 export const List = {

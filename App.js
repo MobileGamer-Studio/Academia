@@ -21,6 +21,8 @@ import ProductListScreen from './screens/ProductListScreen';
 import CheckOutScreen from "./screens/CheckOutScreen";
 import FollowingListScreen from './screens/FollowingListScreen';
 import FollowersListScreen from './screens/FollowersListScreen';
+import ChatListScreen from './screens/ChatListScreen';
+import ChatScreen from './screens/ChatScreen';
 
 
 const Stack = createNativeStackNavigator();
@@ -124,6 +126,16 @@ function App() {
                     name="Search"
                     component={SearchScreen}
                     options={{headerShown: false}}
+                />
+
+                <Stack.Screen
+                    name="ChatList"
+                    component={ChatListScreen}
+                />
+                <Stack.Screen
+                    name="Chat"
+                    component={ChatScreen}
+                    options={{ headerShown: false }}
                 />
             </Stack.Navigator>
         </NavigationContainer>

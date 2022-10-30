@@ -124,7 +124,7 @@ function HomeScreen({route, navigation}) {
                                     user={item}
                                     color={item.colors}
                                     image={item.profilePicture}
-                                    method={() => navigation.navigate("Account", {user : item})}
+                                    method={() => navigation.navigate("Account", {user : item, id: userId})}
                                 />
                             )
                         }}

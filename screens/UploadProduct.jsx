@@ -169,7 +169,7 @@ const UploadProduct = ({route, navigation}) => {
 
                 <Button
                     style={styles.button_outline}
-                    method={() => navigation.navigate("Home")}
+                    method={() => navigation.navigate("Home", {id: user.id})}
                     text={"Cancel"}
                     textStyle={{color: colors.defaultBG4, fontSize: sizes.Medium}}
                 />

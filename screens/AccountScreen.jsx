@@ -8,36 +8,8 @@ import { Entypo } from '@expo/vector-icons';
 
 function AccountScreen({route, navigation}) {
 
-    
-
-    // const userId = route.params.id;
-    // const [users, setUsers] = useState([])
-
-    // async function getUsers() {
-    //     const querySnapshot = await getDocs(collection(firestore, "Users"));
-    //     let data = []
-    //     querySnapshot.forEach((doc) => {
-    //         data.push(doc.data())
-    //     });
-    //     setUsers(data)
-
-
-
-    // }
-
-    // //getUsers();
-
-    // let user = {}
-    // users.forEach((item) => {
-    //     if (item.id === userId) {
-    //         user = item
-    //         console.log("got user: "+ item)
-    //     }
-    // })
-
-    // user = testUsers[0]
-
     const user = route.params.user;
+    const userId = route.params.id;
 
 
 
@@ -105,7 +77,7 @@ function AccountScreen({route, navigation}) {
                         />
                         <Button
                             style={styles.message_btn}
-                            method={() => console.log("Follow")}
+                            method={() => navigation.navigate("Chat", {rec : user, id: userId})}
                             text={"Message"}
                             textStyle={{ color: colors.defaultBG4, fontSize: sizes.Medium }}
                         />

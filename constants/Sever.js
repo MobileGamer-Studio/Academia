@@ -6,7 +6,8 @@ import {initializeApp} from "firebase/app";
 import {signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword, getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult} from 'firebase/auth';
 import { getFirestore, setDoc, getDocs, doc, collection, addDoc} from 'firebase/firestore';
 import { getStorage, uploadBytes, ref} from "firebase/storage";
-import { users, User } from "./Data"
+import {getAnalytics} from "firebase/analytics";
+import { User } from "./Data"
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -30,6 +31,7 @@ export const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const firestore = getFirestore(app);
 export const storage = getStorage(app, "gs://academia-c3d0e.appspot.com/");
+const analytics = getAnalytics(app);
 
 const providerGoogle = new GoogleAuthProvider();
 providerGoogle.setCustomParameters({

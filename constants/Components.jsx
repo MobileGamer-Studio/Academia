@@ -520,7 +520,7 @@ const styles = StyleSheet.create({
     button: {
         borderRadius: sizes.ExtraLarge,
         padding: 5,
-        backgroundColor: colors.defaultBG4,
+        backgroundColor: colors.white,
         marginHorizontal: 5,
         marginTop: 5,
         width: 150,
