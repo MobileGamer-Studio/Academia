@@ -488,28 +488,28 @@ const styles = StyleSheet.create({
 
     navContainer: {
         position: "absolute",
-        bottom: 20,
+        bottom: 0,
         alignItems: "center",
         alignSelf: "center",
         // elevation: 5,
     },
 
     navBar: {
-        backgroundColor: colors.white,
+        backgroundColor: colors.defaultBG4,
         flexDirection: "row",
-        justifyContent: "center",
-        alignItems: "center",
+        justifyContent: 'space-evenly',
+        //alignItems: "center",
         alignSelf: "center",
-        paddingHorizontal: 5,
         paddingVertical: 5,
-        borderRadius: sizes.ExtraLarge,
+        width: "100%",
+        borderTopLeftRadius: sizes.Medium,
+        borderTopRightRadius: sizes.Medium,
     },
 
     navImages :{
         height: sizes.Large,
         width: sizes.Large,
         flex: 1,
-        marginHorizontal: 10,
         marginVertical: 5,
     },
 

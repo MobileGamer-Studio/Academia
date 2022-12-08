@@ -1,21 +1,29 @@
 export const colors = {
-    //
-    black: "black",
-    white: "white",
-    blue: "blue",
-    red: "red",
-    green: "green",
-    purple: "purple",
-    pink: "pink",
-    yellow: "yellow",
-    grey: "grey",
-    gold: "gold",
-    darkCyan: "darkcyan",
-    darkblue: "darkblue",
-    darkslategray: "darkslategray",
-    mediumslateblue: "mediumslateblue",
+    blue: '#0000FF',
+    red: '#FF0000',
+    green: '#00FF00',
+    yellow: '#FFFF00',
+    white: '#FFFFFF',
+    black: '#000000',
+    orange: '#FFA500',
+    purple: '#800080',
+    gray: '#808080',
+    brown: '#A52A2A',
+    pink: '#FFC0CB',
+    cyan: '#00FFFF',
+    magenta: '#FF00FF',
+    silver: '#C0C0C0',
+    gold: '#FFD700',
+    lime: '#00FF00',
+    maroon: '#800000',
+    navy: '#000080',
+    olive: '#808000',
+    teal: '#008080',
+    violet: '#EE82EE',
+    transparent: 'transparent',
 
-    //
+
+    //default colors
     defaultBG: "#c4d8dd",
     defaultBG2: "#f6f6f6",
     defaultBG3: "#f6e5e5",
@@ -23,7 +31,20 @@ export const colors = {
     defaultBG4_Selected: "#198B76",
     defaultTC: "black",
 
+    //theme colors
+    darkTheme: {
+        color: "#00FFD1",
+        bgColor: '#000',
+        textColor: '#fff'
+    },
+
+    lightTheme: {
+        color: "#00FFD1",
+        bgColor: '#fff',
+        textColor: '#000'
+    }
 };
+
 
 export const themeData = {
     light: {
@@ -65,11 +86,11 @@ export const images = {
 
     //
     icons: {
-        home: require("../images/HomeIcon-colouured.png"),
-        add: require("../images/AddIcon-coloured.png"),
-        settings: require("../images/SettingsIcon-coloured.png"),
-        search: require("../images/SearchIcon-coloured.png"),
-        cart: require("../images/Cart-coloured.png"),
+        home: require("../images/HomeIcon-white.png"),
+        add: require("../images/AddIcon-white.png"),
+        settings: require("../images/SettingsIcon-white.png"),
+        search: require("../images/SearchIcon-white.png"),
+        cart: require("../images/Cart-white.png"),
     },
 };
 

@@ -86,7 +86,7 @@ function AccountScreen({route, navigation}) {
             </View>
 
             <View>
-                <Text style={{ marginLeft: 15, marginTop: 15, fontSize: 25 }}>Products</Text>
+                <Text style={{ marginLeft: 15, marginTop: 15, fontSize: 25, color: colors.white }}>Products</Text>
                 <FlatList
                     horizontal
                     showsHorizontalScrollIndicator={false}

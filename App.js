@@ -34,7 +34,7 @@ function App() {
                 <Stack.Screen
                     name="Loading"
                     component={LoadingScreen}
-                    options={{headerShown: false}}
+                    options={{headerShown: false, }}
                     
                 />
                 <Stack.Screen
