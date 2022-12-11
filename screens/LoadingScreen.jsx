@@ -4,7 +4,7 @@ import {Image, StyleSheet, View} from 'react-native'
 import {colors, images} from '../constants/Data';
 import {auth} from "../constants/Sever";
 
-
+const theme = colors.lightTheme;
 //
 const LoadingScreen = ({route, navigation}) => {
     
@@ -43,7 +43,7 @@ export default LoadingScreen;
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: colors.white,
+        backgroundColor: theme.bgColor,
         flex: 1,
         alignItems: 'center',
         justifyContent: "center"

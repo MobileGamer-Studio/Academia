@@ -6,7 +6,7 @@ import {MaterialIcons} from "@expo/vector-icons"
 import { ProfilePicture } from '../constants/Components';
 
 
-
+const theme = colors.lightTheme
 function SettingScreen({route, navigation}) {
     const user = route.params.user;
     
@@ -59,11 +59,11 @@ function SettingScreen({route, navigation}) {
                     }}
                 >
                     <Text style={{ marginHorizontal: 10 }}>Log Out</Text>
-                    <MaterialIcons name="logout" size={24} color={colors.defaultBG4} />
+                    <MaterialIcons name="logout" size={24} color={theme.color} />
                 </TouchableOpacity>
             </View>
             <Switch
-                trackColor={{ false: colors.defaultBG4, true: "#81b0ff" }}
+                trackColor={{ false: theme.color, true: "#81b0ff" }}
                 thumbColor={isDarkMode ? "#f5dd4b" : "#f4f3f4"}
                 ios_backgroundColor= {colors.grey}
                 onValueChange={() => changeMode()}
@@ -77,12 +77,12 @@ function SettingScreen({route, navigation}) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: colors.white,
+        backgroundColor: theme.bgColor,
     },
     section: {
         flexDirection: "column",
         borderBottomWidth: 1,
-        borderBottomColor: colors.defaultBG4,
+        borderBottomColor: theme.color,
     },
 })
 

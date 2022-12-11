@@ -112,7 +112,7 @@ export const sizes = {
 export const User = {
     name: "",
     description: "",
-    profilePicture: images.defaultProfile,
+    profilePicture: "",
     followers: [],
     following: [],
     location: "----",
@@ -134,6 +134,15 @@ export const User = {
 
         },
         cart: [],
+        feed: {
+            suggestedProducts: [],
+            suggestedUsers: [],
+            bestSellers: [],
+            cart: [],
+            activity: [],
+            new: [],
+            sales: [],
+        },
         rating: 0,
         amountSpent: "0",
         suggested: {

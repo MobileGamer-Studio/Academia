@@ -4,7 +4,7 @@ import { ProfilePicture, RoundButton} from '../constants/Components';
 import {colors, sizes, testUsers} from "../constants/Data";
 
 
-
+const theme = colors.lightTheme;
 function FollowingListScreen({route, navigation}) {
 
     const user = route.params.user;
@@ -31,7 +31,7 @@ function User(props) {
                 alignItems: 'center',
                 justifyContent: 'flex-start',
                 borderBottomWidth: 1,
-                borderBottomColor: colors.defaultBG4,
+                borderBottomColor: theme.color,
                 padding: 10,
             }}
             
@@ -49,6 +49,6 @@ export default FollowingListScreen;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: colors.white,
+        backgroundColor: theme.bgColor,
     }
 })

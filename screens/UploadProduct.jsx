@@ -7,7 +7,7 @@ import {MaterialIcons} from "@expo/vector-icons"
 import { firestore } from "../constants/Sever";
 import {setDoc, doc, collection } from "firebase/firestore";
 
-
+const theme = colors.lightTheme
 const UploadProduct = ({route, navigation}) => {
 
     const user = route.params.user;
@@ -124,7 +124,7 @@ const UploadProduct = ({route, navigation}) => {
                             style={{
                                 borderRadius: sizes.Small,
                                 padding: 5,
-                                backgroundColor: colors.defaultBG4,
+                                backgroundColor: theme.color,
                                 margin: 5,
                                 width: 100,
                                 alignItems: "center",
@@ -148,7 +148,7 @@ const UploadProduct = ({route, navigation}) => {
                         <Button
                             method={() => GetImage()}
                             text={"Get Image"}
-                            textStyle={{color: colors.defaultBG4, fontSize: sizes.Small}}
+                            textStyle={{ color: theme.color, fontSize: sizes.Small}}
                         />
 
                     </View>
@@ -171,7 +171,7 @@ const UploadProduct = ({route, navigation}) => {
                     style={styles.button_outline}
                     method={() => navigation.navigate("Home", {id: user.id})}
                     text={"Cancel"}
-                    textStyle={{color: colors.defaultBG4, fontSize: sizes.Medium}}
+                    textStyle={{ color: theme.color, fontSize: sizes.Medium}}
                 />
 
             </View>
@@ -202,7 +202,7 @@ const ImageSample = (props) => {
 const Tag = (props) => {
     return (
         <View style={{
-            backgroundColor: colors.defaultBG4,
+            backgroundColor: theme.color,
             marginHorizontal: 10,
             height: 25,
             borderRadius: sizes.ExtraLarge,
@@ -222,14 +222,14 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         paddingVertical: sizes.ExtraLarge,
-        backgroundColor: colors.white,
+        backgroundColor: theme.bgColor,
         padding: sizes.ExtraSmall,
     },
 
     button: {
         borderRadius: sizes.ExtraLarge,
         padding: 5,
-        backgroundColor: colors.defaultBG4,
+        backgroundColor: theme.color,
         marginHorizontal: 5,
         marginTop: 20,
         width: 150,
@@ -240,7 +240,7 @@ const styles = StyleSheet.create({
         borderRadius: sizes.ExtraLarge,
         borderWidth: 1,
         padding: 5,
-        borderColor: colors.defaultBG4,
+        borderColor: theme.color,
         marginHorizontal: 5,
         marginTop: 20,
         width: 150,
@@ -249,7 +249,7 @@ const styles = StyleSheet.create({
 
     field: {
         borderBottomWidth: 1,
-        borderBottomColor: colors.defaultBG4,
+        borderBottomColor: theme.color,
         marginVertical: 5,
         padding: 2.5,
     },

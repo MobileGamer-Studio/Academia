@@ -3,6 +3,7 @@ import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {colors, sizes} from '../constants/Data'
 import {ProductMax} from '../constants/Components'
 
+const theme = colors.lightTheme;
 const OrderScreen = ({navigation}) => {
     let user = User;
     return (
@@ -52,7 +53,7 @@ const OrderScreen = ({navigation}) => {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: colors.white,
+        backgroundColor: theme.bgColor,
         flex: 1,
         paddingVertical: sizes.ExtraLarge,
     }

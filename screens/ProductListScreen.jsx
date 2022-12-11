@@ -2,7 +2,7 @@ import React from "react";
 import { View, TouchableOpacity, Text, StyleSheet, FlatList, Image } from "react-native";
 import { colors, sizes } from "../constants/Data";
 
-
+const theme = colors.lightTheme;
 function ProductListScreen({route, navigation}) {
     const userId = route.params.id;
     const user = GetUserData(userId);
@@ -85,14 +85,14 @@ export default ProductListScreen;
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: colors.defaultBG2,
+        backgroundColor: theme.bgColor,
         flex: 1,
         justifyContent: "flex-start",
         paddingTop: sizes.ExtraLarge,
     },
 
     product: {
-        backgroundColor: colors.white,
+        backgroundColor: theme.bgColor,
         flexDirection: "column",
         padding: sizes.ExtraSmall,
         borderRadius: sizes.Medium,

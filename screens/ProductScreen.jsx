@@ -2,6 +2,7 @@ import React from 'react';
 import {FlatList, Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {colors, images, sizes} from '../constants/Data';
 
+const theme = colors.lightTheme;
 function ProductScreen({route, navigation}) {
     const product = route.params.item;
 
@@ -21,7 +22,7 @@ function ProductScreen({route, navigation}) {
                     source={product.image}/>
             </View>
             <View style={{
-                backgroundColor: colors.defaultBG4,
+                backgroundColor: theme.color,
                 borderTopRightRadius: sizes.Medium + 10,
                 borderTopLeftRadius: sizes.Medium + 10,
                 paddingVertical: sizes.Medium,
@@ -48,14 +49,14 @@ function ProductScreen({route, navigation}) {
                                     <View style={{
                                         margin: 10,
                                         padding: 5,
-                                        backgroundColor: colors.white,
+                                        backgroundColor: theme.bgColor,
                                         borderRadius: sizes.ExtraLarge,
                                         alignItems: "center",
                                         justifyContent: "center",
                                     }}>
                                         <Text style={{
                                             fontSize: sizes.Small,
-                                            color: colors.defaultBG4,
+                                            color: theme.color,
                                             marginHorizontal: sizes.ExtraSmall,
                                         }}>
                                             {"#" + item}
@@ -72,7 +73,7 @@ function ProductScreen({route, navigation}) {
                     paddingVertical: 5,
                     paddingHorizontal: 10,
                     alignItems: "center",
-                    backgroundColor: colors.white,
+                    backgroundColor: theme.bgColor,
                     borderRadius: sizes.ExtraLarge,
                     marginHorizontal: sizes.ExtraSmall,
                     marginVertical: sizes.Small,
@@ -80,15 +81,15 @@ function ProductScreen({route, navigation}) {
                     <Text
                         style={{
                             fontSize: sizes.Large,
-                            color: colors.defaultBG4,
+                            color: theme.color,
                         }}>{product.price + " Naira"}
                     </Text>
 
                     <TouchableOpacity
                         style={{
                             borderRadius: sizes.ExtraLarge,
-                            borderColor: colors.white,
-                            backgroundColor: colors.defaultBG4,
+                            borderColor: theme.bgColor,
+                            backgroundColor: theme.color,
                             flexDirection: "row",
                             justifyContent: "space-between",
                             padding: sizes.ExtraSmall,
@@ -126,7 +127,7 @@ function ProductScreen({route, navigation}) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: colors.white,
+        backgroundColor: theme.bgColor,
         paddingTop: sizes.ExtraLarge,
         justifyContent: "space-between",
     },

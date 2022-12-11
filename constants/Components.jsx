@@ -1,6 +1,7 @@
 import React from 'react';
 import {Image, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
-import {colors, images, sizes} from "./Data"
+import {colors, images, sizes} from "./Data";
+import {MaterialIcons} from "@expo/vector-icons";
 
 
 //Buttons, Input, Images
@@ -19,12 +20,7 @@ export const Button = (props) => {
                         width: props.imageWidth,
                         alignItems: "center",
                     }}>
-                        <Image style = {{
-                            height: props.imageHeight,
-                            width: props.imageWidth,
-                            flex: 1,
-                            borderRadius: sizes.ExtraLarge,
-                        }} source = {props.image}/>
+                        <MaterialIcons name={props.icon} size={props.imageWidth} color={props.iconColor} />
                     </View>
                 </View>
             </TouchableOpacity>
@@ -50,7 +46,7 @@ export function RoundButton(props) {
                 alignItems: "center",
             }}>
                 <Image
-                    source={props.image}
+                    source={{uri: props.image}}
                     style={{
                         height: props.height,
                         width: props.width,
@@ -138,7 +134,6 @@ export const ProfilePicture = (props) => {
             height: props.height,
             width: props.width,
             borderRadius: sizes.ExtraLarge,
-            marginEnd: sizes.ExtraSmall,
             alignItems: "center",
             alignSelf: "center",
         }}>
@@ -414,12 +409,18 @@ export const NavBar = (props) => {
                   </TouchableOpacity>
               </View>
 
-              <View style={styles.navItem}>
+              <View style = {styles.navItem}>
                   <TouchableOpacity
-                      onPress={props.settings}
+                      onPress={props.profile}  
+                      style={{
+                          backgroundColor: colors.white,
+                          borderRadius: sizes.ExtraLarge,
+                          height: sizes.Large,
+                          width: sizes.Large,
+                      }}
                   >
                       <Image
-                          source={images.icons.settings}
+                          source={{uri: props.image}}
                           style={styles.navImages}
                           resizeMode="contain"
                       />
@@ -498,9 +499,9 @@ const styles = StyleSheet.create({
         backgroundColor: colors.defaultBG4,
         flexDirection: "row",
         justifyContent: 'space-evenly',
-        //alignItems: "center",
+        alignItems: "center",
         alignSelf: "center",
-        paddingVertical: 5,
+        paddingVertical: 7,
         width: "100%",
         borderTopLeftRadius: sizes.Medium,
         borderTopRightRadius: sizes.Medium,

@@ -4,7 +4,7 @@ import {colors, sizes, testProducts} from '../constants/Data';
 import {ProductCategory, SearchBar} from '../constants/Components';
 
 
-
+const theme = colors.lightTheme;
 
 export default function SearchScreen({navigation, route}) {
 
@@ -115,7 +115,7 @@ const Product = ({ props }) => {
         <View>
             <TouchableOpacity
                 style={{
-                    backgroundColor: colors.white,
+                    backgroundColor: theme.bgColor,
                     marginVertical: sizes.ExtraSmall,
                     marginHorizontal: 5,
                     borderRadius: 10,

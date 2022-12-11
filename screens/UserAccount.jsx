@@ -6,11 +6,12 @@ import { firestore } from "../constants/Sever";
 import { getDocs, collection } from "firebase/firestore";
 import { MaterialIcons, Entypo } from "@expo/vector-icons";
 
-
+const theme = colors.lightTheme;
 
 function UserAccount({ route, navigation }) {
     const userId = route.params.id;
     const [users, setUsers] = useState([])
+    const [optionsAct, setOptionsAct] = useState(false)
 
     async function getUsers() {
         const querySnapshot = await getDocs(collection(firestore, "Users"));
@@ -25,7 +26,14 @@ function UserAccount({ route, navigation }) {
 
     const user = route.params.user
 
-
+    //Functions
+    function options() {
+        if (optionsAct) {
+            setOptionsAct(false)
+        } else {
+            setOptionsAct(true)
+        }
+    }
 
 
     return (
@@ -34,7 +42,7 @@ function UserAccount({ route, navigation }) {
                 flexDirection: 'column',
                 padding: sizes.Small,
                 justifyContent: 'space-between',
-                backgroundColor: colors.defaultBG4,
+                backgroundColor: theme.color,
                 borderBottomLeftRadius: 75,
                 borderBottomRightRadius: 75,
                 paddingTop: 60,
@@ -42,7 +50,7 @@ function UserAccount({ route, navigation }) {
                 marginBottom: 10,
             }}>
                 <View style={{ alignItems: "flex-end", marginBottom: 20 }}>
-                    <TouchableOpacity onPress={() => navigation.navigate("", { id: userId })}>
+                    <TouchableOpacity onPress={() => options()}>
                         <Entypo name="dots-three-vertical" size={24} color={colors.white} />
                     </TouchableOpacity>
                 </View>
@@ -98,6 +106,14 @@ function UserAccount({ route, navigation }) {
                     <View>
                         <Text style={{ color: colors.white }}>{user.description}</Text>
                     </View>
+                    <View style={{
+                        flexDirection: "row",
+                        margin: 10,
+                    }}>
+                        <MaterialIcons name="location-on" size={24} color={colors.white} />
+                        <Text style={{ color: colors.white }}>{user.location}</Text>
+                    </View>
+                    
                 </View>
             </View>
             <ScrollView style={{
@@ -126,6 +142,20 @@ function UserAccount({ route, navigation }) {
                     />
                 </View>
             </ScrollView>
+            <View style={{
+                alignItems: "center",
+                backgroundColor: theme.color,
+                borderRadius: 100,
+                position: "absolute",
+                bottom: sizes.Small,
+                right: sizes.Small,
+                padding: sizes.ExtraSmall,
+                
+            }}>
+                <TouchableOpacity onPress={() => navigation.navigate("Chats", { user: user })}>
+                    <MaterialIcons name="chat" size={30} color={colors.white} />
+                </TouchableOpacity>
+            </View>
         </View>
     );
 }
@@ -158,7 +188,7 @@ function Clikable(props) {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: colors.white,
+        backgroundColor: theme.bgColor,
         flex: 1,
         justifyContent: "flex-start",
     },

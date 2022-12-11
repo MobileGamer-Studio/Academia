@@ -5,6 +5,7 @@ import { firestore } from "../constants/Sever";
 import { getDocs, collection, setDoc, doc } from "firebase/firestore";
 import { FontAwesome, MaterialIcons } from '@expo/vector-icons';
 
+const theme = colors.lightTheme;
 function ChatScreen({route, navigation}) {
 
     const receiver = route.params.rec;
@@ -60,16 +61,16 @@ function ChatScreen({route, navigation}) {
                         borderRadius: sizes.ExtraLarge,
                         marginHorizontal: 10,
                         paddingHorizontal: sizes.Small,
-                        backgroundColor: colors.white,
+                        backgroundColor: theme.bgColor,
                         height: 40,
                         width: "80%",
-                        borderColor: colors.defaultBG4,
+                        borderColor: theme.color,
                         borderWidth: 1,
                     }}
                     placeholder="Message....." 
                 />
                 <TouchableOpacity onPress = {() => {}}>
-                    <FontAwesome name="send" color={colors.defaultBG4} size={35} />
+                    <FontAwesome name="send" color={theme.color} size={35} />
                 </TouchableOpacity>
             </View>
         </View>
@@ -85,7 +86,7 @@ function Chat(props) {
                 alignSelf: "flex-end",
             }}>
                 <TouchableOpacity style={{
-                    backgroundColor: colors.defaultBG4,
+                    backgroundColor: theme.color,
                     padding: 8,
                     alignItems: "center",
                     borderRadius: sizes.ExtraLarge,
@@ -110,7 +111,7 @@ function Chat(props) {
                 alignSelf: "flex-start",
             }}>
                 <TouchableOpacity style={{
-                    backgroundColor: colors.defaultBG4,
+                    backgroundColor: theme.color,
                     padding: 8,
                     alignItems: "center",
                     borderRadius: sizes.ExtraLarge,
@@ -137,7 +138,7 @@ export default ChatScreen;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: colors.white,
+        backgroundColor: theme.bgColor,
     },
 
     inputContainer: {

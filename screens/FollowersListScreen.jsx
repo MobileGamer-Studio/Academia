@@ -4,7 +4,7 @@ import { ProfilePicture, RoundButton } from '../constants/Components';
 import { colors, sizes, testUsers } from "../constants/Data";
 
 
-
+const theme = colors.lightTheme;
 function FollowersListScreen({route, navigation}) {
     const user = route.params.user;
     return(
@@ -31,7 +31,7 @@ function User(props) {
                 alignItems: 'center',
                 justifyContent: 'flex-start',
                 borderBottomWidth: 1,
-                borderBottomColor: colors.defaultBG4,
+                borderBottomColor: theme.color,
                 padding: 10,
             }}
 

@@ -129,7 +129,7 @@ function App() {
                 />
 
                 <Stack.Screen
-                    name="ChatList"
+                    name="Chats"
                     component={ChatListScreen}
                 />
                 <Stack.Screen

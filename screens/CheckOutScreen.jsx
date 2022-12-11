@@ -3,7 +3,7 @@ import { FlatList, StyleSheet, View } from 'react-native';
 import {colors, testUsers} from "../constants/Data"
 import { CartItem } from "../constants/Components";
 
-
+const theme = colors.lightTheme;
 function CheckOutScreen({route, navigation}) {
     const userId = route.params.id;
     const user = testUsers[0];
@@ -37,7 +37,7 @@ export default CheckOutScreen;
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor : colors.defaultBG2,
+        backgroundColor: theme.bgColor,
 
     },
 })

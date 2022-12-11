@@ -3,6 +3,7 @@ import {FlatList, StyleSheet, View} from 'react-native';
 import {colors, testUsers} from '../constants/Data';
 import {CartItem} from "../constants/Components";
 
+const theme = colors.lightTheme;
 function CartScreen({route, navigation}) {
     const userId = route.params.id;
     const user = testUsers[0];
@@ -40,7 +41,7 @@ function CartScreen({route, navigation}) {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: colors.white,
+        backgroundColor: theme.bgColor,
         flex: 1,
     },
 })

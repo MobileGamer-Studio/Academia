@@ -7,6 +7,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { firestore } from "../constants/Sever";
 import { getDocs, collection } from "firebase/firestore";
 
+const theme = colors.lightTheme;
+
 function EditProfileScreen({route, navigation}) {
 
     const userId = route.params.id;
@@ -115,7 +117,7 @@ export default EditProfileScreen;
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: colors.white,
+        backgroundColor: theme.bgColor,
         flex: 1,
         justifyContent: "flex-start",
         paddingTop: sizes.ExtraLarge,
@@ -123,7 +125,7 @@ const styles = StyleSheet.create({
 
     field: {
         borderBottomWidth: 1,
-        borderBottomColor: colors.defaultBG4,
+        borderBottomColor: theme.color,
         marginVertical: 5,
         padding: 2.5,
     },
@@ -131,7 +133,7 @@ const styles = StyleSheet.create({
     button: {
         borderRadius: sizes.ExtraLarge,
         padding: 5,
-        backgroundColor: colors.defaultBG4,
+        backgroundColor: theme.color,
         marginHorizontal: 5,
         marginTop: 20,
         width: 150,
@@ -142,7 +144,7 @@ const styles = StyleSheet.create({
         borderRadius: sizes.ExtraLarge,
         borderWidth: 1,
         padding: 5,
-        borderColor: colors.defaultBG4,
+        borderColor: theme.color,
         marginHorizontal: 5,
         marginTop: 20,
         width: 150,
