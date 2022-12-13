@@ -65,19 +65,9 @@ export async function GetAppData() {
 
 
 export function GetData(id, data) {
-    console.log(data)
-    for (const object in data) {
-        if (object.id === id) {
-            const objectGotten = object[object];
-            return objectGotten;
+    data.forEach((item) => {
+        if (item.id === id) {
+            return item;
         }
-    }
-    
-    console.log("user not found");
+    })
 }
-
-export function ManageAppData() {
-    GetAppData()
-    SaveAppData()
-}
-

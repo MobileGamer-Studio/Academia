@@ -1,14 +1,14 @@
 import React, {useState} from 'react'
 import {FlatList, Image, StyleSheet, Text, TouchableOpacity, View, ScrollView} from 'react-native'
 import {colors, sizes, testProducts} from '../constants/Data';
-import {ProductCategory, SearchBar} from '../constants/Components';
+import {ProductCategory, ProductVertical, SearchBar} from '../constants/Components';
 
 
 const theme = colors.lightTheme;
 
 export default function SearchScreen({navigation, route}) {
 
-    const [searchResult, setSearchResult] = useState([])
+    const [searchResult, setSearchResult] = useState(testProducts)
     const [relatedTags, setRelatedTags] = useState([])
 
     const searchText = route.params.search;
@@ -32,32 +32,35 @@ export default function SearchScreen({navigation, route}) {
     }
 
     function Search(val) {
-        if (val === "null") {
+        if (val === "null" || val === "") {
             return setSearchResult(testProducts);
         }
         val = val.toLowerCase();
         setSearchResult([])
+        let list = []
         testProducts.forEach(product => {
-            if (product.tags.includes(val) === false) {
+            if (product.title.includes(val) === true || product.tags.includes(val) === true) {
                 console.log("found one")
-                searchResult.push(product)
+                list.push(product)
             }
         })
+        setSearchResult(list)  
         console.log(val, "found in: ", searchResult);
 
-        GetRelatedTags()
+        //GetRelatedTags()
     }
-
-    Search(searchText);
 
     return (
         <View style={styles.container}>
-            <View>
+            <View style = {{
+                margin: sizes.ExtraSmall,
+            }}>
                 <SearchBar
                     method={(val) => Search(val)}
+                    colors = {theme.outline}
                 />
             </View>
-            <ScrollView>
+            <View>
                 <View>
                     <FlatList
                         horizontal
@@ -66,10 +69,11 @@ export default function SearchScreen({navigation, route}) {
                         data={relatedTags}
                         renderItem={({ item }) => {
                             return (
-                                <ProductCategory
-                                    text={item.Tag}
-                                    method={() => Search(item.Tag)}//navigation.navigate("Search", {search: item.name})}
-                                />
+                                // <ProductCategory
+                                //     text={item.Tag}
+                                //     method={() => Search(item.Tag)}//navigation.navigate("Search", {search: item.name})}
+                                // />
+                                <View></View>
                             );
                         }}
                     />
@@ -82,7 +86,7 @@ export default function SearchScreen({navigation, route}) {
                         data={searchResult}
                         renderItem={({ item }) => {
                             return (
-                                <Product
+                                <ProductVertical
                                     title={item.title}
                                     image={item.image}
                                     method={() => navigation.navigate("Product", { item })}
@@ -94,23 +98,17 @@ export default function SearchScreen({navigation, route}) {
                 <View>
                     <Text>Suggested</Text>
                     <View>
-                        <FlatList
-                            renderItem={({item}) => {
-                                return  (
-                                   <View/> 
-                                );
-                            }}
-                        />
+                        
                     </View>
                 </View>
-            </ScrollView>
+            </View>
 
         </View>
     )
 }
 
 
-const Product = ({ props }) => {
+const Product = (props) => {
     return (
         <View>
             <TouchableOpacity

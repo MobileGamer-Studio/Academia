@@ -33,14 +33,18 @@ export const colors = {
 
     //theme colors
     darkTheme: {
-        color: "#00FFD1",
+        color: "#FFOOE5",
+        color2: "#FFOOE5",
         bgColor: '#000',
+        outline: "#c4d8dd",
         textColor: '#fff'
     },
 
     lightTheme: {
         color: "#00FFD1",
+        color2: "#FFOOE5",
         bgColor: '#fff',
+        outline: "#c4d8dd",
         textColor: '#000'
     }
 };
@@ -112,10 +116,10 @@ export const sizes = {
 export const User = {
     name: "",
     description: "",
-    profilePicture: "",
+    profilePicture: "https://firebasestorage.googleapis.com/v0/b/academia-c3d0e.appspot.com/o/Images%2FProfile%2FprofileIcon.png?alt=media&token=d0c063e1-d61e-4630-a6af-bba57f100d9d",
     followers: [],
     following: [],
-    location: "----",
+    location: "",
     loginDetails: {
         email: "",
         password: "",
@@ -127,12 +131,6 @@ export const User = {
         amountSelling: "0",
     },
     userInfo: {
-        chatInfo: {
-            chatList : [
-                
-            ],
-
-        },
         cart: [],
         feed: {
             suggestedProducts: [],
@@ -162,6 +160,9 @@ export const User = {
             },
         },
     },
+    chatList: [
+
+    ],
     id: "0",
 }
 
@@ -192,23 +193,23 @@ export const Item = {
 }
 
 export const Order = {
-    user: User,
+    user: "",
     date: "dd/mm/yr",
     products: [],
     id: "0",
 }
 
 export const Message = {
-    receiver : User,
-    sender: User,
-    date: "dd/mm/yr",
+    sender: "",
+    message: "",
     time: "mm:ss",
     id: "0",
 }
 
 export const Chat = {
-    receiver: User,
-    messages: []
+    receiver: "",
+    messages: [],
+    id: "0"
 }
 
 export const List = {

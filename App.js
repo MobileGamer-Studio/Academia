@@ -23,6 +23,8 @@ import FollowingListScreen from './screens/FollowingListScreen';
 import FollowersListScreen from './screens/FollowersListScreen';
 import ChatListScreen from './screens/ChatListScreen';
 import ChatScreen from './screens/ChatScreen';
+import AccountListScreen from './screens/AccountListScreen';
+import SavedScreen from './screens/SavedScreen';
 
 
 const Stack = createNativeStackNavigator();
@@ -136,6 +138,15 @@ function App() {
                     name="Chat"
                     component={ChatScreen}
                     options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                    name="Accounts"
+                    component={AccountListScreen}
+                    options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                    name="Saved"
+                    component={SavedScreen}
                 />
             </Stack.Navigator>
         </NavigationContainer>

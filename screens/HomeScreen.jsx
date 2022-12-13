@@ -7,7 +7,6 @@ import { getDocs, collection, setDoc, doc } from "firebase/firestore";
 import { Entypo } from '@expo/vector-icons';
 
 const theme = colors.lightTheme;
-
 function HomeScreen({ route, navigation }) {
     const userId = route.params.id;
     const [users, setUsers] = useState([])
@@ -21,7 +20,7 @@ function HomeScreen({ route, navigation }) {
         setUsers(data)
     }
 
-    getUsers();
+    getUsers().then(r => console.log("Promise resolved!"));
 
     let user = {}
     users.forEach((item) => {
@@ -31,7 +30,7 @@ function HomeScreen({ route, navigation }) {
             console.log("got user: "+ user.name)
         }
     })
-    console.log("CHECK \n User id:" + userId + "\n Users: " + users + "\n User: " + user)
+    //console.log("CHECK \n User id:" + userId + "\n Users: " + users + "\n User: " + user)
 
 
     return (

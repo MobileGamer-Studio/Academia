@@ -4,6 +4,8 @@ import {colors, images, sizes} from "./Data";
 import {MaterialIcons} from "@expo/vector-icons";
 
 
+const theme = colors.lightTheme;    
+
 //Buttons, Input, Images
 export const Button = (props) => {
 
@@ -117,9 +119,10 @@ export const SearchBar = (props) => {
                     borderRadius: sizes.ExtraLarge,
                     marginHorizontal: 2.5,
                     paddingHorizontal: sizes.Small,
-                    backgroundColor: colors.white,
+                    backgroundColor: theme.bgColor,
                     height: 40,
-                    borderColor: "transparent",
+                    borderColor: props.color,
+                    borderWidth: 1,
                 }}
                 placeholder="snacks, assignments, stationaries..."
             />
@@ -129,24 +132,31 @@ export const SearchBar = (props) => {
 
 export const ProfilePicture = (props) => {
     return (
-        <View style={{
-            backgroundColor: colors.white,
-            height: props.height,
-            width: props.width,
-            borderRadius: sizes.ExtraLarge,
-            alignItems: "center",
-            alignSelf: "center",
-        }}>
-            <Image
-                source={props.image}
-                style={{
-                    height: props.height,
-                    width: props.width,
-                    flex: 1,
-                    borderRadius: sizes.ExtraLarge,
-                }}
-                resizeMode="contain"
-            />
+        <View
+            style={{
+                borderRadius: sizes.ExtraLarge,
+                backgroundColor: props.color,
+                height: props.height,
+                width: props.width,
+                alignItems: "center",
+            }}
+        >
+            <View style={{
+                height: props.height,
+                width: props.width,
+                alignItems: "center",
+            }}>
+                <Image
+                    source={{ uri: props.image }}
+                    style={{
+                        height: props.height,
+                        width: props.width,
+                        flex: 1,
+                        borderRadius: sizes.ExtraLarge,
+                    }}
+                    resizeMode="contain"
+                />
+            </View>
         </View>
     );
 }
@@ -250,81 +260,7 @@ export const ProductCategory = (props) => {
     );
 }
 
-export function CartItem(props) {
-    const product = props.product;
-    const amount = props.amount
 
-    return (
-        <View style={{
-            elevation: sizes.ExtraSmall,
-            marginVertical: sizes.ExtraSmall,
-        }}>
-            <TouchableOpacity
-                style={{
-                    flexDirection: "row",
-                    backgroundColor: colors.white,
-                    borderRadius: sizes.Small,
-                    height: 150,
-                    alignItems: 'flex-start',
-                    justifyContent: "flex-start",
-                    padding: 5,
-                }}
-
-                onPress={props.method}
-            >
-                <View style={{
-                    height: 100,
-                    alignSelf: "center",
-                    justifyContent: "center",
-                }}>
-                    <Image
-                        style={{
-                            flex: 1,
-                            alignSelf: "center",
-                        }}
-                        resizeMode="contain"
-                        source={props.product.image} />
-                </View>
-                <View>
-                    <Text style={{ fontSize: sizes.Medium, color: colors.black }}>{props.title}</Text>
-                    <Text style={{ fontSize: sizes.Small, color: colors.grey }}>{props.description}</Text>
-                </View>
-                <View style={{
-                    flexDirection: "row",
-                    justifyContent: "flex-start"
-                }}>
-                    <Button
-                        style={{
-                            borderRadius: sizes.ExtraLarge,
-                            borderWidth: 1,
-                            borderColor: colors.defaultBG4,
-                            padding: 5,
-                            alignItems: "center",
-                            justifyContent: "center",
-                            marginHorizontal: 10,
-                        }}
-                        method={() => RemoveItem(props.item)}
-                        text={"Cancel"}
-                        textStyle={{ fontSize: sizes.Small, color: colors.white }}
-                    /><Button
-                        style={{
-                            borderRadius: sizes.ExtraLarge,
-                            backgroundColor: colors.defaultBG4,
-                            padding: 5,
-                            alignItems: "center",
-                            justifyContent: "center",
-                            marginHorizontal: 10,
-                        }}
-                        method={() => RemoveItem(props.item)}
-                        text={"Edit"}
-                        textStyle={{ fontSize: sizes.Small, color: colors.white }}
-                    />
-
-                </View>
-            </TouchableOpacity>
-        </View>
-    )
-}
 
 export const UserProfile = (props) => {
     const user = props.user

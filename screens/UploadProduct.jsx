@@ -28,7 +28,7 @@ const UploadProduct = ({route, navigation}) => {
             return;
         }
 
-        setSelectedImage({ uri: pickedImage.uri });
+        setSelectedImage(pickedImage.uri);
         console.log(selectedImage);
     }
 
@@ -60,9 +60,9 @@ const UploadProduct = ({route, navigation}) => {
 
     return (
         <View style={styles.container}>
-            <ScrollView>
+            <ScrollView showsVerticalScrollIndicator = {false}>
                 <View style={styles.field}>
-                    <Text>{"Product: " + title}</Text>
+                    <Text style={{ marginHorizontal: 5 }}>{"Product: " + title}</Text>
                     <InfoInput
                         method={(val) => setTitle(val)}
                         placeholder={"product name"}
@@ -70,7 +70,7 @@ const UploadProduct = ({route, navigation}) => {
 
                 </View>
                 <View style={styles.field}>
-                    <Text>{"Description: " + description}</Text>
+                    <Text style={{ marginHorizontal: 5 }}>{"Description: " + description}</Text>
                     <InfoInput
                         method={(val) => setDescription(val)}
                         placeholder={"description"}
@@ -86,7 +86,7 @@ const UploadProduct = ({route, navigation}) => {
 
                 </View>
                 <View style={styles.field}>
-                    <Text>{"Category: " + category}</Text>
+                    <Text style={{ marginHorizontal: 5 }}>{"Category: " + category}</Text>
                     <InfoInput
                         method={(val) => setCategory(val)}
                         placeholder={"category"}
@@ -95,9 +95,10 @@ const UploadProduct = ({route, navigation}) => {
                 </View>
                 <View style={styles.field}>
                     <View style={{
-                        flexDirection: "row"
+                        flexDirection: "row",
+                        
                     }}>
-                        <Text>{"Tags: "}</Text>
+                        <Text style={{ marginHorizontal: 5 }}>{"Tags: "}</Text>
                         <FlatList
                             horizontal
                             showsHorizontalScrollIndicator={false}
@@ -137,21 +138,30 @@ const UploadProduct = ({route, navigation}) => {
                 </View>
                 <View>
                     <View style={{
-                        flexDirection: "column",
-                    }}>
-                        <ImageSample image={selectedImage.uri}/>
-                    </View>
-                    <View style = {{
                         flexDirection: "row"
                     }}>
-                        <View style = {{marginHorizontal: 1}}><MaterialIcons name="image" size={24} color={colors.defaultBG4} /></View>
+                        <View style={{ marginHorizontal: 1 }}><MaterialIcons name="image" size={24} color={colors.defaultBG4} /></View>
                         <Button
                             method={() => GetImage()}
                             text={"Get Image"}
-                            textStyle={{ color: theme.color, fontSize: sizes.Small}}
+                            textStyle={{ color: theme.color, fontSize: sizes.Small }}
                         />
 
                     </View>
+                    <View style={{
+                        backgroundColor: colors.white,
+                        alignItems: "center",
+                        alignSelf: "center",
+                    }}>
+                        <Image 
+                            source={{ uri: selectedImage }}
+                            style={{
+                                flex: 1,
+                                borderRadius: sizes.ExtraLarge,
+                            }}
+                        />
+                    </View>
+                    
                 </View>
             </ScrollView>
             <View style={{
@@ -183,14 +193,14 @@ const ImageSample = (props) => {
     return (
         <View style = {{
             backgroundColor: colors.white,
-            height: 50,
-            width: 50,
+            height: 200,
+            width: 200,
             alignItems: "center",
             alignSelf: "center",
         }}>
             <Image style={{
-                height: 50,
-                width: 50,
+                height: 200,
+                width: 200,
                 flex: 1,
                 borderRadius: sizes.ExtraLarge,
             }} 
@@ -223,7 +233,7 @@ const styles = StyleSheet.create({
         flex: 1,
         paddingVertical: sizes.ExtraLarge,
         backgroundColor: theme.bgColor,
-        padding: sizes.ExtraSmall,
+        paddingVertical: sizes.Large,
     },
 
     button: {

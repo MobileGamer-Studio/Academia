@@ -1,16 +1,20 @@
 import React, {useState} from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, TextInput, ScrollView} from 'react-native';
-import { colors, sizes } from '../constants/Data';
+import { colors, Message, sizes } from '../constants/Data';
 import { firestore } from "../constants/Sever";
 import { getDocs, collection, setDoc, doc } from "firebase/firestore";
 import { FontAwesome, MaterialIcons } from '@expo/vector-icons';
+import { ProfilePicture } from '../constants/Components';
 
 const theme = colors.lightTheme;
 function ChatScreen({route, navigation}) {
-
-    const receiver = route.params.rec;
+    const chat = route.params.chat;
     const userId = route.params.id;
+    const recId = chat.receiver;
+    
     const [users, setUsers] = useState([])
+    const [messages, setMessages] = useState(chat.messages)
+    const [inputText, setInputText] = useState("")
 
     async function getUsers() {
         const querySnapshot = await getDocs(collection(firestore, "Users"));
@@ -21,42 +25,85 @@ function ChatScreen({route, navigation}) {
         setUsers(data)
     }
 
-    async function saveUsers() {
-        for (const item of users) {
-            await setDoc(doc(firestore, "Users", item.id), item);
-        }
+    async function updateUser(id, data) {
+        await setDoc(doc(firestore, "Users", id), data);
     }
 
-    saveUsers().then(r => console.log(r));
-
-    getUsers().then(r => console.log(r));
+    getUsers().then(r => console.log("Promise resolved!"));
 
     let user = {}
     users.forEach((item) => {
         if (item.id === userId) {
             user = item
-            console.log("got user: ${user}")
+            // console.log("got user: "+ user.name)
+        }
+    })
+
+    let receiver = {}
+    users.forEach((item) => {
+        if (item.id === recId) {
+            receiver = item
+            // console.log("got user: "+ receiver.name)
         }
     })
 
 
-
     //
-    function sendMessage() {
-        const newChat = "";
+    function sendMessage(message) {
+        const newMessage = Message;
+        newMessage.id = messages.length + 1;
+        newMessage.message = message;
+        newMessage.sender = userId;
+        console.log(newMessage);
+
+        user.chatList.forEach((item) => {
+            if (item.id === chat.id) {
+                item = chat;
+                console.log("chat updated" + item.messages)
+            }
+        })
+        receiver.chatList.forEach((item) => {
+            if (item.id === chat.id) {
+                item = chat;
+                console.log("chat updated" + item.messages)
+            }
+        })
+        updateUser(userId, user);
+        updateUser(recId, receiver)
     }
 
     return (
         <View style={styles.container}>
+            <View style = {{flexDirection: 'row', backgroundColor: theme.bgColor}}>
+                <ProfilePicture
+                    image={receiver.profilePicture}
+                    height={sizes.Large}
+                    width={sizes.Large}
+                    color={colors.white}
+                />
+            </View>
             <ScrollView style = {{
                 marginTop: sizes.ExtraLarge,
             }}>
                 <Chat message="Hello Friends" user={user} userId={receiver.id} time = "10:20" />
                 <Chat message="Hello You" user={user} userId={user.id} time="10:22" />
             </ScrollView>
+            <View>
+                <FlatList
+                    vertical
+                    showsHorizontalScrollIndicator={false}
+                    keyExtractor={(item) => item.id}
+                    data={messages}
+                    renderItem={({ item }) => {
+                        return (
+                            <Chat message={item.message} user={user} userId={item.sender}/>
+                        )
+                    }}
+                />
+            </View>
             <View style = {styles.inputContainer}>
                 <TextInput 
-                    onChangeText={() => {console.log("text changed")}}
+                    onChangeText={(val) => setInputText(val)}
                     style={{
                         borderRadius: sizes.ExtraLarge,
                         marginHorizontal: 10,
@@ -69,7 +116,7 @@ function ChatScreen({route, navigation}) {
                     }}
                     placeholder="Message....." 
                 />
-                <TouchableOpacity onPress = {() => {}}>
+                <TouchableOpacity onPress = {() => sendMessage(inputText)}>
                     <FontAwesome name="send" color={theme.color} size={35} />
                 </TouchableOpacity>
             </View>
@@ -148,6 +195,7 @@ const styles = StyleSheet.create({
         bottom: 0,
         marginHorizontal: 10,
         marginBottom: 20,
+        marginTop: 10,
         justifyContent: "space-between",
     }
 })
