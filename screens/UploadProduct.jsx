@@ -18,7 +18,7 @@ const UploadProduct = ({route, navigation}) => {
     const [category, setCategory] = useState("");
     const [tags, setTags] = useState([]);
     const [tag, setTag] = useState("....");
-    const [selectedImage, setSelectedImage] = useState({uri: ""});
+    const [selectedImage, setSelectedImage] = useState({ uri: "https://firebasestorage.googleapis.com/v0/b/academia-c3d0e.appspot.com/o/Images%2FCameraIcon-coloured.png?alt=media&token=0ac47e13-7a64-466b-8027-1f9ae3b006d6"});
 
 
     async function GetImage() {
@@ -28,7 +28,7 @@ const UploadProduct = ({route, navigation}) => {
             return;
         }
 
-        setSelectedImage(pickedImage.uri);
+        setSelectedImage({ uri: pickedImage.uri });
         console.log(selectedImage);
     }
 
@@ -154,7 +154,7 @@ const UploadProduct = ({route, navigation}) => {
                         alignSelf: "center",
                     }}>
                         <Image 
-                            source={{ uri: selectedImage }}
+                            source={{ uri: selectedImage.uri }}
                             style={{
                                 flex: 1,
                                 borderRadius: sizes.ExtraLarge,
