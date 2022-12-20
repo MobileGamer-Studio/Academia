@@ -343,6 +343,8 @@ export const NavBar = (props) => {
                           height: sizes.Large,
                           width: sizes.Large,
                       }}
+
+                    onLongPress = {props.method}
                   >
                       <Image
                           source={{uri: props.image}}
