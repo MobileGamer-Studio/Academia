@@ -1,55 +1,141 @@
-import React, {useState} from 'react';
-import {FlatList, ScrollView, StyleSheet, Text, View, TouchableOpacity} from 'react-native';
-import {colors, sizes, testUsers, testProducts} from '../constants/Data';
+import React, {useState, useEffect} from 'react';
+import {FlatList, ScrollView, StyleSheet, Text, View, TouchableOpacity, Modal} from 'react-native';
+import {colors, sizes, testUsers, testProducts, Chat} from '../constants/Data';
 import {Button, ProductSmall, ProfilePicture, ProductVertical} from '../constants/Components';
 import { firestore } from "../constants/Sever";
-import { getDocs, collection} from "firebase/firestore";
-import { Entypo } from '@expo/vector-icons';
+import { getDocs, collection, onSnapshot, doc} from "firebase/firestore";
+import { Entypo, MaterialIcons} from '@expo/vector-icons';
 
 const theme = colors.lightTheme;
 function AccountScreen({route, navigation}) {
 
     const userId = route.params.id;
+    const accId = route.params.accId
     const [users, setUsers] = useState([])
+    const [user, setUser] = useState({})
+    const [acc, setAcc] = useState({})
+    const [chats, setChats] = useState([])
+    const [userChats, setUserChats] = useState([])
+    const [optionsAct, setOptionsAct] = useState(false)
 
-    async function getUsers() {
-        const querySnapshot = await getDocs(collection(firestore, "Users"));
-        let data = []
-        querySnapshot.forEach((doc) => {
-            data.push(doc.data())
+
+    //
+    const [followingLength, setFollowingLength] = useState(0);
+    const [followersLength, setFollowersLength] = useState(0);
+    const [productsLength, setProductsLength] = useState(0);
+    const [following, setFollowing] = useState(false)
+
+    useEffect(() => {
+        const usersSub = onSnapshot(collection(firestore, "Users"), querySnapshot => {
+            const data = []
+            querySnapshot.forEach((doc) => {
+                data.push(doc.data())
+            });
+            console.log("Current data: ", data);
+            setUsers(data)
         });
-        setUsers(data)
-    }
 
-    getUsers();
+        const userSub = onSnapshot(doc(firestore, "Users", userId), (doc) => {
+            setUser(doc.data())
 
-    const acc = route.params.acc;
-    const user = route.params.user;
+            if (doc.data().following.length !== 0 && doc.data().following.includes(accId)) {
+                setFollowing(true)
+            }else{
+                setFollowing(false)
+            }
 
-    const [following, setFollowing] = useState(user.following.includes(acc.id))
+            if (doc.data().following.length !== 0) {
+                setFollowingLength(doc.data().following.length)
+            }
+
+            if (doc.data().followers.length !== 0) {
+                setFollowersLength(doc.data().followers.length)
+            }
+
+            if (doc.data().sellerInfo.productList.length !== 0) {
+                setProductsLength(doc.data().sellerInfo.productList.length)
+            }
+        });
+
+        const accSub = onSnapshot(doc(firestore, "Users", accId), (doc) => {
+            setAcc(doc.data())
+        });
+
+        const chatsSub = onSnapshot(collection(firestore, "Chats"), querySnapshot => {
+            const data = []
+            querySnapshot.forEach((doc) => {
+                data.push(doc.data())
+            });
+            setChats(data)
+        });
+    }, [])
 
     function follow() {
         if (following) {
-            user.following.splice(user.following.indexOf(acc.id), 1)
+            user.following.splice(user.following.indexOf(accId), 1)
             setFollowing(false)
+            saveData(userId, "Users", user)
         }else{
             user.following.push(acc.id)
             setFollowing(true)
+            saveData(userId, "Users", user)
         }
+    }
+
+    async function saveData(id, path, data) {
+        await setDoc(doc(firestore, path, id), data)
     }
 
     return (
         <View style={styles.container}>
+            <Modal
+                visible={optionsAct}
+                animationType="slide"
+                transparent={true}
+            >
+                <View style={{
+                    backgroundColor: colors.white,
+                    elevation: 5,
+                    width: "80%",
+                    margin: 100,
+                    alignSelf: "center",
+                    borderRadius: 10,
+                }}>
+                    <View style={{
+                        flexDirection: "row",
+                        justifyContent: "flex-end",
+                        margin: 10,
+                    }}>
+                        <TouchableOpacity onPress={() => setOptionsAct(false)}>
+                            <MaterialIcons name="close" size={24} color={colors.defaultBG} />
+                        </TouchableOpacity>
+                    </View>
+                    <View showsVerticalScrollIndicator={false}>
+                        <TouchableOpacity style={styles.popUpSection} onPress={() => navigation.navigate("Saved", { id: userId })}>
+                            <MaterialIcons name="bookmark" size={24} color={colors.defaultBG} />
+                            <Text style={{ color: theme.outline, marginHorizontal: 2.5 }}>Saved</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.popUpSection}>
+                            <MaterialIcons name="share" size={24} color={colors.defaultBG} />
+                            <Text style={{ color: theme.outline, marginHorizontal: 2.5 }}>Share</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </Modal>
             <View style = {styles.userProfile}>
-                <View style={{ alignItems: "flex-end", marginBottom: 20 }}>
-                    <TouchableOpacity onPress={() => navigation.navigate("", { id: userId })}>
-                        <Entypo name="dots-three-vertical" size={24} color={theme.color} />
-                    </TouchableOpacity>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                    <MaterialIcons name="arrow-back-ios" size={24} color={theme.color} style={{ marginLeft: 10 }} onPress={() => navigation.goBack()} />
+                    <View style={{ alignSelf: "flex-end", marginBottom: 20 }}>
+
+                        <TouchableOpacity onPress={() => setOptionsAct(true)}>
+                            <Entypo name="dots-three-vertical" size={24} color={theme.color} />
+                        </TouchableOpacity>
+                    </View>
                 </View>
                 <View style = {{
                     alignItems: "center",
                 }}>
-                    <ProfilePicture color={colors.defaultBG2} image={acc.profilePicture} height = {100} width = {100}/>
+                    <ProfilePicture color={theme.bgColor} image={acc.profilePicture} height = {100} width = {100}/>
                     <Text style={{ color: theme.color, fontSize: 20 }}>{acc.name}</Text>
                 </View>
                 <View style={{
@@ -68,25 +154,27 @@ function AccountScreen({route, navigation}) {
                             marginHorizontal: 10,
                         }}
                         
-                        onPress = {() => navigation.navigate("Following", {user: acc})}>
+                        onPress = {() => navigation.navigate("Following", {id: accId})}>
                             <Text style={{ color: theme.color }}>Following</Text>
-                            <Text style={{ color: theme.color }}>{acc.following.length}</Text>
+                            <Text style={{ color: theme.color }}>{followingLength}</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={{
                             alignItems: 'center',
                             marginHorizontal: 10,
                         }}
                         
-                        onPress = {() => navigation.navigate("Followers", {user: acc})}>
+                        onPress = {() => navigation.navigate("Followers", {id: accId})}>
                             <Text style={{ color: theme.color }}>Followers</Text>
-                            <Text style={{ color: theme.color }}>{ acc.followers.length }</Text>
+                            <Text style={{ color: theme.color }}>{ followersLength }</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={{
                             alignItems: 'center',
                             marginHorizontal: 10,
-                        }}>
+                        }}
+                        
+                            onPress={() => navigation.navigate("ProductList", { id: userId })}>
                             <Text style={{ color: theme.color }}>Products</Text>
-                            <Text style={{ color: theme.color }}>10</Text>
+                            <Text style={{ color: theme.color }}>{productsLength}</Text>
                         </TouchableOpacity>
 
                     </View>
@@ -98,19 +186,41 @@ function AccountScreen({route, navigation}) {
                             style={styles.unfollow}
                             method={() => follow()}
                             text={"Unfollow"}
-                            textStyle={{ color: colors.white, fontSize: sizes.Medium }}
+                            textStyle={{ color: theme.color, fontSize: sizes.Medium }}
                         /> : <Button
                             style={styles.follow}
                             method={() => follow()}
                             text={"Follow"}
-                            textStyle={{ color: colors.white, fontSize: sizes.Medium }}
+                                textStyle={{ color: theme.bgColor, fontSize: sizes.Medium }}
                         />}
                         <Button
                             style={styles.message_btn}
-                            method={() => navigation.navigate("Chat", {rec : acc, id: userId})}
+                            method={() => {
+                                if (user.chatList.includes(userId + "-" + accId)) {
+                                    navigation.navigate("Chat", { chatId: userId + "-" + accId,rec: acc, id: userId })
+                                }else{
+                                    const newChat = Chat;
+                                    newChat.id = userId + "-" + accId;
+
+                                    newChat.members.push(userId, accId)
+
+                                    newChat.members.forEach(y => {
+                                        users.forEach(x => {
+                                            if (x.id === y) {
+                                                x.chatList.push(newChat.id)
+                                                saveData(x.id, "Users", x)
+                                            }
+                                        })
+                                    })
+                                    saveData(newChat.id, "Chats", newChat)
+                                    navigation.navigate('Chat', { chatId: newChat.id, id: userId, recId: item.id })
+                                }
+                            }}
                             text={"Message"}
                             textStyle={{ color: theme.color, fontSize: sizes.Medium }}
                             icon = {"chat"}
+                            iconColor ={theme.color}
+                            iconSize = {sizes.Medium}
                         />
                     </View>
                 </View>
@@ -122,7 +232,7 @@ function AccountScreen({route, navigation}) {
                     horizontal
                     showsHorizontalScrollIndicator={false}
                     keyExtractor={(item) => item.id}
-                    data={acc.sellerInfo.productList}
+                    data={[]}
                     renderItem={({ item }) => {
                         return (
                             <ProductVertical
@@ -160,8 +270,9 @@ const styles = StyleSheet.create({
 
     unfollow: {
         borderRadius: sizes.ExtraLarge,
+        borderWidth: 1,
         padding: 5,
-        backgroundColor: colors.defaultBG4_Selected,
+        borderColor: theme.color,
         marginHorizontal: 5,
         marginTop: 20,
         width: 150,
@@ -188,6 +299,14 @@ const styles = StyleSheet.create({
         borderBottomRightRadius: 75,
         paddingTop: 60,
         paddingBottom: 50,
+    },
+
+    popUpSection: {
+        borderTopColor: theme.outline,
+        borderTopWidth: 1,
+        padding: 10,
+        flexDirection: "row",
+        alignItems: "center",
     },
 });
 

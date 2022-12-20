@@ -114,15 +114,15 @@ export const sizes = {
 
 //Objects
 export const User = {
-    name: "",
-    description: "",
+    name: '',
+    description: '',
     profilePicture: "https://firebasestorage.googleapis.com/v0/b/academia-c3d0e.appspot.com/o/Images%2FProfile%2FprofileIcon.png?alt=media&token=d0c063e1-d61e-4630-a6af-bba57f100d9d",
     followers: [],
     following: [],
-    location: "",
+    location: '',
     loginDetails: {
-        email: "",
-        password: "",
+        email: '',
+        password: '',
     },
     sellerInfo: {
         rating: 0,
@@ -167,19 +167,19 @@ export const User = {
 }
 
 export const Category = {
-    name: "",
-    description: "",
-    image: "",
+    name: '',
+    description: '',
+    image: '',
     id: "0",
 }
 
 export const Product = {
-    title: "",
-    description: "",
+    title: '',
+    description: '',
     category: {},
-    price: "",
-    seller: "",
-    image: "",
+    price: '',
+    seller: '',
+    image: '',
     tags: [],
     amountAvailable: 0,
     ratings: 0,
@@ -193,28 +193,28 @@ export const Item = {
 }
 
 export const Order = {
-    user: "",
+    user: '',
     date: "dd/mm/yr",
     products: [],
     id: "0",
 }
 
 export const Message = {
-    sender: "",
-    message: "",
+    sender: '',
+    message: '',
     time: "mm:ss",
     id: "0",
 }
 
 export const Chat = {
-    receiver: "",
+    members: [],
     messages: [],
     id: "0"
 }
 
 export const List = {
-    name: "",
-    description: "",
+    name: '',
+    description: '',
     items: [],
     id: "0",
 }
@@ -227,14 +227,14 @@ export const testUsers = [
         followers: [
             {
                 name: "Joe",
-                description: "",
+                description: '',
                 profilePicture: images.defaultProfile,
                 followers: [],
                 following: [],
                 location: "----",
                 loginDetails: {
-                    email: "",
-                    password: "",
+                    email: '',
+                    password: '',
                 },
                 sellerInfo: {
                     rating: 0,
@@ -267,14 +267,14 @@ export const testUsers = [
             },
             {
                 name: "Dawn",
-                description: "",
+                description: '',
                 profilePicture: images.defaultProfile,
                 followers: [],
                 following: [],
                 location: "----",
                 loginDetails: {
-                    email: "",
-                    password: "",
+                    email: '',
+                    password: '',
                 },
                 sellerInfo: {
                     rating: 0,
@@ -307,14 +307,14 @@ export const testUsers = [
             },
             {
                 name: "Max",
-                description: "",
+                description: '',
                 profilePicture: images.defaultProfile,
                 followers: [],
                 following: [],
                 location: "----",
                 loginDetails: {
-                    email: "",
-                    password: "",
+                    email: '',
+                    password: '',
                 },
                 sellerInfo: {
                     rating: 0,
@@ -349,14 +349,14 @@ export const testUsers = [
         following: [
             {
                 name: "Zoey",
-                description: "",
+                description: '',
                 profilePicture: images.defaultProfile,
                 followers: [],
                 following: [],
                 location: "----",
                 loginDetails: {
-                    email: "",
-                    password: "",
+                    email: '',
+                    password: '',
                 },
                 sellerInfo: {
                     rating: 0,
@@ -389,14 +389,14 @@ export const testUsers = [
             },
             {
                 name: "Jade",
-                description: "",
+                description: '',
                 profilePicture: images.defaultProfile,
                 followers: [],
                 following: [],
                 location: "----",
                 loginDetails: {
-                    email: "",
-                    password: "",
+                    email: '',
+                    password: '',
                 },
                 sellerInfo: {
                     rating: 0,
@@ -429,14 +429,14 @@ export const testUsers = [
             },
             {
                 name: "Bob",
-                description: "",
+                description: '',
                 profilePicture: images.defaultProfile,
                 followers: [],
                 following: [],
                 location: "----",
                 loginDetails: {
-                    email: "",
-                    password: "",
+                    email: '',
+                    password: '',
                 },
                 sellerInfo: {
                     rating: 0,
@@ -679,14 +679,14 @@ export const testUsers = [
                 suggestedUsers: [
                     {
                         name: "Silly",
-                        description: "",
+                        description: '',
                         profilePicture: images.defaultProfile,
                         followers: [],
                         following: [],
                         location: "----",
                         loginDetails: {
-                            email: "",
-                            password: "",
+                            email: '',
+                            password: '',
                         },
                         sellerInfo: {
                             rating: 0,
@@ -719,14 +719,14 @@ export const testUsers = [
                     },
                     {
                         name: "Drake",
-                        description: "",
+                        description: '',
                         profilePicture: images.defaultProfile,
                         followers: [],
                         following: [],
                         location: "----",
                         loginDetails: {
-                            email: "",
-                            password: "",
+                            email: '',
+                            password: '',
                         },
                         sellerInfo: {
                             rating: 0,
@@ -759,14 +759,14 @@ export const testUsers = [
                     },
                     {
                         name: "Jr",
-                        description: "",
+                        description: '',
                         profilePicture: images.defaultProfile,
                         followers: [],
                         following: [],
                         location: "----",
                         loginDetails: {
-                            email: "",
-                            password: "",
+                            email: '',
+                            password: '',
                         },
                         sellerInfo: {
                             rating: 0,
@@ -870,14 +870,14 @@ export const testUsers = [
     },
     {
         name: "Joe",
-        description: "",
+        description: '',
         profilePicture: images.defaultProfile,
         followers: [],
         following: [],
         location: "----",
         loginDetails: {
-            email: "",
-            password: "",
+            email: '',
+            password: '',
         },
         sellerInfo: {
             rating: 0,
@@ -910,14 +910,14 @@ export const testUsers = [
     },
     {
         name: "Dawn",
-        description: "",
+        description: '',
         profilePicture: images.defaultProfile,
         followers: [],
         following: [],
         location: "----",
         loginDetails: {
-            email: "",
-            password: "",
+            email: '',
+            password: '',
         },
         sellerInfo: {
             rating: 0,
@@ -950,14 +950,14 @@ export const testUsers = [
     },
     {
         name: "Max",
-        description: "",
+        description: '',
         profilePicture: images.defaultProfile,
         followers: [],
         following: [],
         location: "----",
         loginDetails: {
-            email: "",
-            password: "",
+            email: '',
+            password: '',
         },
         sellerInfo: {
             rating: 0,
@@ -990,14 +990,14 @@ export const testUsers = [
     },
     {
         name: "Zoey",
-        description: "",
+        description: '',
         profilePicture: images.defaultProfile,
         followers: [],
         following: [],
         location: "----",
         loginDetails: {
-            email: "",
-            password: "",
+            email: '',
+            password: '',
         },
         sellerInfo: {
             rating: 0,
@@ -1030,14 +1030,14 @@ export const testUsers = [
     },
     {
         name: "Jade",
-        description: "",
+        description: '',
         profilePicture: images.defaultProfile,
         followers: [],
         following: [],
         location: "----",
         loginDetails: {
-            email: "",
-            password: "",
+            email: '',
+            password: '',
         },
         sellerInfo: {
             rating: 0,
@@ -1070,14 +1070,14 @@ export const testUsers = [
     },
     {
         name: "Bob",
-        description: "",
+        description: '',
         profilePicture: images.defaultProfile,
         followers: [],
         following: [],
         location: "----",
         loginDetails: {
-            email: "",
-            password: "",
+            email: '',
+            password: '',
         },
         sellerInfo: {
             rating: 0,
@@ -1110,14 +1110,14 @@ export const testUsers = [
     },
     {
         name: "Silly",
-        description: "",
+        description: '',
         profilePicture: images.defaultProfile,
         followers: [],
         following: [],
         location: "----",
         loginDetails: {
-            email: "",
-            password: "",
+            email: '',
+            password: '',
         },
         sellerInfo: {
             rating: 0,
@@ -1150,14 +1150,14 @@ export const testUsers = [
     },
     {
         name: "Drake",
-        description: "",
+        description: '',
         profilePicture: images.defaultProfile,
         followers: [],
         following: [],
         location: "----",
         loginDetails: {
-            email: "",
-            password: "",
+            email: '',
+            password: '',
         },
         sellerInfo: {
             rating: 0,
@@ -1190,14 +1190,14 @@ export const testUsers = [
     },
     {
         name: "Jr",
-        description: "",
+        description: '',
         profilePicture: images.defaultProfile,
         followers: [],
         following: [],
         location: "----",
         loginDetails: {
-            email: "",
-            password: "",
+            email: '',
+            password: '',
         },
         sellerInfo: {
             rating: 0,

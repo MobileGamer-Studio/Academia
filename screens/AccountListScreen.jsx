@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image } from 'react-native';
 import { Chat, colors, sizes } from '../constants/Data';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -11,30 +11,44 @@ const theme = colors.lightTheme;
 function AccountListScreen({ navigation, route }) {
     const userId = route.params.id;
     const [users, setUsers] = useState([])
+    const [user, setUser] = useState({})
+    const [chats, setChats] = useState([])
+    const [userChats, setUserChats] = useState([])
     const [optionsAct, setOptionsAct] = useState(false)
 
-    async function getUsers() {
-        const querySnapshot = await getDocs(collection(firestore, "Users"));
-        let data = []
-        querySnapshot.forEach((doc) => {
-            data.push(doc.data())
+    useEffect(() => {
+        const usersSub = onSnapshot(collection(firestore, "Users"), querySnapshot => {
+            const data = []
+            querySnapshot.forEach((doc) => {
+                data.push(doc.data())
+            });
+            console.log("Current data: ", data);
+            setUsers(data)
         });
-        setUsers(data)
-    }
 
-    async function saveUser() {
-        await setDoc(doc(firestore, "Users", userId), user)
-    }
+        const userSub = onSnapshot(doc(firestore, "Users", userId), (doc) => {
+            setUser(doc.data())
+        });
 
-    let user = {}
-    users.forEach((item) => {
-        if (item.id === userId) {
-            user = item
-            // console.log("got user: "+ user.name)
-        }
-    })
+        const chatsSub = onSnapshot(collection(firestore, "Chats"), querySnapshot => {
+            const data = []
+            querySnapshot.forEach((doc) => {
+                data.push(doc.data())
+            });
+            console.log("Current data: ", data);
+            setChats(data)
 
-    getUsers().then(r => console.log("!"));
+            const list = []
+            chats.forEach(chat => {
+                if (chat.id.includes(userId)) {
+                    list.push(chat)
+                }
+
+            })
+
+            setUserChats(list)
+        });
+    }, [])
 
     return (
         <View style={styles.container}>

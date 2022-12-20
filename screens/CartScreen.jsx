@@ -4,6 +4,7 @@ import {colors, testUsers, sizes} from '../constants/Data';
 import { firestore } from "../constants/Sever";
 import { getDocs, collection, setDoc, doc } from "firebase/firestore";
 import { Entypo } from '@expo/vector-icons';
+import { Header } from '../constants/Components';
 
 const theme = colors.lightTheme;
 function CartScreen({route, navigation}) {
@@ -39,6 +40,7 @@ function CartScreen({route, navigation}) {
 
     return (
         <View style={styles.container}>
+            <Header method={() => navigation.goBack()} text = {"Cart"}/>
             <View>
                 <FlatList
                     vertical

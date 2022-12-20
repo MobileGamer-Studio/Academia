@@ -1,28 +1,55 @@
-import React from "react";
-import { View, TouchableOpacity, Text, StyleSheet, FlatList, Image } from "react-native";
+import React, { useState, useEffect } from 'react';
+import { View, TouchableOpacity, StyleSheet, FlatList, Text } from "react-native";
+import { ProfilePicture, RoundButton, Header } from '../constants/Components';
 import { colors, sizes } from "../constants/Data";
+import { firestore, logOut } from "../constants/Sever";
+import { collection, doc, onSnapshot } from "firebase/firestore";
 
 const theme = colors.lightTheme;
 function ProductListScreen({route, navigation}) {
     const userId = route.params.id;
-    const user = GetUserData(userId);
+    const [users, setUsers] = useState([])
+    const [user, setUser] = useState({})
+
+    const [productList, setProductList] = useState([])
+
+    useEffect(() => {
+        const usersSub = onSnapshot(collection(firestore, "Users"), querySnapshot => {
+            const data = []
+            querySnapshot.forEach((doc) => {
+                data.push(doc.data())
+            });
+            //console.log("Current data: ", data);
+            setUsers(data)
+        });
+
+        const userSub = onSnapshot(doc(firestore, "Users", userId), (doc) => {
+            setUser(doc.data())
+
+            setProductList(doc.data().sellerInfo.productList)
+        });
+
+    }, [])
 
 
     return (
         <View style={styles.container}>
-            <Text>
-                Products
-            </Text>
-            <View>
+            <Header method={() => navigation.goBack()} text = {'Products'}/>
+            <ProductList productList = {productList}/>
+        </View>
+    );
+}
 
-            </View>
+function ProductList(props) {
+    if (props.productList.length !== 0) {
+        return (
             <View>
                 <FlatList
                     vertical
                     numColumns={2}
                     showsHorizontalScrollIndicator={false}
                     keyExtractor={(item) => item.id}
-                    data={user.sellerInfo.productList}
+                    data={props.productList}
                     renderItem={({ item }) => {
                         return (
                             <Product
@@ -32,8 +59,20 @@ function ProductListScreen({route, navigation}) {
                     }}
                 />
             </View>
-        </View>
-    );
+        )
+    }else{
+        return (
+            <View style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+            }}>
+                <Text style={{
+                    fontSize: sizes.Large,
+                }}>No products</Text>
+            </View>
+        )
+    }
 }
 
 const Product = (props) => {
@@ -87,8 +126,6 @@ const styles = StyleSheet.create({
     container: {
         backgroundColor: theme.bgColor,
         flex: 1,
-        justifyContent: "flex-start",
-        paddingTop: sizes.ExtraLarge,
     },
 
     product: {

@@ -1,35 +1,39 @@
 import React, {useState} from 'react'
 import {FlatList, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
-import {Button, InfoInput} from '../constants/Components';
+import {Button, InfoInput, Header} from '../constants/Components';
 import {Category, colors, Product, sizes} from '../constants/Data'
 import * as ImagePicker from "expo-image-picker"
 import {MaterialIcons} from "@expo/vector-icons"
 import { firestore } from "../constants/Sever";
 import {setDoc, doc, collection } from "firebase/firestore";
 
-const theme = colors.lightTheme
+const theme = colors.lightTheme;
 const UploadProduct = ({route, navigation}) => {
 
     const user = route.params.user;
 
-    const [title, setTitle] = useState("");
-    const [description, setDescription] = useState("");
+    const [title, setTitle] = useState('');
+    const [description, setDescription] = useState('');
     const [price, setPrice] = useState("0");
-    const [category, setCategory] = useState("");
+    const [category, setCategory] = useState('');
     const [tags, setTags] = useState([]);
     const [tag, setTag] = useState("....");
-    const [selectedImage, setSelectedImage] = useState({ uri: "https://firebasestorage.googleapis.com/v0/b/academia-c3d0e.appspot.com/o/Images%2FCameraIcon-coloured.png?alt=media&token=0ac47e13-7a64-466b-8027-1f9ae3b006d6"});
+    const [selectedImage, setSelectedImage] = useState("https://firebasestorage.googleapis.com/v0/b/academia-c3d0e.appspot.com/o/Images%2FCameraIcon-coloured.png?alt=media&token=0ac47e13-7a64-466b-8027-1f9ae3b006d6");
 
 
     async function GetImage() {
-        let pickedImage = ImagePicker.launchImageLibraryAsync()
-        console.log(pickedImage);
-        if (pickedImage.cancelled === true) {
-            return;
-        }
+        let result = await ImagePicker.launchImageLibraryAsync({
+            //allowsEditing: true,
+            quality: 1,
+        });
 
-        setSelectedImage({ uri: pickedImage.uri });
-        console.log(selectedImage);
+        if (result.cancelled === false) {
+            console.log(result);
+            setSelectedImage(result.uri);
+        } else {
+            setSelectedImage("https://firebasestorage.googleapis.com/v0/b/academia-c3d0e.appspot.com/o/Images%2FCameraIcon-coloured.png?alt=media&token=0ac47e13-7a64-466b-8027-1f9ae3b006d6")
+            alert('You did not select any image.');
+        }
     }
 
     const addTag = (val) => {
@@ -60,6 +64,7 @@ const UploadProduct = ({route, navigation}) => {
 
     return (
         <View style={styles.container}>
+            <Header method={() => navigation.goBack()} text={'Upload Product'} />
             <ScrollView showsVerticalScrollIndicator = {false}>
                 <View style={styles.field}>
                     <Text style={{ marginHorizontal: 5 }}>{"Product: " + title}</Text>
@@ -149,18 +154,28 @@ const UploadProduct = ({route, navigation}) => {
 
                     </View>
                     <View style={{
-                        backgroundColor: colors.white,
-                        alignItems: "center",
-                        alignSelf: "center",
+                        height: 100,
+                        width: 100,
+                        justifyContent: "center",
                     }}>
-                        <Image 
-                            source={{ uri: selectedImage.uri }}
+                        <Image
                             style={{
                                 flex: 1,
-                                borderRadius: sizes.ExtraLarge,
+                                alignSelf: "center",
                             }}
+                            resizeMode="contain"
+                            source={{ uri: "https://firebasestorage.googleapis.com/v0/b/academia-c3d0e.appspot.com/o/Images%2FCameraIcon-coloured.png?alt=media&token=0ac47e13-7a64-466b-8027-1f9ae3b006d6" }}
                         />
                     </View>
+
+
+
+
+
+                    {/* <ImageViewer
+                        placeholderImageSource={"https://firebasestorage.googleapis.com/v0/b/academia-c3d0e.appspot.com/o/Images%2FCameraIcon-coloured.png?alt=media&token=0ac47e13-7a64-466b-8027-1f9ae3b006d6"}
+                        selectedImage={selectedImage}
+                    /> */}
                     
                 </View>
             </ScrollView>
@@ -168,7 +183,7 @@ const UploadProduct = ({route, navigation}) => {
                 flexDirection: "row",
                 bottom: 0,
                 alignItems: "center",
-                justifyContent: "space-evenly"
+                justifyContent: "space-evenly",
             }}>
                 <Button
                     style={styles.button}
@@ -189,24 +204,12 @@ const UploadProduct = ({route, navigation}) => {
     )
 }
 
-const ImageSample = (props) => {
-    return (
-        <View style = {{
-            backgroundColor: colors.white,
-            height: 200,
-            width: 200,
-            alignItems: "center",
-            alignSelf: "center",
-        }}>
-            <Image style={{
-                height: 200,
-                width: 200,
-                flex: 1,
-                borderRadius: sizes.ExtraLarge,
-            }} 
-            source={{uri: props.image}} />
-        </View>
-    );
+function ImageViewer({ placeholderImageSource, selectedImage }) {
+    const imageSource = selectedImage !== null
+        ? selectedImage
+        : placeholderImageSource;
+
+    return <Image source={{uri: imageSource}}/>
 }
 
 const Tag = (props) => {
@@ -231,9 +234,8 @@ export default UploadProduct
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingVertical: sizes.ExtraLarge,
         backgroundColor: theme.bgColor,
-        paddingVertical: sizes.Large,
+        paddingBottom: sizes.Small,
     },
 
     button: {
@@ -259,7 +261,7 @@ const styles = StyleSheet.create({
 
     field: {
         borderBottomWidth: 1,
-        borderBottomColor: theme.color,
+        borderBottomColor: theme.outline,
         marginVertical: 5,
         padding: 2.5,
     },

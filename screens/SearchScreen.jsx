@@ -32,7 +32,7 @@ export default function SearchScreen({navigation, route}) {
     }
 
     function Search(val) {
-        if (val === "null" || val === "") {
+        if (val === "null" || val === '') {
             return setSearchResult(testProducts);
         }
         val = val.toLowerCase();

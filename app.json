@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Academia-Remastered",
+    "name": "Academia",
     "slug": "academia",
     "owner": "mobilegamer",
     "version": "1.0.0",
@@ -36,5 +36,10 @@
         "projectId": "4c1b808a-7d3a-4f5d-a457-25ae00792d49"
       }
     }
+  },
+
+  "react-native-google-mobile-ads": {
+    "android_app_id": "ca-app-pub-4268026028349874~2294296394",
+    "ios_app_id": "ca-app-pub-4268026028349874~2294296394"
   }
 }

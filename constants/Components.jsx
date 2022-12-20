@@ -9,24 +9,13 @@ const theme = colors.lightTheme;
 //Buttons, Input, Images
 export const Button = (props) => {
 
-    props.imageWidth = undefined;
-    props.imageHeight = undefined;
-
     return(
-        <View>
-            <TouchableOpacity style = {props.style} onPress = {props.method}>
-                <View style = {{flexDirection: "row",}}>
-                    <Text style = {props.textStyle}>{props.text}</Text>
-                    <View style = {{
-                        height: props.imageHeight,
-                        width: props.imageWidth,
-                        alignItems: "center",
-                    }}>
-                        <MaterialIcons name={props.icon} size={props.imageWidth} color={props.iconColor} />
-                    </View>
-                </View>
-            </TouchableOpacity>
-        </View>
+        <TouchableOpacity style = {props.style} onPress = {props.method}>
+            <View style = {{flexDirection: "row", alignItems: 'center', justifyContent: 'space-between'}}>
+                <Text style = {props.textStyle}>{props.text}</Text>
+                <MaterialIcons name={props.icon} size={props.iconSize} color={props.iconColor} style = {{marginHorizontal: 5}}/>
+            </View>
+        </TouchableOpacity>
     );
 }
 
@@ -367,6 +356,17 @@ export const NavBar = (props) => {
   );
 }
 
+export function Header(props) {
+    return(
+        <View style = {styles.header}>
+            <View style= {{flexDirection: 'row', alignItems: 'center'}}>
+                <MaterialIcons name="arrow-back-ios" size={24} color={colors.white} style={{ marginLeft: 20, marginRight: 10 }} onPress={props.method} />
+                <Text style={{ fontSize: 24, color: colors.white }}>{props.text}</Text>
+            </View>
+        </View>
+    )
+}
+
 //StyleSheets
 const styles = StyleSheet.create({
     header: {
@@ -439,8 +439,8 @@ const styles = StyleSheet.create({
         alignSelf: "center",
         paddingVertical: 7,
         width: "100%",
-        borderTopLeftRadius: sizes.Medium,
-        borderTopRightRadius: sizes.Medium,
+        borderTopLeftRadius: sizes.Large+10,
+        borderTopRightRadius: sizes.Large + 10,
     },
 
     navImages :{
@@ -466,8 +466,18 @@ const styles = StyleSheet.create({
 
     textStyle: {
         fontSize: sizes.Medium,
-    }
+    },
 
+    header: {
+        width: "100%",
+        padding: 10,
+        paddingTop: 40,
+        marginBottom: 10,
+        elevation: 10,
+        backgroundColor: colors.defaultBG4,
+        justifyContent: 'flex-start',
+        flexDirection: "row",
+    }
 })
 
 

@@ -1,31 +1,52 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect} from 'react'
 import { StyleSheet, Text, TouchableOpacity, View, ScrollView, FlatList, Modal } from 'react-native'
 import { colors, sizes } from '../constants/Data'
 import { RoundButton, ProductVertical } from "../constants/Components";
 import { firestore, logOut } from "../constants/Sever";
-import { getDocs, collection } from "firebase/firestore";
+import { collection, doc, onSnapshot } from "firebase/firestore";
 import { MaterialIcons, Entypo } from "@expo/vector-icons";
 
 const theme = colors.lightTheme;
-
 function UserAccount({ route, navigation }) {
-    const userId = route.params.id;
-    const [user, setUser] = useState(route.params.user)
-    const [users, setUsers] = useState([])
     const [optionsAct, setOptionsAct] = useState(false)
 
-    async function getUsers() {
-        const querySnapshot = await getDocs(collection(firestore, "Users"));
-        let data = []
-        querySnapshot.forEach((doc) => {
-            data.push(doc.data())
+    const userId = route.params.id;
+    const [users, setUsers] = useState([])
+    const [user, setUser] = useState({})
+
+    //
+    const [followingLength, setFollowingLength] = useState(0);
+    const [followersLength, setFollowersLength] = useState(0);
+    const [productsLength, setProductsLength] = useState(0);
+
+
+    useEffect(() => {
+        const usersSub = onSnapshot(collection(firestore, "Users"), querySnapshot => {
+            const data = []
+            querySnapshot.forEach((doc) => {
+                data.push(doc.data())
+            });
+            //console.log("Current data: ", data);
+            setUsers(data)
         });
-        setUsers(data)
-    }
-    getUsers().then(r => console.log("Promise resolved!"));
-    //Functions
 
+        const userSub = onSnapshot(doc(firestore, "Users", userId), (doc) => {
+            setUser(doc.data())
 
+            if (doc.data().following.length !== 0) {
+                setFollowingLength(doc.data().following.length)
+            }
+
+            if (doc.data().followers.length !== 0) {
+                setFollowersLength(doc.data().followers.length)
+            }
+
+            if (doc.data().sellerInfo.productList.length !== 0) {
+                setProductsLength(doc.data().sellerInfo.productList.length)
+            }
+        });
+
+    }, [])
 
     //Return
     return (
@@ -57,23 +78,22 @@ function UserAccount({ route, navigation }) {
                         <View style = {{
                             flexDirection: "row",
                             justifyContent: "flex-end",
-                            marginTop: 10,
-                            marginRight: 10,
+                            margin: 10,
                         }}>
                             <TouchableOpacity onPress={() => setOptionsAct(false)}>
                                 <MaterialIcons name="close" size={24} color={colors.defaultBG} />
                             </TouchableOpacity>
                         </View>
                         <View showsVerticalScrollIndicator={false}>
-                            <TouchableOpacity style = {styles.popUpSection} onPress = {() => navigation.navigate("Settings", {user: user})}>
+                            <TouchableOpacity style = {styles.popUpSection} onPress = {() => navigation.navigate("Settings", {id: userId})}>
                                 <MaterialIcons name="settings" size={24} color={colors.defaultBG} />
                                 <Text style={{ color: theme.outline, marginHorizontal: 2.5 }}>Settigs</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={styles.popUpSection} onPress={() => navigation.navigate("Saved", { user: user })}>
+                            <TouchableOpacity style={styles.popUpSection} onPress={() => navigation.navigate("Saved", { id: userId })}>
                                 <MaterialIcons name="bookmark" size={24} color={colors.defaultBG} />
                                 <Text style={{ color: theme.outline, marginHorizontal: 2.5 }}>Saved</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={styles.popUpSection}>
+                            <TouchableOpacity style={styles.popUpSection} onPress={() => navigation.navigate("EditProfile", { id: userId })}>
                                 <MaterialIcons name="edit" size={24} color={colors.defaultBG} />
                                 <Text style={{ color: theme.outline, marginHorizontal: 2.5 }}>Edit Profile</Text>
                             </TouchableOpacity>
@@ -91,10 +111,14 @@ function UserAccount({ route, navigation }) {
                         </View>
                     </View>
                 </Modal>
-                <View style={{ alignItems: "flex-end", marginBottom: 20 }}>
-                    <TouchableOpacity onPress={() => setOptionsAct(true)}>
-                        <Entypo name="dots-three-vertical" size={24} color={colors.white} />
-                    </TouchableOpacity>
+                <View style = {{flexDirection: 'row', justifyContent: 'space-between'}}>
+                    <MaterialIcons name="arrow-back-ios" size={24} color={colors.white} style={{ marginLeft: 10}} onPress = {() => navigation.goBack()}/>
+                    <View style={{ alignSelf: "flex-end", marginBottom: 20 }}>
+
+                        <TouchableOpacity onPress={() => setOptionsAct(true)}>
+                            <Entypo name="dots-three-vertical" size={24} color={colors.white} />
+                        </TouchableOpacity>
+                    </View>
                 </View>
                 <View style={{
                     flexDirection: 'column',
@@ -122,27 +146,33 @@ function UserAccount({ route, navigation }) {
                         justifyContent: 'space-between',
                         marginVertical: 10,
                     }}>
-                        <View style={{
+                        <TouchableOpacity style={{
                             alignItems: 'center',
                             marginHorizontal: 10,
-                        }}>
-                            <Text style={{ color: colors.white }}>Following</Text>
-                            <Text style={{ color: colors.white }}>{10}</Text>
-                        </View>
-                        <View style={{
+                        }}
+
+                            onPress={() => navigation.navigate("Following", { id: userId })}>
+                            <Text style={{ color: theme.bgColor }}>Following</Text>
+                            <Text style={{ color: theme.bgColor }}>{followingLength}</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={{
                             alignItems: 'center',
                             marginHorizontal: 10,
-                        }}>
-                            <Text style={{ color: colors.white }}>Followers</Text>
-                            <Text style={{ color: colors.white }}>10</Text>
-                        </View>
-                        <View style={{
+                        }}
+
+                            onPress={() => navigation.navigate("Followers", { id: userId })}>
+                            <Text style={{ color: theme.bgColor }}>Followers</Text>
+                            <Text style={{ color: theme.bgColor }}>{followersLength}</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={{
                             alignItems: 'center',
                             marginHorizontal: 10,
-                        }}>
-                            <Text style={{ color: colors.white }}>Products</Text>
-                            <Text style={{ color: colors.white }}>10</Text>
-                        </View>
+                        }}
+                        
+                            onPress={() => navigation.navigate("ProductList", { id: userId })}>
+                            <Text style={{ color: theme.bgColor }}>Products</Text>
+                            <Text style={{ color: theme.bgColor }}>{productsLength}</Text>
+                        </TouchableOpacity>
 
                     </View>
                     <View>
@@ -163,7 +193,7 @@ function UserAccount({ route, navigation }) {
                 bottom: 0,
             }}>
                 <View>
-                    <Text style={{ marginLeft: 15, marginTop: 15, fontSize: 25 }}>Products</Text>
+                    <Text style={{ marginLeft: 15, marginTop: 15, fontSize: 25 }} onPress={() => navigation.navigate("")}>Products</Text>
                     <FlatList
                         horizontal
                         showsHorizontalScrollIndicator={false}
@@ -194,7 +224,7 @@ function UserAccount({ route, navigation }) {
                 padding: sizes.ExtraSmall,
                 
             }}>
-                <TouchableOpacity onPress={() => navigation.navigate("Chats", { user: user })}>
+                <TouchableOpacity onPress={() => navigation.navigate("Chats", { id: userId, user: user })}>
                     <MaterialIcons name="chat" size={30} color={colors.white} />
                 </TouchableOpacity>
             </View>
@@ -203,31 +233,6 @@ function UserAccount({ route, navigation }) {
 }
 
 export default UserAccount;
-
-function Clikable(props) {
-    return (
-        <View style={{
-            flexDirection: "column",
-            margin: 5,
-        }}>
-            <TouchableOpacity onPress={props.method}>
-                <Text style={{
-                    fontSize: sizes.Small,
-                    color: colors.white,
-                }}>
-                    {props.value}
-                </Text>
-                <Text style={{
-                    fontSize: sizes.ExtraSmall,
-                    color: colors.white,
-                }}>
-                    {props.title}
-                </Text>
-            </TouchableOpacity>
-        </View>
-    );
-}
-
 
 
 const styles = StyleSheet.create({

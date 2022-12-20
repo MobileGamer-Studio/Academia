@@ -167,7 +167,7 @@ export const SignIn_Google_PopUp = () => {
 
             newUser.name = user.displayName;
             newUser.loginDetails.email = user.email;
-            newUser.loginDetails.password = "";
+            newUser.loginDetails.password = '';
             newUser.id = user.uid;
 
             users.push(newUser);

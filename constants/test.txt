@@ -19,3 +19,6 @@ shopping-cart
 home
 search
 search
+
+
+npx eas-cli build --profile development

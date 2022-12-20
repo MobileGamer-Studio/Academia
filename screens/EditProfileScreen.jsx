@@ -1,6 +1,6 @@
 import React, {useState} from "react"
 import {Text, View, StyleSheet, ScrollView} from "react-native"
-import {Button, InfoInput, ProfilePicture} from "../constants/Components";
+import {Button, Header, InfoInput, ProfilePicture} from "../constants/Components";
 import * as ImagePicker from "expo-image-picker";
 import {colors, images, sizes, User} from "../constants/Data";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -46,7 +46,7 @@ function EditProfileScreen({route, navigation}) {
             return images.defaultProfile;
         }
         // user.profilePicture = pickedImage.url;
-        setProfilePicture(pickedImage.url);
+        setProfilePicture({ uri: pickedImage.url });
     }
 
     async function saveUsers() {
@@ -64,6 +64,7 @@ function EditProfileScreen({route, navigation}) {
 
     return (
         <View style={styles.container}>
+            <Header method={navigation.goBack()} text = {'Edit Profile'}/>
             <View>
 
             </View>

@@ -1,36 +1,50 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FlatList, ScrollView, Image,  StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { categories, colors, sizes, suggestedProducts, images } from '../constants/Data';
 import { NavBar, ProductCategory, ProductVertical, RoundButton, SearchBar, UserProfile } from '../constants/Components';
 import { firestore } from "../constants/Sever";
-import { getDocs, collection, setDoc, doc } from "firebase/firestore";
-import { Entypo } from '@expo/vector-icons';
+import { collection, setDoc, doc, onSnapshot} from "firebase/firestore";
+import { Entypo, MaterialIcons, FontAwesome } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+//import mobileAds, { GAMBannerAd, BannerAdSize } from 'react-native-google-mobile-ads';
 
 const theme = colors.lightTheme;
 function HomeScreen({ route, navigation }) {
     const userId = route.params.id;
     const [users, setUsers] = useState([])
+    const [user, setUser] = useState({})
+    const [theme, setTheme ] = useState(colors.lightTheme)
 
-    async function getUsers() {
-        const querySnapshot = await getDocs(collection(firestore, "Users"));
-        let data = []
-        querySnapshot.forEach((doc) => {
-            data.push(doc.data())
+    const bannerAdId = 'ca-app-pub-4268026028349874/3147738671';
+
+
+    useEffect(() => {
+        const usersSub = onSnapshot(collection(firestore, "Users"), querySnapshot => {
+            const data = []
+            querySnapshot.forEach((doc) => {
+                data.push(doc.data())
+            });
+            //console.log("Current data: ", data);
+            setUsers(data)
+            //setUser(ans.data)
         });
-        setUsers(data)
-    }
 
-    getUsers().then(r => console.log("Promise resolved!"));
+        const userSub = onSnapshot(doc(firestore, "Users", userId), (doc) => {
+            setUser(doc.data())
+        });
 
-    let user = {}
-    users.forEach((item) => {
-        console.log("item: " + item.name)
-        if (item.id === userId) {
-            user = item
-            console.log("got user: "+ user.name)
-        }
-    })
-    //console.log("CHECK \n User id:" + userId + "\n Users: " + users + "\n User: " + user)
+        
+
+        // mobileAds()
+        //     .initialize()
+        //     .setRequestConfiguration({
+        //         testDeviceIdentifiers: ['EMULATOR'],
+        //     })
+        //     .then(adapterStatuses => {
+        //         // Initialization complete!
+        //     });
+
+    }, [])
 
 
     return (
@@ -38,11 +52,12 @@ function HomeScreen({ route, navigation }) {
             <View style={{
                 flexDirection: "row",
                 alignItems: "center",
+                justifyContent: "space-between",
                 backgroundColor: colors.white,
             }}>
                 <View style={{
-                    height: 40,
-                    alignSelf: "center",
+                    height: 35,
+                    width: 200,
                     justifyContent: "center",
                 }}>
                     <Image
@@ -54,9 +69,25 @@ function HomeScreen({ route, navigation }) {
                         source={images.academia}
                     />
                 </View>
+
+                <TouchableOpacity style = {{
+                    marginHorizontal: 15,
+                }} onPress={() => navigation.navigate('Notifications', {id: userId})}>
+                    <FontAwesome name="bell-o" size={24} color={theme.color} />
+                </TouchableOpacity>
             </View>
 
             <ScrollView showsVerticalScrollIndicator={false}>
+                <View>
+                    {/* <GAMBannerAd
+                        unitId={bannerAdId}
+                        sizes={[BannerAdSize.FULL_BANNER]}
+                        requestOptions={{
+                            requestNonPersonalizedAdsOnly: true,
+
+                        }}
+                    /> */}
+                </View>
                 <View style={styles.section}>
                     <FlatList
                         horizontal
@@ -121,6 +152,21 @@ function HomeScreen({ route, navigation }) {
                         />
                     </View>
                 </View>
+
+                <View style={{
+                    height: 100,
+                    width: 100,
+                    justifyContent: "center",
+                }}>
+                    <Image
+                        style={{
+                            flex: 1,
+                            alignSelf: "center",
+                        }}
+                        resizeMode="contain"
+                        source={{ uri: "https://firebasestorage.googleapis.com/v0/b/academia-c3d0e.appspot.com/o/Images%2FCameraIcon-coloured.png?alt=media&token=0ac47e13-7a64-466b-8027-1f9ae3b006d6" }}
+                    />
+                </View>
                 
                 
             </ScrollView>
@@ -129,7 +175,7 @@ function HomeScreen({ route, navigation }) {
                 search={() => navigation.navigate("Search", { search: "null" })}
                 add={() => navigation.navigate("UploadProduct", { user: user })}
                 cart={() => navigation.navigate("Cart", { user: user })}
-                profile={() => navigation.navigate("UserAccount", { user: user })}
+                profile={() => navigation.navigate("UserAccount", { id: userId, user: user })}
                 image = {user.profilePicture}
             />
         </View>

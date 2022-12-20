@@ -1,13 +1,14 @@
 import React from 'react';
 import {FlatList, Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {colors, images, sizes} from '../constants/Data';
+import {Header} from '../constants/Components'
 
 const theme = colors.lightTheme;
 function ProductScreen({route, navigation}) {
     const product = route.params.item;
 
     return (
-        <View style={styles.container} showsVerticalScrollIndicator={false}>
+        <View style={styles.container}>
             <View style={{
                 height: 400,
                 width: 400,

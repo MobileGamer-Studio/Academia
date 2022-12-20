@@ -1,55 +1,75 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, Text, StyleSheet, FlatList, TouchableOpacity, Modal, Image} from 'react-native';
 import { colors, sizes, Chat} from '../constants/Data';
 import { MaterialIcons, Entypo } from "@expo/vector-icons";
-import { SearchBar, ProfilePicture } from '../constants/Components';
+import { SearchBar, ProfilePicture, Header } from '../constants/Components';
 import { firestore } from "../constants/Sever";
-import { getDocs, collection, setDoc, doc } from "firebase/firestore";
+import { getDocs, collection, setDoc, doc, onSnapshot } from "firebase/firestore";
 
 const theme = colors.lightTheme;
 function ChatListScreen({navigation, route}) {
     const userId = route.params.id;
-    const [user, setUser] = useState(route.params.user)
+    const [user, setUser] = useState({})
     const [users, setUsers] = useState([])
     const [optionsAct, setOptionsAct] = useState(false)
     const [chats, setChats] = useState([])
+    const [userChats, setUserChats] = useState([])
     const [searchResult, setSearchResult] = useState(users)
 
-    async function getUsers() {
-        const querySnapshot = await getDocs(collection(firestore, "Users"));
-        let data = []
-        querySnapshot.forEach((doc) => {
-            data.push(doc.data())
+    useEffect(() => {
+        const usersSub = onSnapshot(collection(firestore, "Users"), querySnapshot => {
+            const data = []
+            querySnapshot.forEach((doc) => {
+                data.push(doc.data())
+            });
+            setUsers(data)
+            setSearchResult(data)
         });
 
-        let list = []
-        user.chatList.forEach(element => {
-            users.forEach(item => {
-                if (item.id === element.receiver) {
-                    let container = {
-                        user: user,
-                        receiver: item,
-                        chat: element,
-                        id: element.id
+        const userSub = onSnapshot(doc(firestore, "Users", userId), (item) => {
+            setUser(item.data())
+        });
+
+        const chatsSub = onSnapshot(collection(firestore, "Chats"), querySnapshot => {
+            const data = []
+            querySnapshot.forEach((doc) => {
+                data.push(doc.data())
+            });
+            setChats(data)  
+            
+            if (chats.length !== 0 && users.length !== 0) {
+                const list = [];
+                chats.forEach((chat) => {
+                    if (chat.members.includes(userId)) {
+                        chat.members.forEach((y) => {
+                            if (y !== userId) {
+                                console.log("receiver: " + y);
+                                users.forEach((z) => {
+                                    if (z.id === y) {
+                                        console.log(z);
+                                        list.push({
+                                            chat: chat,
+                                            acc: z,
+                                        });
+                                    }
+                                });
+                            }
+                        });
                     }
-                    list.push(container)
-                }
-            })
+                });
+
+                setUserChats(list);
+            }
         });
+    }, [users, chats])
 
-        setChats(list)
-
-        setUsers(data)
+    async function saveData(id, path,  data){
+        await setDoc(doc(firestore, path, id), data)
     }
-
-    async function saveUser(id, data){
-        await setDoc(doc(firestore, "Users", id), data)
-    }
-    getUsers().then(r => console.log("Promise resolved!"));
 
 
     function Search(val) {
-        if (val === "null" || val === "") {
+        if (val === "null" || val === '') {
             return setSearchResult(users);
         }
         val = val.toLowerCase();
@@ -64,6 +84,7 @@ function ChatListScreen({navigation, route}) {
         setSearchResult(list)
         console.log(val, "found in: ", searchResult);
     }
+
 
 
     return (
@@ -92,7 +113,7 @@ function ChatListScreen({navigation, route}) {
                         <View>
                             <SearchBar
                                 method={(val) => Search(val)}
-                                colors={theme.outline}
+                                color={colors.transparent}
                             />
                         </View>
                         <TouchableOpacity onPress={() => setOptionsAct(false)}>
@@ -110,20 +131,25 @@ function ChatListScreen({navigation, route}) {
                                     <TouchableOpacity 
                                         style={styles.popUpSection} 
                                         onPress={() => {
-                                            const newChat = Chat;
-                                            let receiver = {};
-                                            newChat.id = userId + "-" + item.id;
-                                            newChat.receiver = item.id;
-                                            user.chatList.push(newChat);
-                                            users.forEach((rec) => {
-                                                if (rec.id === newChat.receiver) {
-                                                    receiver = item;
-                                                    receiver.chatList.push(newChat);
-                                                }
-                                            })
-                                            saveUser(userId, user)
-                                            saveUser(receiver.id, receiver)
-                                            navigation.navigate('Chat', { chat: newChat, id: userId })
+                                            if (user.chatList.includes(userId + "-" + item.id)) {
+                                                navigation.navigate('Chat', { chatId: userId + "-" + item.id, id: userId, recId: item.id })
+                                            }else{
+                                                const newChat = Chat;
+                                                newChat.id = userId + "-" + item.id;
+
+                                                newChat.members.push(userId, item.id)
+
+                                                newChat.members.forEach(y => {
+                                                    users.forEach(x => {
+                                                        if (x.id === y) {
+                                                            x.chatList.push(newChat.id)
+                                                            saveData(x.id, "Users", x)
+                                                        }
+                                                    })
+                                                })
+                                                saveData(newChat.id, "Chats", newChat)
+                                                navigation.navigate('Chat', { chatId: newChat.id, id: userId, recId: item.id })
+                                            }
                                         }}
                                     >
                                         <View style={{
@@ -145,13 +171,25 @@ function ChatListScreen({navigation, route}) {
                     </View>
                 </View>
             </Modal>
+            <Header method = {() => navigation.goBack()} text = {"Chats"}/>
             <View style={{}}>
                 <FlatList
                     vertical
                     showsHorizontalScrollIndicator={false}
-                    keyExtractor={(item) => item.id}
-                    data={chats}
+                    keyExtractor={(item) => item.chat.id}
+                    data={userChats}
                     renderItem={({ item }) => {
+                        // let acc = {};
+                        // item.members.forEach(member => {
+                        //     if (member !== userId) {
+                        //         users.forEach(element => {
+                        //             if (element.id === member) {
+                        //                 acc = element 
+                        //             }
+                        //         })
+                        //     }
+                        // })
+
                         return (
                             <View>
                                 <TouchableOpacity 
@@ -162,18 +200,21 @@ function ChatListScreen({navigation, route}) {
                                     flexDirection: "row",
                                     alignItems: "center"
                                 }}  
-                                onPress={() => navigation.navigate("Chat", item)}>
+                                    onPress={() => navigation.navigate("Chat", { chatId: item.chat.id, id: userId , recId: item.acc.id })}>
                                     <View style = {{
                                         marginHorizontal: 10
                                     }}>
                                         <ProfilePicture
-                                            image={user.profilePicture}
+                                            image={item.acc.profilePicture}
                                             height={sizes.Large}
                                             width={sizes.Large}
                                             color={colors.white}
                                         />
                                     </View>
-                                    <Text style={{color: theme.outline}}>{item.receiver.name}</Text>
+                                    <View>
+                                        <Text style={{ color: theme.textColor }}>{item.acc.name}</Text>
+                                        {/* <Text>{item.chat.messages[item.chat.messages.length - 1]}</Text> */}
+                                    </View>
                                 </TouchableOpacity>
                             </View>
                         
@@ -208,8 +249,8 @@ const styles = StyleSheet.create({
     },
 
     popUpSection: {
-        borderTopColor: theme.outline,
-        borderTopWidth: 1,
+        // borderTopColor: theme.outline,
+        // borderTopWidth: 1,
         padding: 10,
         flexDirection: "row",
         alignItems: "center",

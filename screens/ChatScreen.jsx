@@ -1,94 +1,99 @@
-import React, {useState} from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, TextInput, ScrollView} from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, TextInput, ScrollView } from 'react-native';
 import { colors, Message, sizes } from '../constants/Data';
 import { firestore } from "../constants/Sever";
-import { getDocs, collection, setDoc, doc } from "firebase/firestore";
+import { getDocs, collection, setDoc, doc, onSnapshot } from "firebase/firestore";
 import { FontAwesome, MaterialIcons } from '@expo/vector-icons';
 import { ProfilePicture } from '../constants/Components';
 
 const theme = colors.lightTheme;
-function ChatScreen({route, navigation}) {
-    const chat = route.params.chat;
+function ChatScreen({ route, navigation }) {
+    const chatId = route.params.chatId;
     const userId = route.params.id;
-    const recId = chat.receiver;
-    
+    const recId = route.params.recId;
+
+
+    //Check if chatId is valid
+    if (userId + "-" + recId !== chatId) {
+        navigation.navigate("Chats");
+    }
+
     const [users, setUsers] = useState([])
-    const [messages, setMessages] = useState(chat.messages)
-    const [inputText, setInputText] = useState("")
+    const [user, setUser] = useState({})
+    const [receiver, setReceiver] = useState({})
+    const [chat, setChat] = useState({})
+    const [messages, setMessages] = useState([])
+    const [inputText, setInputText] = useState('')
 
-    async function getUsers() {
-        const querySnapshot = await getDocs(collection(firestore, "Users"));
-        let data = []
-        querySnapshot.forEach((doc) => {
-            data.push(doc.data())
+    useEffect(() => {
+        const usersSub = onSnapshot(collection(firestore, "Users"), querySnapshot => {
+            const data = []
+            querySnapshot.forEach((doc) => {
+                data.push(doc.data())
+            });
+            console.log("Current data: ", data);
+            setUsers(data)
+            //setUser(ans.data)
         });
-        setUsers(data)
-    }
 
-    async function updateUser(id, data) {
-        await setDoc(doc(firestore, "Users", id), data);
-    }
+        const userSub = onSnapshot(doc(firestore, "Users", userId), (doc) => {
+            setUser(doc.data())
+        });
 
-    getUsers().then(r => console.log("Promise resolved!"));
+        const recSub = onSnapshot(doc(firestore, "Users", recId), (doc) => {
+            setReceiver(doc.data())
+        });
 
-    let user = {}
-    users.forEach((item) => {
-        if (item.id === userId) {
-            user = item
-            // console.log("got user: "+ user.name)
-        }
-    })
+        const chatSub = onSnapshot(doc(firestore, "Chats", chatId), (doc) => {
+            setChat(doc.data())
+            setMessages(doc.data().messages)
+        });
+        console.log("User: " + user + "\n" + "Receiver: " + receiver + "\n" + "Chta: " + chat)
 
-    let receiver = {}
-    users.forEach((item) => {
-        if (item.id === recId) {
-            receiver = item
-            // console.log("got user: "+ receiver.name)
-        }
-    })
+    }, [])
 
 
     //
-    function sendMessage(message) {
-        const newMessage = Message;
-        newMessage.id = messages.length + 1;
-        newMessage.message = message;
-        newMessage.sender = userId;
-        console.log(newMessage);
 
-        user.chatList.forEach((item) => {
-            if (item.id === chat.id) {
-                item = chat;
-                console.log("chat updated" + item.messages)
-            }
-        })
-        receiver.chatList.forEach((item) => {
-            if (item.id === chat.id) {
-                item = chat;
-                console.log("chat updated" + item.messages)
-            }
-        })
-        updateUser(userId, user);
-        updateUser(recId, receiver)
+    async function saveChat(id, chat) {
+        await setDoc(doc(firestore, "Chats", id), chat);
+    }
+
+    function sendMessage(message) {
+        const date = new Date();
+        const newMessage = Message;
+        newMessage.message = message;
+        newMessage.time = (date.getHours() + ":" + date.getMinutes()).toString();
+        newMessage.sender = userId;
+        newMessage.id = userId + message + (date.getHours() + ":" + date.getMinutes()).toString();
+
+        messages.push(newMessage);
+        chat.messages = messages;
+
+        saveChat(chat.id, chat)
+
     }
 
     return (
         <View style={styles.container}>
-            <View style = {{flexDirection: 'row', backgroundColor: theme.bgColor}}>
-                <ProfilePicture
-                    image={receiver.profilePicture}
-                    height={sizes.Large}
-                    width={sizes.Large}
-                    color={colors.white}
-                />
+            <View style={{ flexDirection: 'row', backgroundColor: theme.bgColor, marginTop: 30, borderBottomColor: theme.outline, borderBottomWidth: 1, padding: 10, alignItems: 'center'}}>
+                <MaterialIcons name="arrow-back-ios" size={24} color="black" style ={{marginLeft: 10}} onPress = {() => navigation.goBack()}/>
+                <View style={{ flexDirection: 'row', alignItems: 'center'}}>
+                    <TouchableOpacity style={{ marginLeft: 10, marginRight: 20 }} onPress = {() => navigation.navigate("Account", {id: userId, accId: recId})}>
+                        <ProfilePicture
+                            image={receiver.profilePicture}
+                            height={sizes.Large}
+                            width={sizes.Large}
+                            color={colors.white}
+                        />
+                    </TouchableOpacity>
+                    <View>
+                        <Text style ={{fontSize: 20}}>{receiver.name}</Text>
+                        <Text>{'online'}</Text>
+                    </View>
+                </View>
             </View>
-            <ScrollView style = {{
-                marginTop: sizes.ExtraLarge,
-            }}>
-                <Chat message="Hello Friends" user={user} userId={receiver.id} time = "10:20" />
-                <Chat message="Hello You" user={user} userId={user.id} time="10:22" />
-            </ScrollView>
-            <View>
+            <View style = {{flex: 1}}>
                 <FlatList
                     vertical
                     showsHorizontalScrollIndicator={false}
@@ -96,13 +101,13 @@ function ChatScreen({route, navigation}) {
                     data={messages}
                     renderItem={({ item }) => {
                         return (
-                            <Chat message={item.message} user={user} userId={item.sender}/>
+                            <Chat message={item.message} user={user} userId={item.sender} time={item.time} />
                         )
                     }}
                 />
             </View>
-            <View style = {styles.inputContainer}>
-                <TextInput 
+            <View style={styles.inputContainer}>
+                <TextInput
                     onChangeText={(val) => setInputText(val)}
                     style={{
                         borderRadius: sizes.ExtraLarge,
@@ -114,9 +119,9 @@ function ChatScreen({route, navigation}) {
                         borderColor: theme.color,
                         borderWidth: 1,
                     }}
-                    placeholder="Message....." 
+                    placeholder="Message....."
                 />
-                <TouchableOpacity onPress = {() => sendMessage(inputText)}>
+                <TouchableOpacity onPress={() => sendMessage(inputText)}>
                     <FontAwesome name="send" color={theme.color} size={35} />
                 </TouchableOpacity>
             </View>
@@ -125,36 +130,39 @@ function ChatScreen({route, navigation}) {
 }
 
 function Chat(props) {
-    
-    if(props.userId === props.user.id) {
+
+    if (props.userId === props.user.id) {
         return (
             <View style={{
-                width: 200,
+                width: 250,
                 alignSelf: "flex-end",
             }}>
                 <TouchableOpacity style={{
                     backgroundColor: theme.color,
                     padding: 8,
                     alignItems: "center",
-                    borderRadius: sizes.ExtraLarge,
+                    borderRadius: sizes.Medium,
                     alignSelf: "flex-end",
                     marginHorizontal: 20,
+                    marginVertical: 5,
                     flexDirection: "row",
+                    borderBottomRightRadius: 0,
                 }}>
                     <Text style={{ color: colors.white, flexWrap: "wrap", fontSize: 16 }}>{props.message}</Text>
-                    <View style = {{
+                    <View style={{
                         flexDirection: "column",
                         marginHorizontal: 5,
+                        alignSelf: 'flex-end',
                     }}>
                         <Text style={{ color: colors.white, fontSize: 10,}}>{props.time}</Text>
                     </View>
                 </TouchableOpacity>
             </View>
         )
-    }else{
+    } else {
         return (
-            <View style = {{
-                width: 200,
+            <View style={{
+                width: 250,
                 alignSelf: "flex-start",
             }}>
                 <TouchableOpacity style={{
@@ -165,6 +173,7 @@ function Chat(props) {
                     alignSelf: "flex-start",
                     marginHorizontal: 20,
                     flexDirection: "row",
+                    borderBottomLeftRadius: 0,
                 }}>
                     <Text style={{ color: colors.white, flexWrap: "wrap", fontSize: 16 }}>{props.message}</Text>
                     <View style={{
@@ -177,7 +186,7 @@ function Chat(props) {
             </View>
         )
     }
-    
+
 }
 
 export default ChatScreen;
@@ -193,7 +202,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         alignSelf: "center",
         bottom: 0,
-        marginHorizontal: 10,
+        marginHorizontal: 5,
         marginBottom: 20,
         marginTop: 10,
         justifyContent: "space-between",

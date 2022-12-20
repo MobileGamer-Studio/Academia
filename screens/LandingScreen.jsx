@@ -1,8 +1,22 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {colors, images, sizes} from '../constants/Data';
 
 function LandingScreen({navigation}) {
+
+    useEffect(() => {
+        const setTheme = async () => {
+            try {
+                await AsyncStorage.setItem("theme", JSON.stringify(colors.lightTheme))
+            } catch (err) {
+                console.log("error getting theme data")
+            }
+        }
+
+        setTheme()
+    }, [])
+
+
     return (
         <View style={styles.container}>
             <View style={{

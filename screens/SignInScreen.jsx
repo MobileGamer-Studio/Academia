@@ -5,8 +5,8 @@ import {SignIn, SignIn_Google} from "../constants/Sever"
 
 
 const SignInScreen = ({route, navigation}) => {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
 
     return (
         <View style={styles.container}>

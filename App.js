@@ -25,6 +25,7 @@ import ChatListScreen from './screens/ChatListScreen';
 import ChatScreen from './screens/ChatScreen';
 import AccountListScreen from './screens/AccountListScreen';
 import SavedScreen from './screens/SavedScreen';
+import NotificationsScreen from './screens/NotificationsScreen';
 
 
 const Stack = createNativeStackNavigator();
@@ -97,20 +98,24 @@ function App() {
                 <Stack.Screen
                     name="Following"
                     component={FollowingListScreen}
+                    options={{ headerShown: false }}
                 />
 
                 <Stack.Screen
                     name="Followers"
                     component={FollowersListScreen}
+                    options={{ headerShown: false }}
                 />
 
                 <Stack.Screen
                     name="Checkout"
                     component={CheckOutScreen}
+                    options={{ headerShown: false }}
                 />
                 <Stack.Screen
                     name="Cart"
                     component={CartScreen}
+                    options={{ headerShown: false }}
                 />                
                 <Stack.Screen
                     name="Orders"
@@ -123,6 +128,7 @@ function App() {
                 <Stack.Screen
                     name="Settings"
                     component={SettingScreen}
+                    options={{ headerShown: false }}
                 />
                 <Stack.Screen
                     name="Search"
@@ -133,6 +139,7 @@ function App() {
                 <Stack.Screen
                     name="Chats"
                     component={ChatListScreen}
+                    options={{ headerShown: false }}
                 />
                 <Stack.Screen
                     name="Chat"
@@ -147,6 +154,12 @@ function App() {
                 <Stack.Screen
                     name="Saved"
                     component={SavedScreen}
+                    options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                    name="Notifications"
+                    component={NotificationsScreen}
+                    options={{ headerShown: false }}
                 />
             </Stack.Navigator>
         </NavigationContainer>

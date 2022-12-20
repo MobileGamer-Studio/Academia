@@ -1,7 +1,7 @@
 import React  from "react";
 import { FlatList, StyleSheet, View } from 'react-native';
 import {colors, testUsers} from "../constants/Data"
-import { CartItem } from "../constants/Components";
+import { CartItem, Header } from "../constants/Components";
 
 const theme = colors.lightTheme;
 function CheckOutScreen({route, navigation}) {
@@ -10,6 +10,7 @@ function CheckOutScreen({route, navigation}) {
 
     return (
         <View style = {styles.container}>
+            <Header method = {() => navigation.goBack()} text = {'Check Out'}/>
             <View>
                 <FlatList
                     vertical
@@ -22,7 +23,7 @@ function CheckOutScreen({route, navigation}) {
                             <CartItem
                                 product={item.product}
                                 item={item}
-                                method={() => console.log("") }
+                                method={() => console.log('') }
                                 amount={item.amountSellected}
                             />
                         );

@@ -1,38 +1,40 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, TouchableOpacity, View, Switch} from 'react-native';
 import { colors, themeData, User} from '../constants/Data'
 import {logOut} from "../constants/Sever"
 import {MaterialIcons} from "@expo/vector-icons"
-import { ProfilePicture } from '../constants/Components';
+import { Header, ProfilePicture } from '../constants/Components';
+import { firestore } from "../constants/Sever";
+import { getDocs, collection, setDoc, doc, onSnapshot } from "firebase/firestore";
 
 
-const theme = colors.lightTheme
+const theme = colors.lightTheme;
 function SettingScreen({route, navigation}) {
-    const user = route.params.user;
-    
+    const userId = route.params.id;
+    const [users, setUsers] = useState([])
+    const [user, setUser] = useState({})
+    const [settings, setSettings] = useState({});  
 
-    async function GetSettingsData(id) {
-        const data = await AsyncStorage.getItem('Settings');
-        const settings = JSON.parse(data);
 
-        console.log("Settings: " + settings + "\n Data: " + data);
-        return settings;
-    }
+    useEffect(() => {
+        const usersSub = onSnapshot(collection(firestore, "Users"), querySnapshot => {
+            const data = []
+            querySnapshot.forEach((doc) => {
+                data.push(doc.data())
+            });
+            //console.log("Current data: ", data);
+            setUsers(data)
+            //setUser(ans.data)
+        });
 
-    const [settings, setSettings] = useState(GetSettingsData().then(r => console.log(r)));
-    const [isDarkMode, setDarkMode] = useState(false)
+        const userSub = onSnapshot(doc(firestore, "Users", userId), (doc) => {
+            setUser(doc.data())
+        });
+    }, [])
 
-    function changeMode() {
-        if(isDarkMode === false){
-            setDarkMode(true)
-            settings.themeData = themeData.dark;
-        }else{
-            settings.themeData = themeData.light;
-            setDarkMode(false)
-        }
-    }
     return (
         <View style = {styles.container}>
+            <Header method = {() => navigation.goBack()} text = {'Settings'}/>
             <View style = {styles.section}>
                 <View>
                     <TouchableOpacity style={{
@@ -43,13 +45,16 @@ function SettingScreen({route, navigation}) {
                     }}
 
                         onPress={() => navigation.navigate("UserAccount", {id: user.id})}>
-                        <ProfilePicture color={colors.white} image={user.profilePicture} height={40} width={40} />
-                        <Text style={{ marginHorizontal: 10 , fontSize: 17}}>{user.name}</Text>
+                        <ProfilePicture color={colors.white} image={user.profilePicture} height={100} width={100} />
+                        <View style={{ justifyContent: 'flex-start', height: '100%', alignItems: 'flex-start', marginHorizontal: 10, }}>
+                            <Text style={{  fontSize: 20 }}>{user.name}</Text>
+                            <Text onPress={() => navigation.navigate("EditProfile", { id: userId })}>Edit Profile</Text>
+                        </View>
                     </TouchableOpacity>
                 </View>
                 <TouchableOpacity style={{
                     flexDirection: "row",
-                    alignSelf: "flex-end",
+                    alignSelf: "flex-start",
                     marginHorizontal: 10,
                 }}
 
@@ -62,13 +67,6 @@ function SettingScreen({route, navigation}) {
                     <MaterialIcons name="logout" size={24} color={theme.color} />
                 </TouchableOpacity>
             </View>
-            <Switch
-                trackColor={{ false: theme.color, true: "#81b0ff" }}
-                thumbColor={isDarkMode ? "#f5dd4b" : "#f4f3f4"}
-                ios_backgroundColor= {colors.grey}
-                onValueChange={() => changeMode()}
-                value={isDarkMode}
-            />
         </View>
     );
 }
