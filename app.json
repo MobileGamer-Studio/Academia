@@ -2,13 +2,13 @@
   "expo": {
     "name": "Academia",
     "slug": "academia",
-    "owner": "mobilegamer",
+    "owner": "",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./images/Logo.png",
+    "icon": "./images/AppIcon-White.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./images/Logo.png",
+      "image": "./images/A.png",
       "resizeMode": "contain",
       "backgroundColor": "#FFFFFF"
     },
@@ -23,13 +23,13 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./images/Logo.png",
+        "foregroundImage": "./images/AppIcon-White.png",
         "backgroundColor": "#FFFFFF"
       },
       "package": "com.mobilegamer.academia"
     },
     "web": {
-      "favicon": "./images/AppArt3.png"
+      "favicon": "./images/AppIcon-White.png"
     },
     "extra": {
       "eas": {
