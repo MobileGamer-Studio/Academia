@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, Text, TouchableOpacity, View, Switch} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View, ScrollView} from 'react-native';
 import { colors, themeData, User} from '../constants/Data'
 import {logOut} from "../constants/Sever"
 import {MaterialIcons} from "@expo/vector-icons"
@@ -16,6 +16,10 @@ function SettingScreen({route, navigation}) {
     const [settings, setSettings] = useState({});  
 
 
+    const [name, setName] = useState("");
+    const [email, setEmail] = useState("");
+
+
     useEffect(() => {
         const usersSub = onSnapshot(collection(firestore, "Users"), querySnapshot => {
             const data = []
@@ -29,46 +33,77 @@ function SettingScreen({route, navigation}) {
 
         const userSub = onSnapshot(doc(firestore, "Users", userId), (doc) => {
             setUser(doc.data())
+            setName(doc.data().name)
+            setEmail(doc.data().loginDetails.email)
         });
     }, [])
 
     return (
         <View style = {styles.container}>
             <Header method = {() => navigation.goBack()} text = {'Settings'}/>
-            <View style = {styles.section}>
+            <ScrollView>
                 <View>
-                    <TouchableOpacity style={{
+                    <TouchableOpacity 
+                    style={{
                         flexDirection: 'row',
                         alignItems: 'center',
                         justifyContent: 'flex-start',
                         padding: 10,
                     }}
 
-                        onPress={() => navigation.navigate("UserAccount", {id: user.id})}>
-                        <ProfilePicture color={colors.white} image={user.profilePicture} height={100} width={100} />
+                    onPress={() => navigation.navigate("UserAccount", { id: user.id })}>
+                        <ProfilePicture color={colors.white} image={user.profilePicture} height={50} width={50} />
                         <View style={{ justifyContent: 'flex-start', height: '100%', alignItems: 'flex-start', marginHorizontal: 10, }}>
-                            <Text style={{  fontSize: 20 }}>{user.name}</Text>
-                            <Text onPress={() => navigation.navigate("EditProfile", { id: userId })}>Edit Profile</Text>
+                            <Text style={{ fontSize: 20 }}>{name}</Text>
+                            <Text>{email}</Text>
                         </View>
                     </TouchableOpacity>
                 </View>
-                <TouchableOpacity style={{
-                    flexDirection: "row",
-                    alignSelf: "flex-start",
-                    marginHorizontal: 10,
-                }}
-
-                    onPress={() => {
+                <Section
+                    text={"Share"}
+                    method={async () => {
+                        try {
+                            const result = await Share.share({
+                                message:
+                                    'React Native | A framework for building native apps using React',
+                            });
+                            if (result.action === Share.sharedAction) {
+                                if (result.activityType) {
+                                    // shared with activity type of result.activityType
+                                } else {
+                                    // shared
+                                }
+                            } else if (result.action === Share.dismissedAction) {
+                                // dismissed
+                            }
+                        } catch (error) {
+                            alert(error.message);
+                        }
+                    }}
+                />
+                <Section
+                    text={"Log Out"}
+                    method={() => {
                         logOut()
                         navigation.navigate("Loading");
                     }}
-                >
-                    <Text style={{ marginHorizontal: 10 }}>Log Out</Text>
-                    <MaterialIcons name="logout" size={24} color={theme.color} />
-                </TouchableOpacity>
-            </View>
+                />
+            </ScrollView>
         </View>
     );
+}
+
+function Section(props) {
+    return(
+        <View style = {styles.section}>
+            <TouchableOpacity
+
+                onPress={props.method}
+            >
+                <Text style={{ marginHorizontal: 10 }}>{props.text}</Text>
+            </TouchableOpacity>
+        </View>
+    )
 }
 
 
@@ -79,8 +114,12 @@ const styles = StyleSheet.create({
     },
     section: {
         flexDirection: "column",
-        borderBottomWidth: 1,
-        borderBottomColor: theme.color,
+        borderTopWidth: 2,
+        borderTopColor: theme.outline,
+        paddingVertical: 10,
+        flexDirection: "row",
+        alignSelf: "flex-start",
+        width: "100%",
     },
 })
 

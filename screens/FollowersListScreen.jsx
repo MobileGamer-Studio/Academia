@@ -1,16 +1,18 @@
-import React, {useState, useEffect} from 'react';
-import { View, TouchableOpacity, StyleSheet, FlatList, Text } from "react-native";
-import { ProfilePicture, RoundButton, Header } from '../constants/Components';
-import { colors, sizes, testUsers } from "../constants/Data";
+import React, { useState, useEffect } from 'react';
+import { View, TouchableOpacity, StyleSheet, FlatList, Text, Image } from "react-native";
+import { ProfilePicture, RoundButton, Header, Loading, Button} from '../constants/Components';
+import { colors, sizes, testUsers, images} from "../constants/Data";
 import { firestore, logOut } from "../constants/Sever";
 import { collection, doc, onSnapshot } from "firebase/firestore";
 
 
 const theme = colors.lightTheme;
-function FollowersListScreen({route, navigation}) {
+function FollowersListScreen({ route, navigation }) {
+
     const userId = route.params.id;
     const [users, setUsers] = useState([])
     const [user, setUser] = useState({})
+    const [loading, setLoading] = useState(true)
 
     const [followersList, setFollowersList] = useState([])
 
@@ -28,61 +30,97 @@ function FollowersListScreen({route, navigation}) {
             setUser(doc.data())
 
             setFollowersList(doc.data().followers)
+
+            if (user !== {}) {
+                setLoading(false)
+            }
         });
-        
 
     }, [])
 
-    return(
-        <View style = {styles.container}>
-            <Header method = {() => navigation.goBack()} text = {'Followers'}/>
-            <FollowersList followersList = {followersList}/>
-        </View>
-    );
-}
 
-function FollowersList(props) {
-    if (props.followersList.length !== 0) {
+    if (loading === true) {
         return (
-            <View>
-                <FlatList
-                    vertical
-                    showsHorizontalScrollIndicator={false}
-                    keyExtractor={(item) => item.id}
-                    data={props.followersList}
-                    renderItem={({ item }) => <User name={item} />}
-                />
+            <View style={styles.container}>
+                <Header method={() => navigation.goBack()} text={'Followers'} />
+                <Loading />
             </View>
         )
     } else {
+        const followers = []
+        users.forEach(acc => {
+            if (followersList.includes(acc.id)) {
+                followers.push(acc)
+            }
+        });
+
         return (
-            <View style={{
-                flex: 1,
-                justifyContent: "center",
-                alignItems: "center",
-            }}>
-                <Text style={{
-                    fontSize: sizes.Large,
-                }}>Not Followed By Anyone</Text>
+            <View style={styles.container}>
+                <Header method={() => navigation.goBack()} text={'Followers'} />
+                {
+                    followers.length !== 0 ? (
+                        <View>
+                            <FlatList
+                                vertical
+                                showsHorizontalScrollIndicator={false}
+                                keyExtractor={(item) => item.id}
+                                data={followers}
+                                renderItem={({ item }) => <User name={item.name} image={item.profilePicture} method={() => navigation.navigate('Account', { id: userId, accId: item.id })} />}
+                            />
+                        </View>
+                    ) : (
+                        <View style={{
+                            flex: 1,
+                            justifyContent: "center",
+                            alignItems: "center",
+                        }}>
+                                <View style={{
+                                    height: 300,
+                                    width: 300,
+                                    alignItems: "center",
+                                }}>
+                                    <Image
+                                        source={images.follower}
+                                        style={{
+                                            height: 300,
+                                            width: 300,
+                                            flex: 1,
+                                        }}
+                                        resizeMode="contain"
+                                    />
+                                </View>
+                            <Text style={{
+                                fontSize: sizes.Medium,
+                            }}>Not followed by anyone</Text>
+                                <Button
+                                    style={{}}
+                                    method={() => navigation.navigate("Accounts", { id: user.id })}
+                                    text={"Find Users To Connect With"}
+                                    textStyle={{ color: theme.color, fontSize: sizes.Small }}
+                                />
+                        </View>
+                    )
+                }
             </View>
-        )
+        );
     }
 }
 
 
+
+
+
 function User(props) {
     return (
-        <View>
-            <TouchableOpacity style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'flex-start',
-                borderBottomWidth: 1,
-                borderBottomColor: theme.color,
-                padding: 10,
-                backgroundColor: theme.bgColor,
-            }}
-
+        <View style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'flex-start',
+            borderBottomWidth: 1,
+            borderBottomColor: theme.outline,
+            padding: 10,
+        }}>
+            <TouchableOpacity 
                 onPress={props.method}>
                 <ProfilePicture color={colors.white} image={props.image} height={40} width={40} />
                 <Text style={{ marginHorizontal: 10 }}>{props.name}</Text>

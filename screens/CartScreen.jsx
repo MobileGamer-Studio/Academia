@@ -1,67 +1,120 @@
-import React, {useState} from 'react';
-import {FlatList, StyleSheet, View} from 'react-native';
-import {colors, testUsers, sizes} from '../constants/Data';
+import React, {useState, useEffect} from 'react';
+import {FlatList, StyleSheet, View, Image, Text} from 'react-native';
+import {colors, sizes, images} from '../constants/Data';
 import { firestore } from "../constants/Sever";
-import { getDocs, collection, setDoc, doc } from "firebase/firestore";
+import { getDocs, collection, setDoc, doc, onSnapshot } from "firebase/firestore";
 import { Entypo } from '@expo/vector-icons';
-import { Header } from '../constants/Components';
+import { Header, Loading, Button } from '../constants/Components';
 
 const theme = colors.lightTheme;
 function CartScreen({route, navigation}) {
     const userId = route.params.id;
+    const [user, setUser] = useState({})
     const [users, setUsers] = useState([])
+    const [products, setProducts] = useState([])
+    const [optionsAct, setOptionsAct] = useState(false)
+    const [cart, setCart] = useState([])
+    const [loading, setLoading] = useState(true)
 
-    async function getUsers() {
-        const querySnapshot = await getDocs(collection(firestore, "Users"));
-        let data = []
-        querySnapshot.forEach((doc) => {
-            data.push(doc.data())
+    useEffect(() => {
+        const usersSub = onSnapshot(collection(firestore, "Users"), querySnapshot => {
+            const data = []
+            querySnapshot.forEach((doc) => {
+                data.push(doc.data())
+            });
+            setUsers(data)
         });
-        setUsers(data)
+
+        const productsSub = onSnapshot(collection(firestore, "Products"), querySnapshot => {
+            const data = []
+            querySnapshot.forEach((doc) => {
+                data.push(doc.data())
+            });
+            setProducts(data)
+        });
+
+        const userSub = onSnapshot(doc(firestore, "Users", userId), (item) => {
+            setUser(item.data())
+
+            setCart(item.data().userInfo.cart)
+
+            if (user !== {}) {
+                setLoading(false)
+            }
+            
+        });
+
+        
+    }, [])
+
+
+    const RemoveItem = async (item) => {
+        cart.slice(cart.indexOf(item))
+        user.userInfo.cart = cart
+        await setDoc(doc(firestore, "Users", userId), user)
     }
 
-    getUsers().then(r => console.log("Promise resolved!"));
-
-    let user = {}
-    users.forEach((item) => {
-        if (item.id === userId) {
-            user = item
-            console.log("got user: " + user.name)
-        }
-    })
-
-    const cart = [];
-
-
-    const RemoveItem = (item) => {
-        let index = cart.indexOf(item);
-        cart.slice(index)
-    }
-
-    return (
-        <View style={styles.container}>
-            <Header method={() => navigation.goBack()} text = {"Cart"}/>
-            <View>
-                <FlatList
-                    vertical
-                    numColumns={2}
-                    showsHorizontalScrollIndicator={false}
-                    keyExtractor={(item) => item.id}
-                    data={cart}
-                    renderItem={({item}) => {
-                        return (
-                            <CartItem
-                                product = {item.product}
-                                item = {item}
-                                method = {() => {console.log()}}
-                                amount = {item.amountSellected}
-                            />
-                        );
-                    }}
-                />
+    if (loading === true) {
+        return (
+            <View style={styles.container}>
+                <Header method={() => navigation.goBack()} text={'Cart'} />
+                <Loading />
             </View>
-        </View>
-    );
+        )
+    } else {
+        return (
+            <View style={styles.container}>
+                <Header method={() => navigation.goBack()} text={"Cart"} />
+                {
+                    cart.length !== 0 ? (
+                        <View>
+                            <FlatList
+                                vertical
+                                numColumns={2}
+                                showsHorizontalScrollIndicator={false}
+                                keyExtractor={(item) => item.id}
+                                data={cart}
+                                renderItem={({ item }) => {
+                                    return (
+                                        <View></View>
+                                    );
+                                }}
+                            />
+                        </View>
+                    ) : (
+                        <View style = {{
+                            flex: 1,
+                            justifyContent: "center",
+                            alignItems: "center",
+                        }}>
+                                <View style={{
+                                    height: 300,
+                                    width: 300,
+                                    alignItems: "center",
+                                }}>
+                                    <Image
+                                        source={images.empty_cart}
+                                        style={{
+                                            height: 300,
+                                            width: 300,
+                                            flex: 1,
+                                        }}
+                                        resizeMode="contain"
+                                    />
+                                </View>
+                                <Text style={{ fontSize: sizes.Medium }}>It looks like your cart is empty</Text>
+                                <Button
+                                    style={{}}
+                                    method={() => navigation.navigate("Search", { id: user.id })}
+                                    text={"Find Products"}
+                                    textStyle={{ color: theme.color, fontSize: sizes.Small }}
+                                />
+                        </View>
+                    )
+                }
+            </View>
+        );
+    }
 }
 
 function CartItem(props) {

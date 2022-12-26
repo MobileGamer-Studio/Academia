@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
-import {View, TouchableOpacity, StyleSheet, FlatList, Text} from "react-native";
-import { ProfilePicture, RoundButton, Header} from '../constants/Components';
-import {colors, sizes, testUsers} from "../constants/Data";
+import {View, TouchableOpacity, StyleSheet, FlatList, Text, Image} from "react-native";
+import { ProfilePicture, RoundButton, Header, Loading, Button} from '../constants/Components';
+import {colors, sizes, testUsers, images} from "../constants/Data";
 import { firestore, logOut } from "../constants/Sever";
 import { collection, doc, onSnapshot } from "firebase/firestore";
 
@@ -12,6 +12,7 @@ function FollowingListScreen({route, navigation}) {
     const userId = route.params.id;
     const [users, setUsers] = useState([])
     const [user, setUser] = useState({})
+    const [loading, setLoading] = useState(true)
 
     const [followingList, setFollowingList] = useState([])
 
@@ -29,64 +30,98 @@ function FollowingListScreen({route, navigation}) {
             setUser(doc.data())
 
             setFollowingList(doc.data().following)
+
+            if(user !== {}){
+                setLoading(false)
+            }
         });
 
     }, [])
 
 
-    return (
-        <View style = {styles.container}>
-            <Header method = {() => navigation.goBack()} text = {'Following'}/>
-            <FollowingList followingList = {followingList}/>
-        </View>
-    );
-}
-
-
-function FollowingList(props) {
-    if (props.followingList.length !== 0) {
-        return (
-            <View>
-                <FlatList
-                    vertical
-                    showsHorizontalScrollIndicator={false}
-                    keyExtractor={(item) => item.id}
-                    data={props.followingList}
-                    renderItem={({ item }) => <User name={item} />}
-                />
+    if (loading === true) {
+        return(
+            <View style = {styles.container}>
+                <Header method = {() => navigation.goBack()} text = {'Following'}/>
+                <Loading/>
             </View>
         )
-    } else {
+    }else{
+        const following = []
+        users.forEach(acc => {
+            if (followingList.includes(acc.id)) {
+                following.push(acc)
+            }
+        });
+
         return (
-            <View style={{
-                flex: 1,
-                justifyContent: "center",
-                alignItems: "center",
-            }}>
-                <Text style={{
-                    fontSize: sizes.Large,
-                }}>Not Following Anyone</Text>
+            <View style={styles.container}>
+                <Header method={() => navigation.goBack()} text={'Following'} />
+                {
+                    following.length !== 0 ? (
+                        <View>
+                            <FlatList
+                                vertical
+                                showsHorizontalScrollIndicator={false}
+                                keyExtractor={(item) => item.id}
+                                data={following}
+                                renderItem={({ item }) => <User name={item.name} image={item.profilePicture} method={() => navigation.navigate('Account', { id: userId, accId: item.id })} />}
+                            />
+                        </View>
+                        ) : (
+                            <View style={{
+                                flex: 1,
+                                justifyContent: "center",
+                                alignItems: "center",
+                            }}>
+                                <View style={{
+                                    height: 300,
+                                    width: 300,
+                                    alignItems: "center",
+                                }}>
+                                    <Image
+                                        source={images.following}
+                                        style={{
+                                            height: 300,
+                                            width: 300,
+                                            flex: 1,
+                                        }}
+                                        resizeMode="contain"
+                                    />
+                                </View>
+                                <Text style={{
+                                    fontSize: sizes.Medium,
+                                }}>Not following anyone</Text>
+                                <Button
+                                    style={{}}
+                                    method={() => navigation.navigate("Accounts", { id: user.id })}
+                                    text={"Find Users To Follow"}
+                                    textStyle={{ color: theme.color, fontSize: sizes.Small }}
+                                />
+                            </View>
+                        )
+                }
             </View>
-        )
+        );
     }
 }
 
 
 function User(props) {
     return (
-        <View>
+        <View style={{
+            borderBottomWidth: 1,
+            borderBottomColor: theme.outline,
+            padding: 10,
+        }}>
             <TouchableOpacity style={{
-                flexDirection: 'row',
+                flexDirection: 'row', 
                 alignItems: 'center',
                 justifyContent: 'flex-start',
-                borderBottomWidth: 1,
-                borderBottomColor: theme.color,
-                padding: 10,
-            }}
-            
+}}            
             onPress = {props.method}>
-                <ProfilePicture color={colors.white} image={props.image} height={40} width={40} />
-                <Text style = {{marginHorizontal: 10}}>{props.name}</Text>
+                <ProfilePicture color={colors.white} image={props.image} height={30} width={30} />
+                <Text style = {{marginHorizontal: 10, fontSize: sizes.Small}}>{props.name}</Text>
             </TouchableOpacity>
         </View>
     );

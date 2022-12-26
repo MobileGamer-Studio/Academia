@@ -46,7 +46,7 @@ function LandingScreen({navigation}) {
                         alignSelf: "center",
                     }}
                     resizeMode="contain"
-                    source={images.logo}
+                    source={images.welcome}
                 />
             </View>
             <View style={{

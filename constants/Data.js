@@ -37,14 +37,16 @@ export const colors = {
         color2: "#FFOOE5",
         bgColor: '#000',
         outline: "#c4d8dd",
+        outline2: "#f6f6f6",
         textColor: '#fff'
     },
 
     lightTheme: {
         color: "#00FFD1",
-        color2: "#FFOOE5",
+        color2: "#c4d8dd",
         bgColor: '#fff',
         outline: "#c4d8dd",
+        outline2: "#f6f6f6",
         textColor: '#000'
     }
 };
@@ -72,6 +74,7 @@ export const images = {
     //
     logo: require("../images/Logo.png"),
     academia: require("../images/Academia.png"),
+    academia_white: require("../images/Academia2.png"),
     defaultProfile: require("../images/profileIcon.png"),
     cart: require("../images/Cart-white.png"),
     more: require("../images/othersIcon.png"),
@@ -96,6 +99,20 @@ export const images = {
         search: require("../images/SearchIcon-white.png"),
         cart: require("../images/Cart-white.png"),
     },
+
+    //
+    loading: require("../images/AppArt-Loading.png"),
+    welcome: require("../images/AppArt-Openning.png"),
+    chat: require("../images/AppArt-Chat.png"),
+    follower: require("../images/AppArt-Follow.png"),
+    following: require("../images/AppArt-Follow2.png"),
+    confirmed: require("../images/AppArt-OrderConfirmed.png"),
+    notification: require("../images/AppArt-Notification.png"),
+    empty: require("../images/AppArt-Empty.png"),
+    empty_cart: require("../images/AppArt-EmptyCart.png"),
+    search: require("../images/AppArt-Search.png"),
+    error: require("../images/AppArt-ServerDown.png"),
+    analytics: require("../images/AppArt-Analytics.png"),
 };
 
 export const fonts = {
@@ -132,11 +149,11 @@ export const User = {
     },
     userInfo: {
         cart: [],
+        notifications: [],
         feed: {
             suggestedProducts: [],
             suggestedUsers: [],
             bestSellers: [],
-            cart: [],
             activity: [],
             new: [],
             sales: [],

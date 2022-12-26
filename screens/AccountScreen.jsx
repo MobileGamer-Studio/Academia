@@ -3,7 +3,7 @@ import {FlatList, ScrollView, StyleSheet, Text, View, TouchableOpacity, Modal} f
 import {colors, sizes, testUsers, testProducts, Chat} from '../constants/Data';
 import {Button, ProductSmall, ProfilePicture, ProductVertical} from '../constants/Components';
 import { firestore } from "../constants/Sever";
-import { getDocs, collection, onSnapshot, doc} from "firebase/firestore";
+import { setDoc, collection, onSnapshot, doc} from "firebase/firestore";
 import { Entypo, MaterialIcons} from '@expo/vector-icons';
 
 const theme = colors.lightTheme;
@@ -15,7 +15,7 @@ function AccountScreen({route, navigation}) {
     const [user, setUser] = useState({})
     const [acc, setAcc] = useState({})
     const [chats, setChats] = useState([])
-    const [userChats, setUserChats] = useState([])
+    const [chatList, setChatList] = useState([])
     const [optionsAct, setOptionsAct] = useState(false)
 
 
@@ -55,6 +55,14 @@ function AccountScreen({route, navigation}) {
             if (doc.data().sellerInfo.productList.length !== 0) {
                 setProductsLength(doc.data().sellerInfo.productList.length)
             }
+
+            if (doc.data().following.includes(accId) === true) {
+                setFollowing(true)
+            } else {
+                setFollowing(false)
+            }
+
+            setChatList(doc.data().chatList)
         });
 
         const accSub = onSnapshot(doc(firestore, "Users", accId), (doc) => {
@@ -68,17 +76,22 @@ function AccountScreen({route, navigation}) {
             });
             setChats(data)
         });
+
+        
     }, [])
 
-    function follow() {
-        if (following) {
-            user.following.splice(user.following.indexOf(accId), 1)
-            setFollowing(false)
-            saveData(userId, "Users", user)
+    async function follow() {
+        if (following === true) {
+            user.followers.splice(user.following.indexOf(acc.id), 1)
+            acc.following.splice(user.following.indexOf(user.id), 1)
+            await setDoc(doc(firestore, 'Users', userId), user)
+            await setDoc(doc(firestore, 'Users', accId), acc)
         }else{
-            user.following.push(acc.id)
-            setFollowing(true)
-            saveData(userId, "Users", user)
+            user.followers.push(acc.id)
+            acc.following.push(user.id)
+            await setDoc(doc(firestore, 'Users', userId), user)
+            await setDoc(doc(firestore, 'Users', accId), acc)
+            
         }
     }
 
@@ -172,7 +185,7 @@ function AccountScreen({route, navigation}) {
                             marginHorizontal: 10,
                         }}
                         
-                            onPress={() => navigation.navigate("ProductList", { id: userId })}>
+                            onPress={() => navigation.navigate("ProductList", { id: accId })}>
                             <Text style={{ color: theme.color }}>Products</Text>
                             <Text style={{ color: theme.color }}>{productsLength}</Text>
                         </TouchableOpacity>
@@ -182,7 +195,7 @@ function AccountScreen({route, navigation}) {
                         <Text style={{ color: theme.color }}>{acc.description}</Text>
                     </View>
                     <View style = {{flexDirection: "row"}}>
-                        {following ? <Button
+                        {following === true ? <Button
                             style={styles.unfollow}
                             method={() => follow()}
                             text={"Unfollow"}
@@ -196,9 +209,11 @@ function AccountScreen({route, navigation}) {
                         <Button
                             style={styles.message_btn}
                             method={() => {
-                                if (user.chatList.includes(userId + "-" + accId)) {
-                                    navigation.navigate("Chat", { chatId: userId + "-" + accId,rec: acc, id: userId })
-                                }else{
+                                if (chatList.includes(userId + "-" + accId)) {
+                                    navigation.navigate('Chat', { chatId: userId + "-" + accId, id: userId, recId: accId})
+                                } else if (chatList.includes(accId + "-" + userId)) {
+                                    navigation.navigate('Chat', { chatId: accId + "-" + userId, id: userId, recId: accId })
+                                } else{
                                     const newChat = Chat;
                                     newChat.id = userId + "-" + accId;
 
@@ -213,14 +228,14 @@ function AccountScreen({route, navigation}) {
                                         })
                                     })
                                     saveData(newChat.id, "Chats", newChat)
-                                    navigation.navigate('Chat', { chatId: newChat.id, id: userId, recId: item.id })
+                                    navigation.navigate('Chat', { chatId: newChat.id, id: userId, recId: accId })
                                 }
                             }}
                             text={"Message"}
                             textStyle={{ color: theme.color, fontSize: sizes.Medium }}
-                            icon = {"chat"}
-                            iconColor ={theme.color}
-                            iconSize = {sizes.Medium}
+                            // icon = {"chat"}
+                            // iconColor ={theme.color}
+                            // iconSize = {sizes.Medium}
                         />
                     </View>
                 </View>

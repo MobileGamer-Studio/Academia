@@ -1,11 +1,11 @@
-import React, {useState} from "react"
+import React, {useState, useEffect} from "react"
 import {Text, View, StyleSheet, ScrollView} from "react-native"
 import {Button, Header, InfoInput, ProfilePicture} from "../constants/Components";
 import * as ImagePicker from "expo-image-picker";
 import {colors, images, sizes, User} from "../constants/Data";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { firestore } from "../constants/Sever";
-import { getDocs, collection } from "firebase/firestore";
+import { getDocs, collection, onSnapshot, doc } from "firebase/firestore";
 
 const theme = colors.lightTheme;
 
@@ -13,31 +13,34 @@ function EditProfileScreen({route, navigation}) {
 
     const userId = route.params.id;
     const [users, setUsers] = useState([])
-
-    async function getUsers() {
-        const querySnapshot = await getDocs(collection(firestore, "Users"));
-        let data = []
-        querySnapshot.forEach((doc) => {
-            data.push(doc.data())
-        });
-        setUsers(data)
-    }
-
-    getUsers();
-
-    let user = {}
-    users.forEach((item) => {
-        if (item.id === userId) {
-            user = item
-            console.log("got user: " + user)
-        }
-    })
-
+    const [user, setUser] = useState({})
+    
     //Variables
-    const [name, setName] = useState(user.name);
-    const [description, setDescription] = useState(user.description);
-    const [location, setLocation] = useState(user.location);
-    const [profilePicture, setProfilePicture] = useState(user.profilePicture);
+    const [name, setName] = useState("");
+    const [description, setDescription] = useState("");
+    const [location, setLocation] = useState("");
+    const [profilePicture, setProfilePicture] = useState("https://firebasestorage.googleapis.com/v0/b/academia-c3d0e.appspot.com/o/Images%2FProfile%2FprofileIcon.png?alt=media&token=d0c063e1-d61e-4630-a6af-bba57f100d9d");
+
+
+    useEffect(() => {
+        const usersSub = onSnapshot(collection(firestore, "Users"), querySnapshot => {
+            const data = []
+            querySnapshot.forEach((doc) => {
+                data.push(doc.data())
+            });
+            setUsers(data)
+        });
+
+        const userSub = onSnapshot(doc(firestore, "Users", userId), (doc) => {
+            setUser(doc.data())
+
+            setName(doc.data().name)
+            setDescription(doc.data().description)
+            setLocation(doc.data().location)
+            setProfilePicture(doc.data().profilePicture)
+        });
+
+    }, [])
 
     const GetImage = async () => {
         let pickedImage = ImagePicker.launchImageLibraryAsync()
@@ -46,7 +49,7 @@ function EditProfileScreen({route, navigation}) {
             return images.defaultProfile;
         }
         // user.profilePicture = pickedImage.url;
-        setProfilePicture({ uri: pickedImage.url });
+        setProfilePicture(pickedImage.url);
     }
 
     async function saveUsers() {
@@ -70,7 +73,7 @@ function EditProfileScreen({route, navigation}) {
             </View>
             <ScrollView showsVerticalScrollIndicator={false}>
                 <View>
-                    <ProfilePicture image = {{uri: profilePicture}}/>
+                    <ProfilePicture image = {profilePicture}/>
                 </View>
                 <View style={styles.field}>
                     <Text>{"Username: " + name}</Text>

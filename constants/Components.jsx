@@ -1,5 +1,5 @@
 import React from 'react';
-import {Image, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
+import {Image, StyleSheet, Text, TextInput, TouchableOpacity, View, ActivityIndicator} from 'react-native';
 import {colors, images, sizes} from "./Data";
 import {MaterialIcons} from "@expo/vector-icons";
 
@@ -85,10 +85,10 @@ export const InfoInput = (props) => {
                     borderWidth: 1,
                     margin: sizes.ExtraSmall,
                     paddingHorizontal: sizes.Small,
-                    backgroundColor: colors.white,
+                    backgroundColor: theme.bgColor,
                     height: 50,
                     width: 350,
-                    borderColor: colors.defaultBG4,
+                    borderColor: theme.outline,
                 }}
                 onChangeText={props.method}
                 placeholder={props.placeholder}
@@ -110,10 +110,11 @@ export const SearchBar = (props) => {
                     paddingHorizontal: sizes.Small,
                     backgroundColor: theme.bgColor,
                     height: 40,
-                    borderColor: props.color,
+                    borderColor: theme.color2,
                     borderWidth: 1,
                 }}
                 placeholder="snacks, assignments, stationaries..."
+                value = {props.value}
             />
         </View>
     );
@@ -203,7 +204,7 @@ export const ProductHorizontal = (props) => {
                 borderRadius: sizes.ExtraLarge,
                 height: 70,
                 width: 70,
-                backgroundColor: colors.defaultBG2,
+                backgroundColor: theme.outline,
                 margin: sizes.ExtraSmall,
                 alignItems: "center",
 
@@ -241,7 +242,7 @@ export const ProductCategory = (props) => {
                 }}
             >
                 <Text style={{
-                    color: colors.white,
+                    color: theme.bgColor,
                     fontSize: sizes.Small + 2,
                 }}>{"#" + props.text}</Text>
             </View>
@@ -258,7 +259,7 @@ export const UserProfile = (props) => {
             <TouchableOpacity
                 onPress={props.method}
             >
-                <ProfilePicture color={colors.white} image={props.image} height = {100} width = {100}/>
+                <ProfilePicture color={theme.bgColor} image={props.image} height = {100} width = {100}/>
             </TouchableOpacity>
             <View style={{
                 alignItems: "center",
@@ -338,7 +339,7 @@ export const NavBar = (props) => {
                   <TouchableOpacity
                       onPress={props.profile}  
                       style={{
-                          backgroundColor: colors.white,
+                          backgroundColor: theme.bgColor,
                           borderRadius: sizes.ExtraLarge,
                           height: sizes.Large,
                           width: sizes.Large,
@@ -362,37 +363,51 @@ export function Header(props) {
     return(
         <View style = {styles.header}>
             <View style= {{flexDirection: 'row', alignItems: 'center'}}>
-                <MaterialIcons name="arrow-back-ios" size={24} color={colors.white} style={{ marginLeft: 20, marginRight: 10 }} onPress={props.method} />
-                <Text style={{ fontSize: 24, color: colors.white }}>{props.text}</Text>
+                <MaterialIcons name="arrow-back-ios" size={24} color={theme.bgColor} style={{ marginLeft: 20, marginRight: 10 }} onPress={props.method} />
+                <Text style={{ fontSize: 24, color: theme.bgColor }}>{props.text}</Text>
             </View>
+        </View>
+    )
+}
+
+export function Loading() {
+    return(
+        <View style={styles.loading}>
+            <View style={{
+                height: 300,
+                width: 300,
+                alignItems: "center",
+            }}>
+                <Image
+                    source={images.loading}
+                    style={{
+                        height: 300,
+                        width: 300,
+                        flex: 1,
+                    }}
+                    resizeMode="contain"
+                />
+            </View>
+            <ActivityIndicator size={sizes.ExtraLarge} color={theme.color} />
         </View>
     )
 }
 
 //StyleSheets
 const styles = StyleSheet.create({
-    header: {
-        width: "100%",
-        height: "100%",
-        backgroundColor: colors.white,
-        flexDirection: "row",
-        justifyContent: "flex-start",
-        alignItems: "center"
-    },
-
     SearchBar: {
         borderRadius: sizes.ExtraSmall,
         borderWidth: 1,
         marginHorizontal: sizes.Small,
         paddingHorizontal: sizes.Small,
-        backgroundColor: colors.white,
+        backgroundColor: theme.bgColor,
         height: 40,
         borderColor: "transparent",
     },
 
     product_vertical: {
         flexDirection: "column",
-        backgroundColor: colors.white,
+        backgroundColor: theme.bgColor,
         padding: sizes.ExtraSmall,
         borderRadius: sizes.Medium,
         margin: sizes.Small,
@@ -405,7 +420,7 @@ const styles = StyleSheet.create({
 
     product_horizontal: {
         flexDirection: "row",
-        backgroundColor: colors.white,
+        backgroundColor: theme.bgColor,
         padding: sizes.ExtraSmall,
         borderRadius: sizes.Medium,
         margin: sizes.Small,
@@ -414,7 +429,7 @@ const styles = StyleSheet.create({
     },
 
     productCategory: {
-        backgroundColor: colors.defaultBG4,
+        backgroundColor: theme.color,
         borderRadius: sizes.Medium,
         margin: sizes.ExtraSmall,
     },
@@ -434,7 +449,7 @@ const styles = StyleSheet.create({
     },
 
     navBar: {
-        backgroundColor: colors.defaultBG4,
+        backgroundColor: theme.color,
         flexDirection: "row",
         justifyContent: 'space-evenly',
         alignItems: "center",
@@ -459,7 +474,7 @@ const styles = StyleSheet.create({
     button: {
         borderRadius: sizes.ExtraLarge,
         padding: 5,
-        backgroundColor: colors.white,
+        backgroundColor: theme.bgColor,
         marginHorizontal: 5,
         marginTop: 5,
         width: 150,
@@ -476,9 +491,16 @@ const styles = StyleSheet.create({
         paddingTop: 40,
         marginBottom: 10,
         elevation: 10,
-        backgroundColor: colors.defaultBG4,
+        backgroundColor: theme.color,
         justifyContent: 'flex-start',
         flexDirection: "row",
+    },
+
+    loading: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: theme.bgColor
     }
 })
 

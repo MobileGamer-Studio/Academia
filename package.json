@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "~1.17.3",
+    "@react-native-clipboard/clipboard": "^1.11.1",
     "@react-native-community/masked-view": "^0.1.11",
     "@react-navigation/native": "^6.0.13",
     "@react-navigation/native-stack": "^6.9.0",
@@ -22,6 +23,7 @@
     "react": "18.0.0",
     "react-icons": "^4.4.0",
     "react-native": "0.69.6",
+    "react-native-chart-kit": "^6.12.0",
     "react-native-gesture-handler": "~2.5.0",
     "react-native-google-mobile-ads": "^8.2.2",
     "react-native-ico-material-design": "^3.3.1",

@@ -1,8 +1,8 @@
 import React, {useState} from 'react'
-import {FlatList, Image, StyleSheet, Text, TouchableOpacity, View, ScrollView} from 'react-native'
+import {FlatList, Image, StyleSheet, Text, TouchableOpacity, View, ScrollView, TextInput} from 'react-native'
 import {colors, sizes, testProducts} from '../constants/Data';
 import {ProductCategory, ProductVertical, SearchBar} from '../constants/Components';
-
+import { MaterialIcons } from '@expo/vector-icons';
 
 const theme = colors.lightTheme;
 
@@ -53,12 +53,29 @@ export default function SearchScreen({navigation, route}) {
     return (
         <View style={styles.container}>
             <View style = {{
-                margin: sizes.ExtraSmall,
+                flexDirection: "row",
+                alignItems: "center",
+                backgroundColor: theme.color,
+                paddingTop: 40,
+                marginBottom: 10,
+                elevation: 10,
+                paddingBottom: 10,
             }}>
-                <SearchBar
-                    method={(val) => Search(val)}
-                    colors = {theme.outline}
-                />
+                <MaterialIcons name="arrow-back-ios" size={24} color={colors.white} style={{ marginLeft: 10 }} onPress={() => navigation.goBack()} />
+                <View>
+                    <TextInput
+                        onChangeText={(val) => Search(val)}
+                        style={{
+                            borderRadius: sizes.ExtraLarge,
+                            paddingHorizontal: sizes.Small,
+                            backgroundColor: theme.bgColor,
+                            height: 40,
+                            width: 350,
+                            marginHorizontal: sizes.ExtraSmall,
+                        }}
+                        placeholder="snacks, assignments, stationaries..."
+                    />
+                </View>
             </View>
             <View>
                 <View>
@@ -81,11 +98,12 @@ export default function SearchScreen({navigation, route}) {
                 <View>
                     <FlatList
                         vertical
-                        numColumns={2}
+                        numColumns={1}
                         showsVerticalScrollIndicator={false}
                         data={searchResult}
                         renderItem={({ item }) => {
                             return (
+                                
                                 <ProductVertical
                                     title={item.title}
                                     image={item.image}
@@ -110,45 +128,33 @@ export default function SearchScreen({navigation, route}) {
 
 const Product = (props) => {
     return (
-        <View>
-            <TouchableOpacity
-                style={{
-                    backgroundColor: theme.bgColor,
-                    marginVertical: sizes.ExtraSmall,
-                    marginHorizontal: 5,
-                    borderRadius: 10,
-                    padding: sizes.ExtraSmall,
-                    flexDirection: "column",
-                }}
-
-                onPress={props.method}
-            >
-                <View style={{
-                    height: 100,
-                    width: 100,
-                }}>
-                    <Image
-                        style={{
-                            flex: 1,
-                        }}
-                        resizeMode="contain"
-                        source={props.image}
-                    />
-                </View>
-                <View style={{
-                    flexDirection: "column",
-                }}>
+        <TouchableOpacity onPress = {props.method} style ={{
+            height: 200,
+            width: 200,
+        }}>
+            <View style={{
+                height: 100,
+                width: 100,
+            }}>
+                <Image
+                    style={{
+                        flex: 1,
+                    }}
+                    resizeMode="contain"
+                    source={props.image}
+                />
+            </View>
+            <View>
                     <Text>{props.title}</Text>
-                </View>
-            </TouchableOpacity>
-        </View>
+            </View>
+        </TouchableOpacity>
     );
 }
 
 
 const styles = StyleSheet.create({
     container: {
-        paddingVertical: sizes.ExtraLarge,
         flex: 1,
+        backgroundColor: theme.bgColor,
     }
 })

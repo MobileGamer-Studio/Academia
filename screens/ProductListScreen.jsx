@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { View, TouchableOpacity, StyleSheet, FlatList, Text } from "react-native";
-import { ProfilePicture, RoundButton, Header } from '../constants/Components';
-import { colors, sizes } from "../constants/Data";
+import { View, TouchableOpacity, StyleSheet, FlatList, Text, Image } from "react-native";
+import { ProfilePicture, RoundButton, Header, Button } from '../constants/Components';
+import { colors, sizes, images} from "../constants/Data";
 import { firestore, logOut } from "../constants/Sever";
 import { collection, doc, onSnapshot } from "firebase/firestore";
 
@@ -10,6 +10,7 @@ function ProductListScreen({route, navigation}) {
     const userId = route.params.id;
     const [users, setUsers] = useState([])
     const [user, setUser] = useState({})
+    const [loading, setLoading] = useState(true)
 
     const [productList, setProductList] = useState([])
 
@@ -27,6 +28,10 @@ function ProductListScreen({route, navigation}) {
             setUser(doc.data())
 
             setProductList(doc.data().sellerInfo.productList)
+
+            if(user !== {}){
+                setLoading(false)
+            }
         });
 
     }, [])
@@ -67,9 +72,30 @@ function ProductList(props) {
                 justifyContent: "center",
                 alignItems: "center",
             }}>
+                <View style={{
+                    height: 300,
+                    width: 300,
+                    alignItems: "center",
+                }}>
+                    <Image
+                        source={images.empty}
+                        style={{
+                            height: 300,
+                            width: 300,
+                            flex: 1,
+                        }}
+                        resizeMode="contain"
+                    />
+                </View>
                 <Text style={{
-                    fontSize: sizes.Large,
-                }}>No products</Text>
+                    fontSize: sizes.Medium,
+                }}>You have no products</Text>
+                <Button
+                    style={{}}
+                    method={() => navigation.navigate("Accounts", { id: user.id })}
+                    text={"Upload A Product"}
+                    textStyle={{ color: theme.color, fontSize: sizes.Small }}
+                />
             </View>
         )
     }

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, TextInput, ScrollView } from 'react-native';
 import { colors, Message, sizes } from '../constants/Data';
 import { firestore } from "../constants/Sever";
-import { getDocs, collection, setDoc, doc, onSnapshot } from "firebase/firestore";
+import { collection, setDoc, doc, onSnapshot } from "firebase/firestore";
 import { FontAwesome, MaterialIcons } from '@expo/vector-icons';
 import { ProfilePicture } from '../constants/Components';
 
@@ -12,11 +12,6 @@ function ChatScreen({ route, navigation }) {
     const userId = route.params.id;
     const recId = route.params.recId;
 
-
-    //Check if chatId is valid
-    if (userId + "-" + recId !== chatId) {
-        navigation.navigate("Chats");
-    }
 
     const [users, setUsers] = useState([])
     const [user, setUser] = useState({})
@@ -31,7 +26,7 @@ function ChatScreen({ route, navigation }) {
             querySnapshot.forEach((doc) => {
                 data.push(doc.data())
             });
-            console.log("Current data: ", data);
+            //console.log("Current data: ", data);
             setUsers(data)
             //setUser(ans.data)
         });
@@ -48,7 +43,7 @@ function ChatScreen({ route, navigation }) {
             setChat(doc.data())
             setMessages(doc.data().messages)
         });
-        console.log("User: " + user + "\n" + "Receiver: " + receiver + "\n" + "Chta: " + chat)
+        //console.log("User: " + user + "\n" + "Receiver: " + receiver + "\n" + "Chta: " + chat)
 
     }, [])
 
@@ -59,24 +54,24 @@ function ChatScreen({ route, navigation }) {
         await setDoc(doc(firestore, "Chats", id), chat);
     }
 
-    function sendMessage(message) {
+    async function sendMessage(message) {
         const date = new Date();
         const newMessage = Message;
         newMessage.message = message;
         newMessage.time = (date.getHours() + ":" + date.getMinutes()).toString();
         newMessage.sender = userId;
-        newMessage.id = userId + message + (date.getHours() + ":" + date.getMinutes()).toString();
+        newMessage.id = userId + message + messages.length.toString() ;
 
         messages.push(newMessage);
         chat.messages = messages;
 
         saveChat(chat.id, chat)
-
+        setInputText('')
     }
 
     return (
         <View style={styles.container}>
-            <View style={{ flexDirection: 'row', backgroundColor: theme.bgColor, marginTop: 30, borderBottomColor: theme.outline, borderBottomWidth: 1, padding: 10, alignItems: 'center'}}>
+            <View style={{ flexDirection: 'row', backgroundColor: theme.bgColor, marginTop: 30, borderBottomColor: theme.outline, borderBottomWidth: 1, padding: 10, alignItems: 'center', marginBottom: 10}}>
                 <MaterialIcons name="arrow-back-ios" size={24} color="black" style ={{marginLeft: 10}} onPress = {() => navigation.goBack()}/>
                 <View style={{ flexDirection: 'row', alignItems: 'center'}}>
                     <TouchableOpacity style={{ marginLeft: 10, marginRight: 20 }} onPress = {() => navigation.navigate("Account", {id: userId, accId: recId})}>
@@ -120,6 +115,7 @@ function ChatScreen({ route, navigation }) {
                         borderWidth: 1,
                     }}
                     placeholder="Message....."
+                    value= {inputText}
                 />
                 <TouchableOpacity onPress={() => sendMessage(inputText)}>
                     <FontAwesome name="send" color={theme.color} size={35} />
@@ -166,7 +162,7 @@ function Chat(props) {
                 alignSelf: "flex-start",
             }}>
                 <TouchableOpacity style={{
-                    backgroundColor: theme.color,
+                    backgroundColor: theme.color2,
                     padding: 8,
                     alignItems: "center",
                     borderRadius: sizes.ExtraLarge,

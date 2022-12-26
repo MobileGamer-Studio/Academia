@@ -1,6 +1,6 @@
 import {onAuthStateChanged} from 'firebase/auth';
-import React from 'react'
-import {Image, StyleSheet, View} from 'react-native'
+import React from 'react';
+import {Image, StyleSheet, View} from 'react-native';
 import {colors, images} from '../constants/Data';
 import {auth} from "../constants/Sever";
 
@@ -28,11 +28,12 @@ const LoadingScreen = ({route, navigation}) => {
             }}>
                 <Image
                     style={{
-                        flex: 1,
+                        height: 300,
+                        width: 300,
                         alignSelf: "center",
                     }}
                     resizeMode="contain"
-                    source={images.academia}
+                    source={images.academia_white}
                 />
             </View>
         </View>
@@ -43,7 +44,7 @@ export default LoadingScreen;
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: theme.bgColor,
+        backgroundColor: theme.color,
         flex: 1,
         alignItems: 'center',
         justifyContent: "center"

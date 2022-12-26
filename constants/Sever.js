@@ -31,6 +31,7 @@ export const auth = getAuth(app);
 export const firestore = getFirestore(app);
 export const storage = getStorage(app, "gs://academia-c3d0e.appspot.com/");
 
+
 const providerGoogle = new GoogleAuthProvider();
 providerGoogle.setCustomParameters({
     'login_hint': 'user@example.com'

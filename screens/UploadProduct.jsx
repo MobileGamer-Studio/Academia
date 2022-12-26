@@ -1,27 +1,46 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import {FlatList, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {Button, InfoInput, Header} from '../constants/Components';
 import {Category, colors, Product, sizes} from '../constants/Data'
 import * as ImagePicker from "expo-image-picker"
 import {MaterialIcons} from "@expo/vector-icons"
 import { firestore } from "../constants/Sever";
-import {setDoc, doc, collection } from "firebase/firestore";
+import {setDoc, doc, collection, onSnapshot } from "firebase/firestore";
 
 const theme = colors.lightTheme;
 const UploadProduct = ({route, navigation}) => {
 
-    const user = route.params.user;
 
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [price, setPrice] = useState("0");
     const [category, setCategory] = useState('');
     const [tags, setTags] = useState([]);
-    const [tag, setTag] = useState("....");
+    const [tag, setTag] = useState('');
     const [selectedImage, setSelectedImage] = useState("https://firebasestorage.googleapis.com/v0/b/academia-c3d0e.appspot.com/o/Images%2FCameraIcon-coloured.png?alt=media&token=0ac47e13-7a64-466b-8027-1f9ae3b006d6");
 
 
-    async function GetImage() {
+    const userId = route.params.id;
+    const [products, setProducts] = useState([])
+    const [user, setUser] = useState({})
+
+
+    useEffect(() => {
+        const productsSub = onSnapshot(collection(firestore, "Products"), querySnapshot => {
+            const data = []
+            querySnapshot.forEach((doc) => {
+                data.push(doc.data())
+            });
+            setProducts(data)
+        });
+
+        const userSub = onSnapshot(doc(firestore, "Users", userId), (doc) => {
+            setUser(doc.data())
+        });
+
+    }, [])
+
+    const GetImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
             //allowsEditing: true,
             quality: 1,
@@ -42,22 +61,27 @@ const UploadProduct = ({route, navigation}) => {
         console.log(tags);
     }
 
-    async function uploadProduct(){
+
+
+    const uploadProduct = async () => {
         const newProduct = Product;
         newProduct.title = title;
         newProduct.description = description;
-        newProduct.category = Category;
-        newProduct.category.name = category;
         newProduct.price = price;
-        newProduct.seller = user.name;
+        newProduct.seller = userId;
         newProduct.tags = tags;
-        newProduct.image = selectedImage.uri;
-        newProduct.id = user.id + "_" + newProduct.title 
+        newProduct.image = selectedImage;
+        newProduct.id = userId + "-" + newProduct.title 
 
 
-        user.sellerInfo.productList.push(newProduct);
-        await setDoc(doc(firestore, "Users", user.id), user);
-        await setDoc(doc(firestore, "Products", newProduct.id), newProduct);
+        if (user.sellerInfo.productList.includes(newProduct.id) === false){
+            user.sellerInfo.productList.push(newProduct.id);
+
+            await setDoc(doc(firestore, "Users", userId), user);
+            await setDoc(doc(firestore, "Products", newProduct.id), newProduct);
+        }else{
+            alert("Product already exists")
+        }
 
         console.log(newProduct +"\n"+ user)
     }
@@ -168,10 +192,6 @@ const UploadProduct = ({route, navigation}) => {
                         />
                     </View>
 
-
-
-
-
                     {/* <ImageViewer
                         placeholderImageSource={"https://firebasestorage.googleapis.com/v0/b/academia-c3d0e.appspot.com/o/Images%2FCameraIcon-coloured.png?alt=media&token=0ac47e13-7a64-466b-8027-1f9ae3b006d6"}
                         selectedImage={selectedImage}
@@ -187,7 +207,10 @@ const UploadProduct = ({route, navigation}) => {
             }}>
                 <Button
                     style={styles.button}
-                    method={() => uploadProduct()}
+                    method={() => {
+                        uploadProduct()
+                        navigation.goBack()
+                    }}
                     text={"Upload"}
                     textStyle={{color: colors.white, fontSize: sizes.Medium}}
                 />
@@ -217,13 +240,13 @@ const Tag = (props) => {
         <View style={{
             backgroundColor: theme.color,
             marginHorizontal: 10,
-            height: 25,
             borderRadius: sizes.ExtraLarge,
-            paddingHorizontal: 10
+            paddingHorizontal: 10,
+            paddingVertical: 2.5
         }}>
             <Text style={{
                 color: colors.white,
-                fontSize: sizes.Small + 2,
+                fontSize: sizes.Small,
             }}>{"#" + props.tagName}</Text>
         </View>
     );

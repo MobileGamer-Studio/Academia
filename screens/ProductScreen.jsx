@@ -1,11 +1,18 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {FlatList, Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {colors, images, sizes} from '../constants/Data';
 import {Header} from '../constants/Components'
 
 const theme = colors.lightTheme;
 function ProductScreen({route, navigation}) {
-    const product = route.params.item;
+    const productId = route.params.productId;
+    const userId = route.params.userId;
+
+    const [product, setProduct] = React.useState({})
+    const [user, setUser] = React.useState({})
+    const [loading, setLoading] = React.useState(true)
+    const [users, setUsers] = React.useState([])
+    
 
     return (
         <View style={styles.container}>

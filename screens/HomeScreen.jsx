@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { FlatList, ScrollView, Image,  StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { FlatList, ScrollView, Image,  StyleSheet, Text, TouchableOpacity, View, ActivityIndicator } from 'react-native';
 import { categories, colors, sizes, suggestedProducts, images } from '../constants/Data';
-import { NavBar, ProductCategory, ProductVertical, RoundButton, SearchBar, UserProfile } from '../constants/Components';
+import { NavBar, ProductCategory, ProductVertical, RoundButton, SearchBar, UserProfile, Loading} from '../constants/Components';
 import { firestore } from "../constants/Sever";
 import { collection, setDoc, doc, onSnapshot} from "firebase/firestore";
 import { Entypo, MaterialIcons, FontAwesome } from '@expo/vector-icons';
@@ -12,8 +12,19 @@ const theme = colors.lightTheme;
 function HomeScreen({ route, navigation }) {
     const userId = route.params.id;
     const [users, setUsers] = useState([])
+    const [products, setProducts] = useState([])
     const [user, setUser] = useState({})
-    const [theme, setTheme ] = useState(colors.lightTheme)
+    const [loading, setLoading] = useState(true)
+
+    const [suggestedProducts, setSuggestedProducts] = useState([])
+    const [suggestedUsers, setSuggestedUsers] = useState([])
+    const [activity, setActivity] = useState([])
+    const [sales, setSales] = useState([])
+    const [newProducts, setNewProducts] = useState([])
+    const [cart, setCart] = useState([])
+    const [bestSellers, setBestSellers] = useState([])
+
+
 
     const bannerAdId = 'ca-app-pub-4268026028349874/3147738671';
 
@@ -29,12 +40,29 @@ function HomeScreen({ route, navigation }) {
             //setUser(ans.data)
         });
 
-        const userSub = onSnapshot(doc(firestore, "Users", userId), (doc) => {
-            setUser(doc.data())
+        const productsSub = onSnapshot(collection(firestore, "Products"), querySnapshot => {
+            const data = []
+            querySnapshot.forEach((doc) => {
+                data.push(doc.data())
+            });
+            //console.log("Current data: ", data);
+            setProducts(data)
         });
 
-        
+        const userSub = onSnapshot(doc(firestore, "Users", userId), (doc) => {
+            setUser(doc.data())
 
+            setSuggestedUsers(doc.data().userInfo.feed.suggestedUsers)
+            setSuggestedProducts(doc.data().userInfo.feed.suggestedProducts)
+            setActivity(doc.data().userInfo.feed.activity)
+            setSales(doc.data().userInfo.feed.sales)
+            setNewProducts(doc.data().userInfo.feed.new)
+            setCart(doc.data().userInfo.cart)
+            setBestSellers(doc.data().userInfo.feed.bestSellers)
+
+
+            setLoading(false)
+        });
         // mobileAds()
         //     .initialize()
         //     .setRequestConfiguration({
@@ -47,39 +75,19 @@ function HomeScreen({ route, navigation }) {
     }, [])
 
 
-    return (
-        <View style={styles.container}>
-            <View style={{
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "space-between",
-                backgroundColor: colors.white,
-            }}>
-                <View style={{
-                    height: 35,
-                    width: 200,
-                    justifyContent: "center",
-                }}>
-                    <Image
-                        style={{
-                            flex: 1,
-                            alignSelf: "center",
-                        }}
-                        resizeMode="contain"
-                        source={images.academia}
-                    />
-                </View>
-
-                <TouchableOpacity style = {{
-                    marginHorizontal: 15,
-                }} onPress={() => navigation.navigate('Notifications', {id: userId})}>
-                    <FontAwesome name="bell-o" size={24} color={theme.color} />
-                </TouchableOpacity>
+    if (loading === true) {
+        return (
+            <View style={styles.container}>
+                <Loading />
             </View>
-
-            <ScrollView showsVerticalScrollIndicator={false}>
-                <View>
-                    {/* <GAMBannerAd
+        )
+    }else{
+        return (
+            <View style={styles.container}>
+                <Header method = {() => navigation.navigate('Notifications', { id: userId })} />
+                <ScrollView showsVerticalScrollIndicator={false}>
+                    <View>
+                        {/* <GAMBannerAd
                         unitId={bannerAdId}
                         sizes={[BannerAdSize.FULL_BANNER]}
                         requestOptions={{
@@ -87,112 +95,233 @@ function HomeScreen({ route, navigation }) {
 
                         }}
                     /> */}
-                </View>
-                <View style={styles.section}>
-                    <FlatList
-                        horizontal
-                        showsHorizontalScrollIndicator={false}
-                        keyExtractor={(item) => item.id}
-                        data={categories}
-                        renderItem={({item}) => {
-                            return (
-                                <ProductCategory
-                                    text={item.name}
-                                    method={() => navigation.navigate("Search", {item})}
-                                />
-                            )
-                        }}
-                    />
-                </View>
-                <View style={styles.section}>
-                    <Text>Check Out</Text>
-                    <View style={{}}>
-                        <FlatList
-                            horizontal
-                            showsHorizontalScrollIndicator={false}
-                            keyExtractor={(item) => item.id}
-                            data={categories}
-                            renderItem={({ item }) => {
-                                return (
-                                    <View></View>
-                                )
-                            }}
-                        />
                     </View>
-                </View>
-                <View style={styles.section}>
-                    <Text>Suggested</Text>
-                    <View style={{}}>
-                        <FlatList
-                            horizontal
-                            showsHorizontalScrollIndicator={false}
-                            keyExtractor={(item) => item.id}
-                            data={categories}
-                            renderItem={({ item }) => {
-                                return (
-                                    <View></View>
-                                )
-                            }}
-                        />
-                    </View>
-                </View>
-                <View style={styles.section}>
-                    <Text>Best Sellers</Text>
-                    <View style={{}}>
-                        <FlatList
-                            horizontal
-                            showsHorizontalScrollIndicator={false}
-                            keyExtractor={(item) => item.id}
-                            data={categories}
-                            renderItem={({ item }) => {
-                                return (
-                                    <View></View>
-                                )
-                            }}
-                        />
-                    </View>
-                </View>
+                    {
+                        suggestedProducts.length > 0 ? (
+                            <View style={styles.section}>
+                                <Text>Check Out</Text>
+                                <View style={{}}>
+                                    <FlatList
+                                        horizontal
+                                        showsHorizontalScrollIndicator={false}
+                                        keyExtractor={(item) => item.id}
+                                        data={categories}
+                                        renderItem={({ item }) => {
+                                            return (
+                                                <View></View>
+                                            )
+                                        }}
+                                    />
+                                </View>
+                            </View>
+                        ) : (
+                                <View style={styles.section}>
+                                    <Text>Products</Text>
+                                    <View style={{}}>
+                                        <FlatList
+                                            horizontal
+                                            showsHorizontalScrollIndicator={false}
+                                            keyExtractor={(item) => item.id}
+                                            data={products}
+                                            renderItem={({ item }) => {
+                                                return (
+                                                    <View>
+                                                        <Text>{item.title}</Text>
+                                                    </View>
+                                                )
+                                            }}
+                                        />
+                                    </View>
+                                </View>
+                        )
+                    }
+                    {
+                        suggestedUsers.length > 0 ? (
+                            <View style={styles.section}>
+                                <Text>Check Out</Text>
+                                <View style={{}}>
+                                    <FlatList
+                                        horizontal
+                                        showsHorizontalScrollIndicator={false}
+                                        keyExtractor={(item) => item.id}
+                                        data={categories}
+                                        renderItem={({ item }) => {
+                                            return (
+                                                <View></View>
+                                            )
+                                        }}
+                                    />
+                                </View>
+                            </View>
+                        ) : null
+                    }
+                    {
+                        bestSellers.length > 0 ? (
+                            <View style={styles.section}>
+                                <Text>Check Out</Text>
+                                <View style={{}}>
+                                    <FlatList
+                                        horizontal
+                                        showsHorizontalScrollIndicator={false}
+                                        keyExtractor={(item) => item.id}
+                                        data={categories}
+                                        renderItem={({ item }) => {
+                                            return (
+                                                <View></View>
+                                            )
+                                        }}
+                                    />
+                                </View>
+                            </View>
+                        ) : null
+                    }
+                    {
+                        activity.length > 0 ? (
+                            <View style={styles.section}>
+                                <Text>Check Out</Text>
+                                <View style={{}}>
+                                    <FlatList
+                                        horizontal
+                                        showsHorizontalScrollIndicator={false}
+                                        keyExtractor={(item) => item.id}
+                                        data={categories}
+                                        renderItem={({ item }) => {
+                                            return (
+                                                <View></View>
+                                            )
+                                        }}
+                                    />
+                                </View>
+                            </View>
+                        ) : null
+                    }
+                    {
+                        sales.length > 0 ? (
+                            <View style={styles.section}>
+                                <Text>Check Out</Text>
+                                <View style={{}}>
+                                    <FlatList
+                                        horizontal
+                                        showsHorizontalScrollIndicator={false}
+                                        keyExtractor={(item) => item.id}
+                                        data={categories}
+                                        renderItem={({ item }) => {
+                                            return (
+                                                <View></View>
+                                            )
+                                        }}
+                                    />
+                                </View>
+                            </View>
+                        ) : null
+                    }
+                    {
+                        newProducts.length > 0 ? (
+                            <View style={styles.section}>
+                                <Text>Check Out</Text>
+                                <View style={{}}>
+                                    <FlatList
+                                        horizontal
+                                        showsHorizontalScrollIndicator={false}
+                                        keyExtractor={(item) => item.id}
+                                        data={categories}
+                                        renderItem={({ item }) => {
+                                            return (
+                                                <View></View>
+                                            )
+                                        }}
+                                    />
+                                </View>
+                            </View>
+                        ) : null
+                    }
+                    {
+                        cart.length > 0 ? (
+                            <View style={styles.section}>
+                                <Text>Check Out</Text>
+                                <View style={{}}>
+                                    <FlatList
+                                        horizontal
+                                        showsHorizontalScrollIndicator={false}
+                                        keyExtractor={(item) => item.id}
+                                        data={categories}
+                                        renderItem={({ item }) => {
+                                            return (
+                                                <View></View>
+                                            )
+                                        }}
+                                    />
+                                </View>
+                            </View>
+                        ) : null
+                    }
 
-                <View style={{
-                    height: 100,
-                    width: 100,
-                    justifyContent: "center",
-                }}>
-                    <Image
-                        style={{
-                            flex: 1,
-                            alignSelf: "center",
-                        }}
-                        resizeMode="contain"
-                        source={{ uri: "https://firebasestorage.googleapis.com/v0/b/academia-c3d0e.appspot.com/o/Images%2FCameraIcon-coloured.png?alt=media&token=0ac47e13-7a64-466b-8027-1f9ae3b006d6" }}
-                    />
-                </View>
-                
-                
-            </ScrollView>
-            <NavBar
-                home={() => navigation.navigate("Home", { id: userId })}
-                search={() => navigation.navigate("Search", { search: "null" })}
-                add={() => navigation.navigate("UploadProduct", { user: user })}
-                cart={() => navigation.navigate("Cart", { user: user })}
-                profile={() => navigation.navigate("UserAccount", { id: userId, user: user })}
-                image = {user.profilePicture}
-            />
+
+                </ScrollView>
+                <NavBar
+                    home={() => navigation.navigate("Home", { id: userId })}
+                    search={() => navigation.navigate("Search", { search: "null" })}
+                    add={() => navigation.navigate("UploadProduct", { id: userId })}
+                    cart={() => navigation.navigate("Cart", { id: userId })}
+                    profile={() => navigation.navigate("UserAccount", { id: userId, user: user })}
+                    image={user.profilePicture}
+                />
+            </View>
+        );
+    }
+}
+
+
+function Header(props){
+    return(
+        <View style={{
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+            backgroundColor: colors.white,
+            paddingTop: 40,
+            paddingBottom: 5,
+            elevation: 0,
+            borderBottomColor: theme.outline,
+            borderBottomWidth: 1,
+            marginBottom: 10,
+        }}>
+            <View style={{
+                height: 35,
+                width: 200,
+                justifyContent: "center",
+            }}>
+                <Image
+                    style={{
+                        flex: 1,
+                        alignSelf: "center",
+                    }}
+                    resizeMode="contain"
+                    source={images.academia}
+                />
+            </View>
+            <View style={{ flexDirection: 'row' }}>
+                <TouchableOpacity style={{
+                    marginHorizontal: 15,
+                }} onPress={props.method}>
+                    <FontAwesome name="bell-o" size={24} color={theme.color} />
+                </TouchableOpacity>
+            </View>
+
         </View>
-    );
+    )
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: theme.bgColor,
-        paddingVertical: sizes.ExtraLarge,
     },
 
     section: {
         marginVertical: sizes.ExtraSmall,
-        borderBottomColor: theme.color,
-        borderBottomWidth: 1,
+        borderBottomColor: theme.outline2,
+        borderBottomWidth: 5,
     },
 
     sectionTitle: {

@@ -1,10 +1,11 @@
 import React, { useState, useEffect} from 'react'
-import { StyleSheet, Text, TouchableOpacity, View, ScrollView, FlatList, Modal } from 'react-native'
+import { StyleSheet, Text, TouchableOpacity, View, ScrollView, FlatList, Modal, Share } from 'react-native'
 import { colors, sizes } from '../constants/Data'
 import { RoundButton, ProductVertical } from "../constants/Components";
 import { firestore, logOut } from "../constants/Sever";
 import { collection, doc, onSnapshot } from "firebase/firestore";
 import { MaterialIcons, Entypo } from "@expo/vector-icons";
+import { LineChart, ProgressChart } from 'react-native-chart-kit';
 
 const theme = colors.lightTheme;
 function UserAccount({ route, navigation }) {
@@ -66,6 +67,7 @@ function UserAccount({ route, navigation }) {
                     visible = {optionsAct}
                     animationType = "slide"
                     transparent = {true}
+                    
                 >
                     <View style = {{
                         backgroundColor: colors.white,
@@ -97,7 +99,24 @@ function UserAccount({ route, navigation }) {
                                 <MaterialIcons name="edit" size={24} color={colors.defaultBG} />
                                 <Text style={{ color: theme.outline, marginHorizontal: 2.5 }}>Edit Profile</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={styles.popUpSection}>
+                            <TouchableOpacity style={styles.popUpSection} onPress = {async () => {
+                                try {
+                                    const result = await Share.share({
+                                        message: user.name + " is using Academia. Download it now! \n https://play.google.com/store/apps/details?id=com.academia",
+                                    });
+                                    if (result.action === Share.sharedAction) {
+                                        if (result.activityType) {
+                                            // shared with activity type of result.activityType
+                                        } else {
+                                            // shared
+                                        }
+                                    } else if (result.action === Share.dismissedAction) {
+                                        // dismissed
+                                    }
+                                } catch (error) {
+                                    alert(error.message);
+                                }
+                            }}>
                                 <MaterialIcons name="share" size={24} color={colors.defaultBG} />
                                 <Text style={{ color: theme.outline, marginHorizontal: 2.5 }}>Share</Text>
                             </TouchableOpacity>
@@ -193,25 +212,7 @@ function UserAccount({ route, navigation }) {
                 bottom: 0,
             }}>
                 <View>
-                    <Text style={{ marginLeft: 15, marginTop: 15, fontSize: 25 }} onPress={() => navigation.navigate("")}>Products</Text>
-                    <FlatList
-                        horizontal
-                        showsHorizontalScrollIndicator={false}
-                        keyExtractor={(item) => item.id}
-                        data={[]}
-                        renderItem={({ item }) => {
-                            return (
-                                <ProductVertical
-                                    product={item}
-                                    title={item.title}
-                                    price={item.price}
-                                    image={item.image}
-                                    seller={item.seller}
-                                    method={() => navigation.navigate("Product", { item })}
-                                />
-                            )
-                        }}
-                    />
+
                 </View>
             </ScrollView>
             <View style={{

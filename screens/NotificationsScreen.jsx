@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { View, TouchableOpacity, StyleSheet, FlatList, Text } from "react-native";
-import { ProfilePicture, RoundButton, Header } from '../constants/Components';
-import { colors, sizes, testUsers } from "../constants/Data";
+import { View, TouchableOpacity, StyleSheet, FlatList, Text, Image } from "react-native";
+import { ProfilePicture, RoundButton, Header, Loading} from '../constants/Components';
+import { colors, sizes, images } from "../constants/Data";
 import { firestore, logOut } from "../constants/Sever";
 import { collection, doc, onSnapshot } from "firebase/firestore";
 
@@ -12,7 +12,8 @@ function NotificationsScreen({ route, navigation }) {
     const [users, setUsers] = useState([])
     const [user, setUser] = useState({})
 
-    const [followersList, setFollowersList] = useState([])
+    const [notificationList, setNotificationList] = useState([])
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
         const usersSub = onSnapshot(collection(firestore, "Users"), querySnapshot => {
@@ -27,25 +28,65 @@ function NotificationsScreen({ route, navigation }) {
         const userSub = onSnapshot(doc(firestore, "Users", userId), (doc) => {
             setUser(doc.data())
 
-            setFollowersList(doc.data().followers)
+            setNotificationList(doc.data().userInfo.notifications)
+
+            if (user !== {}) {
+                setLoading(false)
+            }
         });
 
     }, [])
 
-    return (
-        <View style={styles.container}>
-            <Header method = {() => navigation.goBack()} text = {'Notifications'}/>
-            <View>
-                <FlatList
-                    vertical
-                    showsHorizontalScrollIndicator={false}
-                    keyExtractor={(item) => item.id}
-                    data={user.followers}
-                    renderItem={({ item }) => <User name={item} />}
-                />
+    if (loading === true) {
+        return (
+            <View style={styles.container}>
+                <Header method={() => navigation.goBack()} text={'Notifications'} />
+                <Loading />
             </View>
-        </View>
-    );
+        )
+    } else {
+        return (
+            <View style={styles.container}>
+                <Header method={() => navigation.goBack()} text={'Notifications'} />
+                {
+                    notificationList.length !== 0 ? (
+                        <View>
+                            <FlatList
+                                data={notificationList}
+                                renderItem={({ item }) => {
+                                    return (
+                                        <View></View>
+                                    )
+                                }}
+                            />
+                        </View>
+                    ) : (
+                        <View style = {{
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            flex: 1,
+                        }}>
+                                <View style={{
+                                    height: 300,
+                                    width: 300,
+                                    alignItems: "center",
+                                }}>
+                                    <Image
+                                        source={images.notification}
+                                        style={{
+                                            height: 300,
+                                            width: 300,
+                                            flex: 1,
+                                        }}
+                                        resizeMode="contain"
+                                    />
+                                </View>
+                        </View>
+                    )
+                }
+            </View>
+        );
+    }
 }
 
 
