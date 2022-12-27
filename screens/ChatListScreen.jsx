@@ -184,7 +184,7 @@ function ChatListScreen({ navigation, route }) {
                 <Header method={() => navigation.goBack()} text={"Chats"} />
                 {
                     userChats.length !== 0 ? (
-                        <View style={{}}>
+                        <View>
                             <FlatList
                                 vertical
                                 showsHorizontalScrollIndicator={false}
@@ -225,7 +225,9 @@ function ChatListScreen({ navigation, route }) {
                                                 </View>
                                                 <View>
                                                     <Text style={{ color: theme.textColor , fontSize: sizes.Small}}>{acc.name}</Text>
-                                                    <Text style={{ color: theme.textColor, fontSize: sizes.ExtraSmall }}>{item.messages[item.messages.length - 1].message}</Text>
+                                                    {
+                                                        item.messages.length > 0 ? (<Text style={{ color: theme.textColor, fontSize: sizes.ExtraSmall }}>{item.messages[item.messages.length - 1].message}</Text>) : null
+                                                    }
                                                 </View>
                                             </TouchableOpacity>
                                         </View>

@@ -160,21 +160,14 @@ export const User = {
         },
         rating: 0,
         amountSpent: "0",
-        suggested: {
-            suggestedProducts: [],
-            suggestedUsers: [],
-        },
-        list: [],
+        savedList: [],
     },
     appInfo: {
         settings: {
-            themeData: {
-                appBG: "#c4d8dd",
-                appBG2: "#ffffff",
-                defaultColor: "#00FFD1",
-                defaultColor2: "#00d9ff",
-                textColor: "#000000",
-            },
+            theme: "light",
+            notifications: true,
+            location: true,
+            language: "English",
         },
     },
     chatList: [

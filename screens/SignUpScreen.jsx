@@ -60,7 +60,7 @@ const SignUpScreen = ({navigation}) => {
                         SignUp
                     </Text>
                 </TouchableOpacity>
-                <TouchableOpacity
+                {/* <TouchableOpacity
                     style={{
                         backgroundColor: colors.white,
                         height: 50,
@@ -99,7 +99,7 @@ const SignUpScreen = ({navigation}) => {
                     >
                         SignUp with Google
                     </Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
                 <TouchableOpacity onPress={() => navigation.navigate("SignIn")}>
                     <Text style={{
                         fontSize: sizes.Small + 2.5,

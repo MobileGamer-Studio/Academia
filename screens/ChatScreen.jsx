@@ -168,6 +168,7 @@ function Chat(props) {
                     borderRadius: sizes.ExtraLarge,
                     alignSelf: "flex-start",
                     marginHorizontal: 20,
+                    marginVertical: 5,
                     flexDirection: "row",
                     borderBottomLeftRadius: 0,
                 }}>

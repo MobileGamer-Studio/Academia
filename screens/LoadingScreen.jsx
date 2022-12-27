@@ -2,12 +2,11 @@ import {onAuthStateChanged} from 'firebase/auth';
 import React from 'react';
 import {Image, StyleSheet, View} from 'react-native';
 import {colors, images} from '../constants/Data';
-import {auth} from "../constants/Sever";
+import {auth, logOut} from "../constants/Sever";
 
 const theme = colors.lightTheme;
 //
-const LoadingScreen = ({route, navigation}) => {
-    
+const LoadingScreen = ({route, navigation}) => {    
     onAuthStateChanged(auth, (user) => {
         if (user) {
             navigation.navigate("Home", { id : user.uid });
