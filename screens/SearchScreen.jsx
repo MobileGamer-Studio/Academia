@@ -1,35 +1,55 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import {FlatList, Image, StyleSheet, Text, TouchableOpacity, View, ScrollView, TextInput} from 'react-native'
-import {colors, sizes, testProducts} from '../constants/Data';
-import {ProductCategory, ProductVertical, SearchBar} from '../constants/Components';
+import {colors, sizes, testProducts, images} from '../constants/Data';
+import {ProductCategory, ProductVertical, SearchBar, Loading} from '../constants/Components';
 import { MaterialIcons } from '@expo/vector-icons';
+import { firestore } from '../constants/Sever';
+import { collection, doc, onSnapshot } from "firebase/firestore";
 
 const theme = colors.lightTheme;
 
 export default function SearchScreen({navigation, route}) {
-
-    const [searchResult, setSearchResult] = useState(testProducts)
+    const userId = route.params.id;
+    const [users, setUsers] = useState([])
+    const [user, setUser] = useState({})
+    const [loading, setLoading] = useState(true)
+    const [searchResult, setSearchResult] = useState(productList)
     const [relatedTags, setRelatedTags] = useState([])
+    
 
-    const searchText = route.params.search;
+    const [productList, setProductList] = useState([])
 
-    function GetRelatedTags() {
-        let tags = []
-        searchResult.forEach(result => {
-            result.tags.forEach(tag => {
-                tags.push.apply(tags, tag)
-            })
+    useEffect(() => {
+        const usersSub = onSnapshot(collection(firestore, "Users"), querySnapshot => {
+            const data = []
+            querySnapshot.forEach((doc) => {
+                data.push(doc.data())
+            });
+            
+            setUsers(data)
+        });
 
-            tags.forEach(tag => {
-                let id = relatedTags.length.toString()
-                relatedTags.push({
-                    Tag: tag,
-                    Id: id
-                })
-            })
+        const productsSub = onSnapshot(collection(firestore, "Products"), querySnapshot => {
+            const data = []
+            querySnapshot.forEach((doc) => {
+                data.push(doc.data())
+            });
+            setProductList(data)
+            
+
+            if (doc.data().length !== 0) {
+                setLoading(false)
+            }
+            
         })
 
-    }
+        const userSub = onSnapshot(doc(firestore, "Users", userId), (doc) => {
+            setUser(doc.data()) 
+            
+            
+        });
+
+    }, [])
 
     function Search(val) {
         if (val === "null" || val === '') {
@@ -50,79 +70,118 @@ export default function SearchScreen({navigation, route}) {
         //GetRelatedTags()
     }
 
-    return (
-        <View style={styles.container}>
-            <View style = {{
-                flexDirection: "row",
-                alignItems: "center",
-                backgroundColor: theme.color,
-                paddingTop: 40,
-                marginBottom: 10,
-                elevation: 10,
-                paddingBottom: 10,
-            }}>
-                <MaterialIcons name="arrow-back-ios" size={24} color={colors.white} style={{ marginLeft: 10 }} onPress={() => navigation.goBack()} />
-                <View>
-                    <TextInput
-                        onChangeText={(val) => Search(val)}
-                        style={{
-                            borderRadius: sizes.ExtraLarge,
-                            paddingHorizontal: sizes.Small,
-                            backgroundColor: theme.bgColor,
-                            height: 40,
-                            width: 350,
-                            marginHorizontal: sizes.ExtraSmall,
-                        }}
-                        placeholder="snacks, assignments, stationaries..."
-                    />
-                </View>
-            </View>
-            <View>
-                <View>
-                    <FlatList
-                        horizontal
-                        showsHorizontalScrollIndicator={false}
-                        keyExtractor={(item) => item.Id}
-                        data={relatedTags}
-                        renderItem={({ item }) => {
-                            return (
-                                // <ProductCategory
-                                //     text={item.Tag}
-                                //     method={() => Search(item.Tag)}//navigation.navigate("Search", {search: item.name})}
-                                // />
-                                <View></View>
-                            );
-                        }}
-                    />
-                </View>
-                <View>
-                    <FlatList
-                        vertical
-                        numColumns={1}
-                        showsVerticalScrollIndicator={false}
-                        data={searchResult}
-                        renderItem={({ item }) => {
-                            return (
-                                
-                                <ProductVertical
-                                    title={item.title}
-                                    image={item.image}
-                                    method={() => navigation.navigate("Product", { item })}
-                                />
-                            );
-                        }}
-                    />
-                </View>
-                <View>
-                    <Text>Suggested</Text>
+    if(loading === true){
+        return(
+            <View style = {styles.container}>
+                <View style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    backgroundColor: theme.color,
+                    paddingTop: 40,
+                    marginBottom: 10,
+                    elevation: 10,
+                    paddingBottom: 10,
+                }}>
+                    <MaterialIcons name="arrow-back-ios" size={24} color={colors.white} style={{ marginLeft: 10 }} onPress={() => navigation.goBack()} />
                     <View>
-                        
+                        <TextInput
+                            onChangeText={(val) => Search(val)}
+                            style={{
+                                borderRadius: sizes.ExtraLarge,
+                                paddingHorizontal: sizes.Small,
+                                backgroundColor: theme.bgColor,
+                                height: 40,
+                                width: 350,
+                                marginHorizontal: sizes.ExtraSmall,
+                            }}
+                            placeholder="snacks, assignments, stationaries..."
+                        />
                     </View>
                 </View>
+                <Loading/>
             </View>
+        )
+    }else{
+        return (
+            <View style={styles.container}>
+                <View style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    backgroundColor: theme.color,
+                    paddingTop: 40,
+                    marginBottom: 10,
+                    elevation: 10,
+                    paddingBottom: 10,
+                }}>
+                    <MaterialIcons name="arrow-back-ios" size={24} color={colors.white} style={{ marginLeft: 10 }} onPress={() => navigation.goBack()} />
+                    <View>
+                        <TextInput
+                            onChangeText={(val) => Search(val)}
+                            style={{
+                                borderRadius: sizes.ExtraLarge,
+                                paddingHorizontal: sizes.Small,
+                                backgroundColor: theme.bgColor,
+                                height: 40,
+                                width: 350,
+                                marginHorizontal: sizes.ExtraSmall,
+                            }}
+                            placeholder="snacks, assignments, stationaries..."
+                        />
+                    </View>
+                </View>
+                {
+                    searchResult.length !== 0 ? (
+                        <View style={{
+                            alignItems: "center",
+                            justifyContent: "center",
+                        }}>
+                            <FlatList
+                                vertical
+                                numColumns={2}
+                                showsVerticalScrollIndicator={false}
+                                data={searchResult}
+                                renderItem={({ item }) => {
+                                    return (
 
-        </View>
-    )
+                                        <ProductVertical
+                                            title={item.title}
+                                            image={item.image}
+                                            method={() => navigation.navigate("Product", { item })}
+                                        />
+                                    );
+                                }}
+                            />
+                        </View>
+                    ) : (
+                            <View style={{
+                                flex: 1,
+                                justifyContent: "center",
+                                alignItems: "center",
+                            }}>
+                                <View style={{
+                                    height: 300,
+                                    width: 300,
+                                    alignItems: "center",
+                                }}>
+                                    <Image
+                                        source={images.search}
+                                        style={{
+                                            height: 300,
+                                            width: 300,
+                                            flex: 1,
+                                        }}
+                                        resizeMode="contain"
+                                    />
+                                </View>
+                                <Text style={{
+                                    fontSize: sizes.Medium,
+                                }}>No product found</Text>
+                            </View>
+                    )
+                }
+            </View>
+        )
+    }
 }
 
 

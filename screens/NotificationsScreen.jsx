@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, TouchableOpacity, StyleSheet, FlatList, Text, Image } from "react-native";
-import { ProfilePicture, RoundButton, Header, Loading} from '../constants/Components';
+import { ProfilePicture, Header, Loading} from '../constants/Components';
 import { colors, sizes, images } from "../constants/Data";
 import { firestore, logOut } from "../constants/Sever";
 import { collection, doc, onSnapshot } from "firebase/firestore";
@@ -81,33 +81,15 @@ function NotificationsScreen({ route, navigation }) {
                                         resizeMode="contain"
                                     />
                                 </View>
+                                <Text style={{
+                                    fontSize: sizes.Medium,
+                                }}>Looks like you have no notifications</Text>
                         </View>
                     )
                 }
             </View>
         );
     }
-}
-
-
-function User(props) {
-    return (
-        <View>
-            <TouchableOpacity style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'flex-start',
-                borderBottomWidth: 1,
-                borderBottomColor: theme.color,
-                padding: 10,
-            }}
-
-                onPress={props.method}>
-                <ProfilePicture color={colors.defaultBG2} image={props.image} height={40} width={40} />
-                <Text style={{ marginHorizontal: 10 }}>{props.name}</Text>
-            </TouchableOpacity>
-        </View>
-    );
 }
 
 

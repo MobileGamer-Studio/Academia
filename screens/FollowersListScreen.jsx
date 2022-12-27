@@ -92,12 +92,12 @@ function FollowersListScreen({ route, navigation }) {
                             <Text style={{
                                 fontSize: sizes.Medium,
                             }}>Not followed by anyone</Text>
-                                <Button
-                                    style={{}}
-                                    method={() => navigation.navigate("Accounts", { id: user.id })}
-                                    text={"Find Users To Connect With"}
-                                    textStyle={{ color: theme.color, fontSize: sizes.Small }}
-                                />
+                            <Button
+                                style={{}}
+                                method={() => navigation.navigate("Accounts", { id: user.id })}
+                                text={"Find Users To Connect With"}
+                                textStyle={{ color: theme.color, fontSize: sizes.Small }}
+                            />
                         </View>
                     )
                 }

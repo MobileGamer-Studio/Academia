@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, TouchableOpacity, StyleSheet, FlatList, Text, Image } from "react-native";
-import { ProfilePicture, RoundButton, Header, Button } from '../constants/Components';
+import { ProfilePicture, Loading, Header, Button } from '../constants/Components';
 import { colors, sizes, images} from "../constants/Data";
 import { firestore, logOut } from "../constants/Sever";
 import { collection, doc, onSnapshot } from "firebase/firestore";
@@ -37,65 +37,67 @@ function ProductListScreen({route, navigation}) {
     }, [])
 
 
-    return (
-        <View style={styles.container}>
-            <Header method={() => navigation.goBack()} text = {'Products'}/>
-            <ProductList productList = {productList}/>
-        </View>
-    );
-}
-
-function ProductList(props) {
-    if (props.productList.length !== 0) {
+    if (loading === true) {
         return (
-            <View>
-                <FlatList
-                    vertical
-                    numColumns={2}
-                    showsHorizontalScrollIndicator={false}
-                    keyExtractor={(item) => item.id}
-                    data={props.productList}
-                    renderItem={({ item }) => {
-                        return (
-                            <Product
-                                product={item}
-                            />
-                        )
-                    }}
-                />
+            <View style={styles.container}>
+                <Header method={() => navigation.goBack()} text={'Products'} />
+                <Loading />
             </View>
         )
-    }else{
+    } else {
         return (
-            <View style={{
-                flex: 1,
-                justifyContent: "center",
-                alignItems: "center",
-            }}>
-                <View style={{
-                    height: 300,
-                    width: 300,
-                    alignItems: "center",
-                }}>
-                    <Image
-                        source={images.empty}
-                        style={{
-                            height: 300,
-                            width: 300,
-                            flex: 1,
-                        }}
-                        resizeMode="contain"
-                    />
-                </View>
-                <Text style={{
-                    fontSize: sizes.Medium,
-                }}>You have no products</Text>
-                <Button
-                    style={{}}
-                    method={() => navigation.navigate("Accounts", { id: user.id })}
-                    text={"Upload A Product"}
-                    textStyle={{ color: theme.color, fontSize: sizes.Small }}
-                />
+            <View style={styles.container}>
+                <Header method={() => navigation.goBack()} text={'Products'} />
+                {
+                    productList.length !== 0 ? (
+                        <View>
+                            <FlatList
+                                vertical
+                                numColumns={2}
+                                showsHorizontalScrollIndicator={false}
+                                keyExtractor={(item) => item.id}
+                                data={productList}
+                                renderItem={({ item }) => {
+                                    return (
+                                        <Product
+                                            product={item}
+                                        />
+                                    )
+                                }}
+                            />
+                        </View>
+                    ) : (
+                            <View style={{
+                                flex: 1,
+                                justifyContent: "center",
+                                alignItems: "center",
+                            }}>
+                                <View style={{
+                                    height: 300,
+                                    width: 300,
+                                    alignItems: "center",
+                                }}>
+                                    <Image
+                                        source={images.empty}
+                                        style={{
+                                            height: 300,
+                                            width: 300,
+                                            flex: 1,
+                                        }}
+                                        resizeMode="contain"
+                                    />
+                                </View>
+                                <Text style={{
+                                    fontSize: sizes.Medium,
+                                }}>You have no products</Text>
+                                <Button
+                                    style={{}}
+                                    method={() => navigation.navigate("Accounts", { id: user.id })}
+                                    text={"Upload Your First Product"}
+                                    textStyle={{ color: theme.color, fontSize: sizes.Small }}
+                                />
+                            </View>)
+                }
             </View>
         )
     }

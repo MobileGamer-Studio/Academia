@@ -260,7 +260,7 @@ function HomeScreen({ route, navigation }) {
                 </ScrollView>
                 <NavBar
                     home={() => navigation.navigate("Home", { id: userId })}
-                    search={() => navigation.navigate("Search", { search: "null" })}
+                    search={() => navigation.navigate("Search", { id: userId })}
                     add={() => navigation.navigate("UploadProduct", { id: userId })}
                     cart={() => navigation.navigate("Cart", { id: userId })}
                     profile={() => navigation.navigate("UserAccount", { id: userId, user: user })}

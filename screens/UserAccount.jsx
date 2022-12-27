@@ -215,6 +215,7 @@ function UserAccount({ route, navigation }) {
 
                 </View>
             </ScrollView>
+            
             <View style={{
                 alignItems: "center",
                 backgroundColor: theme.color,
