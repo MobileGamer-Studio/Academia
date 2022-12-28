@@ -5,7 +5,7 @@
     "owner": "mobilegamer",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./images/AppIcon-White.png",
+    "icon": "./images/AppIcon.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./images/A.png",
