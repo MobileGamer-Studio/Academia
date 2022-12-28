@@ -59,6 +59,7 @@ const UploadProduct = ({route, navigation}) => {
         //tagsList.push(val);
         tags.push(val);
         console.log(tags);
+        setTag('');
     }
 
 
@@ -138,11 +139,13 @@ const UploadProduct = ({route, navigation}) => {
                                     <Tag tagName={item}/>
                                 );
                             }}
+
                         />
                     </View>
                     <InfoInput
                         method={(val) => setTag(val)}
                         placeholder={"tag"}
+                        value={tag}
                     />
 
                     <View style={{

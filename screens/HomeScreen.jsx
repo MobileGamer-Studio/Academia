@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { FlatList, ScrollView, Image,  StyleSheet, Text, TouchableOpacity, View, ActivityIndicator } from 'react-native';
 import { categories, colors, sizes, suggestedProducts, images } from '../constants/Data';
-import { NavBar, ProductCategory, ProductVertical, RoundButton, SearchBar, UserProfile, Loading} from '../constants/Components';
+import { NavBar, Loading} from '../constants/Components';
 import { firestore } from "../constants/Sever";
 import { collection, setDoc, doc, onSnapshot} from "firebase/firestore";
 import { Entypo, MaterialIcons, FontAwesome } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useDerivedValue } from 'react-native-reanimated';
 //import mobileAds, { GAMBannerAd, BannerAdSize } from 'react-native-google-mobile-ads';
 
 const theme = colors.lightTheme;
@@ -61,7 +62,9 @@ function HomeScreen({ route, navigation }) {
             setBestSellers(doc.data().userInfo.feed.bestSellers)
 
 
-            setLoading(false)
+            if(user !== {}){
+                setLoading(false)
+            }
         });
         // mobileAds()
         //     .initialize()
@@ -78,10 +81,88 @@ function HomeScreen({ route, navigation }) {
     if (loading === true) {
         return (
             <View style={styles.container}>
+                <Header method={() => navigation.navigate('Notifications', { id: userId })} />
                 <Loading />
+                <NavBar
+                    home={() => navigation.navigate("Home", { id: userId })}
+                    search={() => navigation.navigate("Search", { id: userId })}
+                    add={() => navigation.navigate("UploadProduct", { id: userId })}
+                    cart={() => navigation.navigate("Cart", { id: userId })}
+                    profile={() => navigation.navigate("UserAccount", { id: userId, user: user })}
+                    image={"https://firebasestorage.googleapis.com/v0/b/academia-c3d0e.appspot.com/o/Images%2FProfile%2FprofileIcon.png?alt=media&token=d0c063e1-d61e-4630-a6af-bba57f100d9d"}
+                />
             </View>
         )
     }else{
+
+        const sgUsers = []
+        const sgProducts = []
+        const act = []
+        const sls = []
+        const newP = []
+        const crt = []
+        const bs = []
+
+        const defaultProducts = products.slice(0, 9)
+
+        suggestedUsers.forEach((item) => {
+            users.forEach((user) => {
+                if (item === user.id) {
+                    sgUsers.push(user)
+                }
+            })
+        })
+
+        suggestedProducts.forEach((item) => {
+            products.forEach((product) => {
+                if (item === product.id) {
+                    sgProducts.push(product)
+                }
+            })
+        })
+
+        activity.forEach((item) => {
+            products.forEach((product) => {
+                if (item === product.id) {
+                    act.push(product)
+                }
+            })
+        })
+
+        sales.forEach((item) => {
+            products.forEach((product) => {
+                if (item === product.id) {
+                    sls.push(product)
+                }
+            })
+        })
+
+        newProducts.forEach((item) => {
+            products.forEach((product) => {
+                if (item === product.id) {
+                    newP.push(product)
+                }
+            })
+        })
+
+        cart.forEach((item) => {
+            products.forEach((product) => {
+                if (item === product.id) {
+                    crt.push(product)
+                }
+            })
+        })
+
+        bestSellers.forEach((item) => {
+            products.forEach((product) => {
+                if (item === product.id) {
+                    bs.push(product)
+                }
+            })
+        })
+
+
+
         return (
             <View style={styles.container}>
                 <Header method = {() => navigation.navigate('Notifications', { id: userId })} />
@@ -97,18 +178,19 @@ function HomeScreen({ route, navigation }) {
                     /> */}
                     </View>
                     {
-                        suggestedProducts.length > 0 ? (
+                        sgProducts.length > 0 ? (
                             <View style={styles.section}>
-                                <Text>Check Out</Text>
+                                <Text>Suggested</Text>
                                 <View style={{}}>
                                     <FlatList
                                         horizontal
+                                        numColumns={2}
                                         showsHorizontalScrollIndicator={false}
                                         keyExtractor={(item) => item.id}
-                                        data={categories}
+                                        data={sgProducts}
                                         renderItem={({ item }) => {
                                             return (
-                                                <View></View>
+                                                <ProductVertical item = {item}/>
                                             )
                                         }}
                                     />
@@ -117,12 +199,12 @@ function HomeScreen({ route, navigation }) {
                         ) : (
                                 <View style={styles.section}>
                                     <Text>Products</Text>
-                                    <View style={{}}>
+                                    <View>
                                         <FlatList
-                                            horizontal
+                                            vertical
                                             showsHorizontalScrollIndicator={false}
                                             keyExtractor={(item) => item.id}
-                                            data={products}
+                                            data={defaultProducts}
                                             renderItem={({ item }) => {
                                                 return (
                                                     <View>
@@ -136,7 +218,47 @@ function HomeScreen({ route, navigation }) {
                         )
                     }
                     {
-                        suggestedUsers.length > 0 ? (
+                        sgUsers.length > 0 ? (
+                            <View style={styles.section}>
+                                <Text>Check Out</Text>
+                                <View>
+                                    <FlatList
+                                        horizontal
+                                        showsHorizontalScrollIndicator={false}
+                                        keyExtractor={(item) => item.id}
+                                        data={sgUsers}
+                                        renderItem={({ item }) => {
+                                            return (
+                                                <View></View>
+                                            )
+                                        }}
+                                    />
+                                </View>
+                            </View>
+                        ) : null
+                    }
+                    {
+                        bs.length > 0 ? (
+                            <View style={styles.section}>
+                                <Text>Check Out</Text>
+                                <View style={{}}>
+                                    <FlatList
+                                        horizontal
+                                        showsHorizontalScrollIndicator={false}
+                                        keyExtractor={(item) => item.id}
+                                        data={bs}
+                                        renderItem={({ item }) => {
+                                            return (
+                                                <View></View>
+                                            )
+                                        }}
+                                    />
+                                </View>
+                            </View>
+                        ) : null
+                    }
+                    {
+                        act.length > 0 ? (
                             <View style={styles.section}>
                                 <Text>Check Out</Text>
                                 <View style={{}}>
@@ -156,7 +278,7 @@ function HomeScreen({ route, navigation }) {
                         ) : null
                     }
                     {
-                        bestSellers.length > 0 ? (
+                        sls.length > 0 ? (
                             <View style={styles.section}>
                                 <Text>Check Out</Text>
                                 <View style={{}}>
@@ -176,7 +298,7 @@ function HomeScreen({ route, navigation }) {
                         ) : null
                     }
                     {
-                        activity.length > 0 ? (
+                        newP.length > 0 ? (
                             <View style={styles.section}>
                                 <Text>Check Out</Text>
                                 <View style={{}}>
@@ -196,47 +318,7 @@ function HomeScreen({ route, navigation }) {
                         ) : null
                     }
                     {
-                        sales.length > 0 ? (
-                            <View style={styles.section}>
-                                <Text>Check Out</Text>
-                                <View style={{}}>
-                                    <FlatList
-                                        horizontal
-                                        showsHorizontalScrollIndicator={false}
-                                        keyExtractor={(item) => item.id}
-                                        data={categories}
-                                        renderItem={({ item }) => {
-                                            return (
-                                                <View></View>
-                                            )
-                                        }}
-                                    />
-                                </View>
-                            </View>
-                        ) : null
-                    }
-                    {
-                        newProducts.length > 0 ? (
-                            <View style={styles.section}>
-                                <Text>Check Out</Text>
-                                <View style={{}}>
-                                    <FlatList
-                                        horizontal
-                                        showsHorizontalScrollIndicator={false}
-                                        keyExtractor={(item) => item.id}
-                                        data={categories}
-                                        renderItem={({ item }) => {
-                                            return (
-                                                <View></View>
-                                            )
-                                        }}
-                                    />
-                                </View>
-                            </View>
-                        ) : null
-                    }
-                    {
-                        cart.length > 0 ? (
+                        crt.length > 0 ? (
                             <View style={styles.section}>
                                 <Text>Check Out</Text>
                                 <View style={{}}>
@@ -310,6 +392,34 @@ function Header(props){
 
         </View>
     )
+}
+
+function ProductVertical(props){
+    <TouchableOpacity style={{
+        backgroundColor: theme.color2,
+        borderRadius: sizes.Medium,
+        width: 150,
+        height: 250,
+        padding: 5,
+        marginVertical: 5,
+        marginHorizontal: 10,
+    }} onPress={() => navigation.navigate('Product', { id: userId, productId: props.item.id })}>
+        <View>
+
+        </View>
+        <View style={{
+            margin: 5,
+            backgroundColor: theme.bgColor,
+            borderRadius: sizes.Medium,
+            padding: 5,
+        }}>
+            <Text style={{ fontSize: sizes.Medium }}>{props.item.title}</Text>
+            <View>
+                <Text style={{ fontSize: sizes.small }}>{props.item.rating + " star rating"}</Text>
+                <Text style={{ fontSize: sizes.Small }}>{props.item.price}</Text>
+            </View>
+        </View>
+    </TouchableOpacity>
 }
 
 const styles = StyleSheet.create({

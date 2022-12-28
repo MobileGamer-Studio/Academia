@@ -3,12 +3,12 @@
     "name": "Academia",
     "slug": "academia",
     "owner": "mobilegamer",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./images/AppIcon.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./images/A.png",
+      "image": "./images/Splash-White.png",
       "resizeMode": "contain",
       "backgroundColor": "#FFFFFF"
     },
@@ -23,7 +23,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./images/AppIcon-White.png",
+        "foregroundImage": "./images/A.png",
         "backgroundColor": "#FFFFFF"
       },
       "package": "com.mobilegamer.academia"

@@ -92,7 +92,7 @@ export const InfoInput = (props) => {
                 }}
                 onChangeText={props.method}
                 placeholder={props.placeholder}
-                value={props.valueType}
+                value={props.value}
                 keyboardType={props.keyboardType}
             />
         </View>
