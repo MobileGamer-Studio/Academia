@@ -1,7 +1,7 @@
 import {onAuthStateChanged} from 'firebase/auth';
 import React from 'react';
-import {Image, StyleSheet, View} from 'react-native';
-import {colors, images} from '../constants/Data';
+import {Image, StyleSheet, View, ActivityIndicator} from 'react-native';
+import {colors, images, sizes} from '../constants/Data';
 import {auth, logOut} from "../constants/Sever";
 
 const theme = colors.lightTheme;
@@ -35,6 +35,7 @@ const LoadingScreen = ({route, navigation}) => {
                     source={images.academia_white}
                 />
             </View>
+            <ActivityIndicator size={sizes.ExtraLarge} color={theme.bgColor}/>
         </View>
     );
 }

@@ -8,7 +8,7 @@ import {firestore} from '../constants/Sever';
 const theme = colors.lightTheme;
 function ProductScreen({route, navigation}) {
     const productId = route.params.productId;
-    const userId = route.params.userId;
+    const userId = route.params.id;
 
     const [product, setProduct] = React.useState({})
     const [user, setUser] = React.useState({})
