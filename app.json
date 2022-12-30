@@ -3,7 +3,7 @@
     "name": "Academia",
     "slug": "academia",
     "owner": "mobilegamer",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "orientation": "portrait",
     "icon": "./images/AppIcon.png",
     "userInterfaceStyle": "light",

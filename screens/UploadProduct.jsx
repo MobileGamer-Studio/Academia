@@ -14,7 +14,8 @@ const UploadProduct = ({route, navigation}) => {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [price, setPrice] = useState("0");
-    const [category, setCategory] = useState('');
+    const [discount, setDiscount] = useState(0);
+    const [numAvailable, setNumAvailable] = useState(0);
     const [tags, setTags] = useState([]);
     const [tag, setTag] = useState('');
     const [selectedImage, setSelectedImage] = useState("https://firebasestorage.googleapis.com/v0/b/academia-c3d0e.appspot.com/o/Images%2FCameraIcon-coloured.png?alt=media&token=0ac47e13-7a64-466b-8027-1f9ae3b006d6");
@@ -69,7 +70,10 @@ const UploadProduct = ({route, navigation}) => {
         newProduct.title = title;
         newProduct.description = description;
         newProduct.price = price;
-        newProduct.seller = userId;
+        newProduct.sellersId = userId;
+        newProduct.seller = user.name;
+        newProduct.discount = discount;
+        newProduct.amountAvailable = numAvailable;
         newProduct.tags = tags;
         newProduct.image = selectedImage;
         newProduct.id = userId + "-" + newProduct.title 
@@ -95,15 +99,15 @@ const UploadProduct = ({route, navigation}) => {
                     <Text style={{ marginHorizontal: 5 }}>{"Product: " + title}</Text>
                     <InfoInput
                         method={(val) => setTitle(val)}
-                        placeholder={"product name"}
+                        placeholder={"Item name"}
                     />
 
                 </View>
                 <View style={styles.field}>
-                    <Text style={{ marginHorizontal: 5 }}>{"Description: " + description}</Text>
+                    <Text style={{ marginHorizontal: 5 }}>{"Details: " + description}</Text>
                     <InfoInput
                         method={(val) => setDescription(val)}
-                        placeholder={"description"}
+                        placeholder={"Item description"}
                     />
 
                 </View>
@@ -111,17 +115,30 @@ const UploadProduct = ({route, navigation}) => {
                     <Text>{"Naira " + price}</Text>
                     <InfoInput
                         method={(val) => setPrice(val)}
-                        placeholder={"price"}
+                        placeholder={"Price"}
                     />
 
                 </View>
                 <View style={styles.field}>
-                    <Text style={{ marginHorizontal: 5 }}>{"Category: " + category}</Text>
+                    <View  style = {{
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                    }}>
+                        <Text style={{ marginHorizontal: 5 }}>{"Discount: -" + discount + '%'}</Text>
+                        <Text style={{ marginHorizontal: 5 }}>{"NewPrice: Naira " + (price - (discount / 100 * price)).toString()}</Text>
+                    </View>
                     <InfoInput
-                        method={(val) => setCategory(val)}
-                        placeholder={"category"}
+                        method={(val) => setDiscount(val)}
+                        placeholder={"Discount on item"}
                     />
 
+                </View>
+                <View style={styles.field}>
+                    <Text style={{ marginHorizontal: 5 }}>{"Number Available: " + numAvailable}</Text>
+                    <InfoInput
+                        method={(val) => setNumAvailable(val)}
+                        placeholder={"Number of items currently available"}
+                    />
                 </View>
                 <View style={styles.field}>
                     <View style={{
@@ -180,25 +197,10 @@ const UploadProduct = ({route, navigation}) => {
                         />
 
                     </View>
-                    <View style={{
-                        height: 100,
-                        width: 100,
-                        justifyContent: "center",
-                    }}>
-                        <Image
-                            style={{
-                                flex: 1,
-                                alignSelf: "center",
-                            }}
-                            resizeMode="contain"
-                            source={{ uri: "https://firebasestorage.googleapis.com/v0/b/academia-c3d0e.appspot.com/o/Images%2FCameraIcon-coloured.png?alt=media&token=0ac47e13-7a64-466b-8027-1f9ae3b006d6" }}
-                        />
-                    </View>
-
-                    {/* <ImageViewer
+                    <ImageViewer
                         placeholderImageSource={"https://firebasestorage.googleapis.com/v0/b/academia-c3d0e.appspot.com/o/Images%2FCameraIcon-coloured.png?alt=media&token=0ac47e13-7a64-466b-8027-1f9ae3b006d6"}
                         selectedImage={selectedImage}
-                    /> */}
+                    />
                     
                 </View>
             </ScrollView>
@@ -235,7 +237,22 @@ function ImageViewer({ placeholderImageSource, selectedImage }) {
         ? selectedImage
         : placeholderImageSource;
 
-    return <Image source={{uri: imageSource}}/>
+    return (
+    <View style = {{
+        alignItems: "center",
+        justifyContent: "center",
+        margin: 10,
+        height: 100,
+        width: 100,
+    }}>
+        <Image style={{
+            height: 100,
+            width: 100,
+        }}
+        
+        resizeMode="contain"
+        source={{ uri: imageSource }} />
+    </View>)
 }
 
 const Tag = (props) => {

@@ -1,9 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import {FlatList, Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {colors, images, sizes} from '../constants/Data';
-import {Header} from '../constants/Components';
+import {Header, Loading} from '../constants/Components';
 import {collection, doc, onSnapshot} from 'firebase/firestore';
 import {firestore} from '../constants/Sever';
+import {Entypo, MaterialIcons} from '@expo/vector-icons';
 
 const theme = colors.lightTheme;
 function ProductScreen({route, navigation}) {
@@ -47,6 +48,15 @@ function ProductScreen({route, navigation}) {
     } else {
         return (
             <View style={styles.container}>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 10 }}>
+                    <MaterialIcons name="arrow-back-ios" size={24} color={theme.color} style={{ marginLeft: 10 }} onPress={() => navigation.goBack()} />
+                    <View style={{ alignSelf: "flex-end", marginBottom: 20 }}>
+
+                        <TouchableOpacity onPress={() => setOptionsAct(true)}>
+                            <Entypo name="dots-three-vertical" size={24} color={theme.color} />
+                        </TouchableOpacity>
+                    </View>
+                </View>
                 <View style={{
                     height: 400,
                     width: 400,
@@ -56,24 +66,27 @@ function ProductScreen({route, navigation}) {
                     <Image
                         style={{
                             flex: 1,
+                            height: 400,
+                            width: 400,
                         }}
                         resizeMode="contain"
-                        source={product.image} />
+                        source={{ uri: product.image }} />
                 </View>
                 <View style={{
                     backgroundColor: theme.color,
-                    borderTopRightRadius: sizes.Medium + 10,
-                    borderTopLeftRadius: sizes.Medium + 10,
+                    borderTopRightRadius: sizes.Large,
+                    borderTopLeftRadius: sizes.Large,
                     paddingVertical: sizes.Medium,
+                    justifyContent: "space-evenly",
                 }}>
                     <Text style={{
-                        fontSize: sizes.ExtraLarge,
+                        fontSize: sizes.Large,
                         marginBottom: 5,
                         color: colors.white,
                         marginHorizontal: sizes.Small
                     }}>{product.title}</Text>
                     <Text style={{
-                        fontSize: sizes.Small,
+                        fontSize: sizes.Medium - 5,
                         color: colors.white,
                         marginHorizontal: sizes.Small,
                     }}>{product.description}</Text>
@@ -86,20 +99,16 @@ function ProductScreen({route, navigation}) {
                                 return (
                                     <TouchableOpacity>
                                         <View style={{
-                                            margin: 10,
-                                            padding: 5,
                                             backgroundColor: theme.bgColor,
+                                            marginHorizontal: 10,
                                             borderRadius: sizes.ExtraLarge,
-                                            alignItems: "center",
-                                            justifyContent: "center",
+                                            paddingHorizontal: 10,
+                                            paddingVertical: 5
                                         }}>
                                             <Text style={{
-                                                fontSize: sizes.Small,
                                                 color: theme.color,
-                                                marginHorizontal: sizes.ExtraSmall,
-                                            }}>
-                                                {"#" + item}
-                                            </Text>
+                                                fontSize: sizes.Small,
+                                            }}>{"#" + item}</Text>
                                         </View>
                                     </TouchableOpacity>
                                 );

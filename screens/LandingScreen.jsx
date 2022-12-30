@@ -7,8 +7,8 @@ function LandingScreen({navigation}) {
     return (
         <View style={styles.container}>
             <View style={{
-                height: 300,
-                width: 300,
+                height: 350,
+                width: 350,
                 alignSelf: "center",
                 justifyContent: "center",
             }}>
@@ -16,6 +16,8 @@ function LandingScreen({navigation}) {
                     style={{
                         flex: 1,
                         alignSelf: "center",
+                        height: 350,
+                        width: 350,
                     }}
                     resizeMode="contain"
                     source={images.academia}
