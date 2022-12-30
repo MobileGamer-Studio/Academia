@@ -456,8 +456,8 @@ const styles = StyleSheet.create({
         alignSelf: "center",
         paddingVertical: 7,
         width: "100%",
-        borderTopLeftRadius: sizes.Large+10,
-        borderTopRightRadius: sizes.Large + 10,
+        borderTopLeftRadius: sizes.Large,
+        borderTopRightRadius: sizes.Large,
     },
 
     navImages :{

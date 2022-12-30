@@ -176,12 +176,16 @@ function HomeScreen({ route, navigation }) {
 
                         }}
                     /> */}
+
+                    </View>
+                    <View>
+                        
                     </View>
                     {
                         sgProducts.length > 0 ? (
                             <View style={styles.section}>
-                                <Text>Suggested</Text>
-                                <View style={{}}>
+                                <SectionHeader text = {'Suggested Products'}/>
+                                <View>
                                     <FlatList
                                         horizontal
                                         numColumns={2}
@@ -190,7 +194,7 @@ function HomeScreen({ route, navigation }) {
                                         data={sgProducts}
                                         renderItem={({ item }) => {
                                             return (
-                                                <ProductVertical item = {item}/>
+                                                <ProductHorizontal item = {item}/>
                                             )
                                         }}
                                     />
@@ -198,22 +202,20 @@ function HomeScreen({ route, navigation }) {
                             </View>
                         ) : (
                                 <View style={styles.section}>
-                                    <Text>Products</Text>
-                                    <View>
-                                        <FlatList
-                                            vertical
-                                            showsHorizontalScrollIndicator={false}
-                                            keyExtractor={(item) => item.id}
-                                            data={defaultProducts}
-                                            renderItem={({ item }) => {
-                                                return (
-                                                    <View>
-                                                        <Text>{item.title}</Text>
-                                                    </View>
-                                                )
-                                            }}
-                                        />
-                                    </View>
+                                    <SectionHeader text={'Suggested Products'} method= {() => navigation.navigate("Search", { id: userId })} />
+                                    <FlatList
+                                        horizontal
+                                        
+                                        showsHorizontalScrollIndicator={false}
+                                        keyExtractor={(item) => item.id}
+                                        data={defaultProducts}
+                                        renderItem={({ item }) => {
+                                            return (
+                                                <ProductVertical title={item.title} image={item.image} id={item.id} price={item.price} seller={item.seller} rating = {item.ratings}/>
+                                            )
+                                        }}
+
+                                    />
                                 </View>
                         )
                     }
@@ -394,32 +396,105 @@ function Header(props){
     )
 }
 
-function ProductVertical(props){
-    <TouchableOpacity style={{
-        backgroundColor: theme.color2,
-        borderRadius: sizes.Medium,
-        width: 150,
-        height: 250,
-        padding: 5,
-        marginVertical: 5,
-        marginHorizontal: 10,
-    }} onPress={() => navigation.navigate('Product', { id: userId, productId: props.item.id })}>
-        <View>
-
-        </View>
+function SectionHeader(props){
+    return(
         <View style={{
-            margin: 5,
-            backgroundColor: theme.bgColor,
-            borderRadius: sizes.Medium,
-            padding: 5,
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            marginBottom: 10,
         }}>
-            <Text style={{ fontSize: sizes.Medium }}>{props.item.title}</Text>
-            <View>
-                <Text style={{ fontSize: sizes.small }}>{props.item.rating + " star rating"}</Text>
-                <Text style={{ fontSize: sizes.Small }}>{props.item.price}</Text>
-            </View>
+            <Text style={{
+                marginHorizontal: 10,
+                fontSize: 20,
+            }}>{props.text}</Text>
+            <TouchableOpacity style={{
+                marginHorizontal: 10,
+                flexDirection: 'row',
+                alignItems: 'center',
+            }} onPress = {props.method}>
+                <Text style={{ fontSize: 12, color: theme.outline }}>See More</Text>
+                <MaterialIcons name="arrow-forward-ios" size={10} color={theme.outline} style={{ marginLeft: 5 }} onPress={() => navigation.goBack()} />
+            </TouchableOpacity>
         </View>
-    </TouchableOpacity>
+    )
+}
+
+export function ProductVertical(props){
+    return(
+        <TouchableOpacity style={{
+            backgroundColor: theme.outline3,
+            borderRadius: sizes.ExtraSmall,
+            width: 150,
+            height: 200,
+            padding: 5,
+            marginVertical: 5,
+            marginHorizontal: 10,
+        }} onPress={() => navigation.navigate('Product', { id: userId, productId: props.id })}>
+            <View style={{
+                height: 100,
+                width: 100,
+                alignSelf: "center",
+                alignItems: "center",
+            }}>
+                <Image
+                    style={{
+                        flex: 1,
+                    }}
+                    resizeMode="contain"
+                    source={{ uri: props.image }} />
+            </View>
+            <View style={{
+                margin: 5,
+                backgroundColor: theme.bgColor,
+                borderRadius: sizes.ExtraSmall,
+                padding: 5,
+                height: 80,
+                justifyContent: "center",
+            }}>
+                <Text style={{ fontSize: sizes.Small }}>{props.title}</Text>
+                <View style={{ flexDirection: 'column' }}>
+                    <Text style={{ fontSize: sizes.ExtraSmall }}>{props.rating + " star"}</Text>
+                    <Text style={{ fontSize: 12 }}>{props.price + ' Naira'}</Text>
+                </View>
+            </View>
+        </TouchableOpacity>
+    )
+}
+
+export function ProductHorizontal(props){
+    return(
+        <TouchableOpacity style = {{
+            backgroundColor: theme.color,
+            borderRadius: sizes.ExtraSmall,
+            flexDirection: 'row',
+            margin: 5,
+        }}>
+            <View style={{
+                height: 70,
+                width: 70,
+                alignSelf: "center",
+                alignItems: "center",
+                backgroundColor: theme.bgColor,
+                borderRadius: sizes.ExtraSmall,
+                margin: 5,
+            }}>
+                <Image
+                    style={{
+                        flex: 1,
+                    }}
+                    resizeMode="contain"
+                    source={{ uri: props.image }} />
+            </View>
+            <View style = {{
+                marginHorizontal: 10,
+                marginVertical: 5,
+            }}>
+                <Text style = {{color: theme.bgColor, fontSize: 15}}>{props.title}</Text>
+                <Text style={{ color: theme.bgColor, fontSize: sizes.ExtraSmall }}>{props.rating + " star"}</Text>
+                <Text style={{ color: theme.bgColor, fontSize: 12 }}>{props.price + ' Naira'}</Text>
+            </View>
+        </TouchableOpacity>
+    )
 }
 
 const styles = StyleSheet.create({
@@ -430,15 +505,8 @@ const styles = StyleSheet.create({
 
     section: {
         marginVertical: sizes.ExtraSmall,
-        borderBottomColor: theme.outline2,
-        borderBottomWidth: 5,
-    },
-
-    sectionTitle: {
-        fontSize: sizes.Large,
-        fontWeight: "bold",
-        color: theme.textColor,
-        margin: sizes.ExtraSmall,
+        // borderBottomColor: theme.outline3,
+        // borderBottomWidth: 5,
     },
 })
 
