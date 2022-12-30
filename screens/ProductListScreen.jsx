@@ -4,11 +4,13 @@ import { ProfilePicture, Loading, Header, Button } from '../constants/Components
 import { colors, sizes, images} from "../constants/Data";
 import { firestore, logOut } from "../constants/Sever";
 import { collection, doc, onSnapshot } from "firebase/firestore";
+import { ProductVertical } from './HomeScreen';
 
 const theme = colors.lightTheme;
 function ProductListScreen({route, navigation}) {
     const userId = route.params.id;
     const [users, setUsers] = useState([])
+    const [products, setProducts] = useState([])
     const [user, setUser] = useState({})
     const [loading, setLoading] = useState(true)
 
@@ -22,6 +24,15 @@ function ProductListScreen({route, navigation}) {
             });
             //console.log("Current data: ", data);
             setUsers(data)
+        });
+
+        const productsSub = onSnapshot(collection(firestore, "Products"), querySnapshot => {
+            const data = []
+            querySnapshot.forEach((doc) => {
+                data.push(doc.data())
+            });
+            //console.log("Current data: ", data);
+            setProducts(data)
         });
 
         const userSub = onSnapshot(doc(firestore, "Users", userId), (doc) => {
@@ -45,23 +56,34 @@ function ProductListScreen({route, navigation}) {
             </View>
         )
     } else {
+        const userProducts = []
+        productList.forEach((product) => {
+            products.forEach((item) => {
+                if (product === item.id) {
+                    userProducts.push(item)
+                }
+            })
+        })
+
         return (
             <View style={styles.container}>
                 <Header method={() => navigation.goBack()} text={'Products'} />
                 {
-                    productList.length !== 0 ? (
-                        <View>
+                    userProducts.length !== 0 ? (
+                        <View style={{
+                            alignItems: "center",
+                            justifyContent: "center",
+                        }}>
                             <FlatList
                                 vertical
+                                columnWrapperStyle = {{justifyContent: "space-around"}}
                                 numColumns={2}
                                 showsHorizontalScrollIndicator={false}
                                 keyExtractor={(item) => item.id}
-                                data={productList}
+                                data={userProducts}
                                 renderItem={({ item }) => {
                                     return (
-                                        <Product
-                                            product={item}
-                                        />
+                                        <Product title = {item.title} price = {item.price} image = {item.image} seller = {item.seller} />
                                     )
                                 }}
                             />
@@ -104,45 +126,44 @@ function ProductListScreen({route, navigation}) {
 }
 
 const Product = (props) => {
-    const product = props.product
-    return (
-        <TouchableOpacity>
-            <View style={styles.product}>
-                <View styles={{
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                }}>
-                    <Text style={{
-                        fontSize: sizes.Medium,
-                    }}>{product.title}</Text>
-                    <Text style={{
-                        fontSize: sizes.Small,
-                    }}>{product.price + " naira"}</Text>
-                </View>
-                <View style={{
-                    height: sizes.ExtraLarge,
-                    width: sizes.ExtraLarge,
-                    alignSelf: "center",
-                    justifyContent: "center",
-                }}>
-                    <Image
-                        style={{
-                            flex: 1,
-                            alignSelf: "center",
-                        }}
-                        resizeMode="contain"
-                        source={product.image} />
-                </View>
-                <View style={{
-                    justifyContent: "flex-end",
-                    marginTop: sizes.ExtraSmall,
-                }}>
-                    <Text style={{
-                        fontSize: sizes.ExtraSmall,
-                    }}>{"Sold by " + product.seller}</Text>
-                </View>
+    return(
+    <TouchableOpacity style={{
+        backgroundColor: theme.outline3,
+        borderRadius: sizes.ExtraSmall,
+        width: '45%',
+        height: 200,
+        padding: 5,
+        marginVertical: 5,
+        marginHorizontal: 10,
+    }} onPress={() => navigation.navigate('Product', { id: userId, productId: props.id })}>
+        <View style={{
+            height: 10,
+            width: 100,
+            alignSelf: "center",
+            alignItems: "center",
+        }}>
+            <Image
+                style={{
+                    flex: 1,
+                }}
+                resizeMode="contain"
+                source={{ uri: props.image }} />
+        </View>
+        <View style={{
+            margin: 5,
+            backgroundColor: theme.bgColor,
+            borderRadius: sizes.ExtraSmall,
+            padding: 5,
+            height: 80,
+            justifyContent: "center",
+        }}>
+            <Text style={{ fontSize: sizes.Small }}>{props.title}</Text>
+            <View style={{ flexDirection: 'column' }}>
+                <Text style={{ fontSize: sizes.ExtraSmall }}>{props.rating + " star"}</Text>
+                <Text style={{ fontSize: 12 }}>{props.price + ' Naira'}</Text>
             </View>
-        </TouchableOpacity>
+        </View>
+    </TouchableOpacity>
     );
 }
 

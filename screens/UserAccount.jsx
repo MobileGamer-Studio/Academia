@@ -87,19 +87,20 @@ function UserAccount({ route, navigation }) {
                             </TouchableOpacity>
                         </View>
                         <View showsVerticalScrollIndicator={false}>
-                            <TouchableOpacity style = {styles.popUpSection} onPress = {() => navigation.navigate("Settings", {id: userId})}>
+                            <TouchableOpacity style = {styles.popUpSection} onPress = {() => {setOptionsAct(false); navigation.navigate("Settings", {id: userId})}}>
                                 <MaterialIcons name="settings" size={24} color={colors.defaultBG} />
                                 <Text style={{ color: theme.outline, marginHorizontal: 2.5 }}>Settigs</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={styles.popUpSection} onPress={() => navigation.navigate("Saved", { id: userId })}>
+                            <TouchableOpacity style={styles.popUpSection} onPress={() => { setOptionsAct(false); navigation.navigate("Saved", { id: userId })}}>
                                 <MaterialIcons name="bookmark" size={24} color={colors.defaultBG} />
                                 <Text style={{ color: theme.outline, marginHorizontal: 2.5 }}>Saved</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={styles.popUpSection} onPress={() => navigation.navigate("EditProfile", { id: userId })}>
+                            <TouchableOpacity style={styles.popUpSection} onPress={() => { setOptionsAct(false); navigation.navigate("EditProfile", { id: userId })}}>
                                 <MaterialIcons name="edit" size={24} color={colors.defaultBG} />
                                 <Text style={{ color: theme.outline, marginHorizontal: 2.5 }}>Edit Profile</Text>
                             </TouchableOpacity>
                             <TouchableOpacity style={styles.popUpSection} onPress = {async () => {
+                                setOptionsAct(false)
                                 try {
                                     const result = await Share.share({
                                         message: user.name + " is using Academia. Download it now! \n https://play.google.com/store/apps/details?id=com.academia",
@@ -121,6 +122,7 @@ function UserAccount({ route, navigation }) {
                                 <Text style={{ color: theme.outline, marginHorizontal: 2.5 }}>Share</Text>
                             </TouchableOpacity>
                             <TouchableOpacity style={styles.popUpSection} onPress={() => {
+                                setOptionsAct(false)
                                 logOut()
                                 navigation.navigate("Loading");
                             }}>

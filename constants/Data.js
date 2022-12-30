@@ -43,10 +43,11 @@ export const colors = {
 
     lightTheme: {
         color: "#00FFD1",
-        color2: "#c4d8dd",
+        color2: "#00EAFF",
         bgColor: '#fff',
-        outline: "#c4d8dd",
-        outline2: "#f6f6f6",
+        outline: "#D7D7D7",
+        outline2: "#E4E4E4",
+        outline3: "#F6F6F6",
         textColor: '#000'
     }
 };
@@ -73,8 +74,8 @@ export const images = {
 
     //
     logo: require("../images/Logo.png"),
-    academia: require("../images/Academia.png"),
-    academia_white: require("../images/Academia2.png"),
+    academia: require("../images/Academia3.png"),
+    academia_white: require("../images/Academia4.png"),
     defaultProfile: require("../images/profileIcon.png"),
     cart: require("../images/Cart-white.png"),
     more: require("../images/othersIcon.png"),
