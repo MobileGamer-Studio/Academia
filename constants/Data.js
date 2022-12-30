@@ -148,6 +148,7 @@ export const User = {
         amountSelling: "0",
     },
     userInfo: {
+        tags: [],
         cart: [],
         notifications: [],
         feed: {
@@ -155,12 +156,13 @@ export const User = {
             suggestedUsers: [],
             bestSellers: [],
             activity: [],
-            new: [],
+            newProducts: [],
             sales: [],
         },
         rating: 0,
         amountSpent: "0",
         savedList: [],
+        recentlyViewed: [],
     },
     appInfo: {
         settings: {
@@ -176,24 +178,24 @@ export const User = {
     id: "0",
 }
 
-export const Category = {
-    name: '',
-    description: '',
-    image: '',
-    id: "0",
-}
 
 export const Product = {
     title: '',
-    description: '',
-    category: {},
+    details: '',
     price: '',
     seller: '',
+    sellersId: '',
     image: '',
     tags: [],
     amountAvailable: 0,
+    sold: 0,
     ratings: 0,
+    likes: 0,
+    comments: [],
+    discount: 0,
+    views: [],
     id: "0",
+
 }
 
 export const Item = {
