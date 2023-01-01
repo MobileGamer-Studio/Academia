@@ -171,7 +171,7 @@ function EditProfileScreen({route, navigation}) {
                         }
                     </TouchableOpacity>
                     <View style={styles.field}>
-                        {/* <Text>{"Username: " + name}</Text> */}
+                        <Text>{"Username "}</Text>
                         <InfoInput
                             method={(val) => setName(val)}
                             placeholder={"username"}
@@ -179,14 +179,14 @@ function EditProfileScreen({route, navigation}) {
                         />
                     </View>
                     <View style={styles.field}>
-                        {/* <Text>{"Description: " + description}</Text> */}
+                        <Text>{"Description: "+ description}</Text>
                         <InfoInput
                             method={(val) => setDescription(val)}
                             placeholder={"description"}
                             value = {description}
                         />
                     </View><View style={styles.field}>
-                        {/* <Text>{"Location: " + location}</Text> */}
+                        <Text>{"Location "}</Text>
                         <InfoInput
                             method={(val) => setLocation(val)}
                             placeholder={"Whitesands, Medowhall"}
