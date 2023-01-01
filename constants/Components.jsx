@@ -152,104 +152,123 @@ export const ProfilePicture = (props) => {
 }
 
 //Products and Users
+export function ProductHorizontal(props) {
+    return (
+        <TouchableOpacity style={{
+            backgroundColor: theme.bgColor,
+            borderRadius: sizes.ExtraSmall,
+            flexDirection: 'row',
+            margin: 5,
+            elevation: 2,
+            width: 250,
+        }}
+
+            onPress={props.method}>
+            <View style={{
+                height: 100,
+                width: 100,
+                alignSelf: "center",
+                alignItems: "center",
+                backgroundColor: theme.bgColor,
+                borderRadius: sizes.ExtraSmall,
+                margin: 5,
+                padding: 5,
+            }}>
+                <Image
+                    style={{
+                        flex: 1,
+                        height: 70,
+                        width: 70,
+                    }}
+                    resizeMode="contain"
+                    source={{ uri: props.image }} />
+            </View>
+            <View style={{
+                marginHorizontal: 10,
+                marginVertical: 5,
+            }}>
+                {
+                    props.title.length < 10 ? (
+                        <Text style={{ fontSize: sizes.Small, color: theme.color2 }}>{props.title}</Text>
+                    ) : (
+                            <Text style={{ fontSize: sizes.Small, color: theme.color2 }}>{props.title.slice(0, 10) + '...'}</Text>
+                    )
+                }
+                <Text style={{ color: theme.color2, fontSize: sizes.ExtraSmall }}>{props.rating + " star"}</Text>
+                {
+                    props.discount === 0 ? (
+                        <View>
+                            <Text style={{ color: theme.color2, fontSize: 12 }}>{props.price + ' Naira'}</Text>
+                        </View>
+                    ) : (
+                        <View>
+                                <Text style={{ color: theme.color2, fontSize: 12, textDecorationLine: 'line-through', textDecorationStyle: 'solid' }}>{props.price + ' Naira'}</Text>
+                                <Text style={{ color: theme.color2, fontSize: 12 }}>{(props.price - (props.discount / 100 * props.price)) + ' Naira'}</Text>
+
+                            <View style={{
+                                backgroundColor: theme.color2,
+                                alignItems: 'center',
+                                borderRadius: sizes.ExtraSmall,
+                                paddingHorizontal: 5,
+                            }}>
+                                <Text style={{color: theme.bgColor}}>{'-' + props.discount + '% discount'}</Text>
+                            </View>
+                        </View>
+                    )
+                }
+            </View>
+        </TouchableOpacity>
+    )
+}
+
+
 export function ProductVertical(props) {
     return (
-        <TouchableOpacity
-            style={styles.product_vertical}
-            onPress={props.method}>
-            <View styles={{
-                flexDirection: "row",
-                justifyContent: "space-between",
+        <TouchableOpacity style={{
+            backgroundColor: theme.bgColor,
+            borderRadius: sizes.ExtraSmall,
+            width: 150,
+            height: 200,
+            padding: 5,
+            marginVertical: 5,
+            marginHorizontal: 10,
+            elevation: 1,
+        }} onPress={props.method}>
+            <View style={{
+                height: 100,
+                width: 100,
+                alignSelf: "center",
+                alignItems: "center",
             }}>
-                <Text style={{
-                    fontSize: sizes.Medium,
-                }}>{props.title}</Text>
-                <Text style={{
-                    fontSize: sizes.Small,
-                }}>{props.price + " naira"}</Text>
+                <Image
+                    style={{
+                        flex: 1,
+                        height: 70,
+                        width: 70,
+                    }}
+                    resizeMode="contain"
+                    source={{ uri: props.image }} />
             </View>
             <View style={{
-                height: sizes.ExtraLarge,
-                width: sizes.ExtraLarge,
-                alignSelf: "center",
+                margin: 5,
+                height: 80,
                 justifyContent: "center",
             }}>
-                <Image
-                    style={{
-                        flex: 1,
-                        alignSelf: "center",
-                    }}
-                    resizeMode="contain"
-                    source={props.image}/>
-            </View>
-            <View style={{
-                justifyContent: "flex-end",
-                marginTop: sizes.ExtraSmall,
-            }}>
-                <Text style={{
-                    fontSize: sizes.ExtraSmall,
-                }}>{"Sold by " + props.seller}</Text>
+                {
+                    props.title.length < 15 ? (
+                        <Text style={{ fontSize: sizes.Small }}>{props.title}</Text>
+                    ) : (
+                        <Text style={{ fontSize: sizes.Small }}>{props.title.slice(0, 15) + '...'}</Text>
+                    )
+                }
+                <View style={{ flexDirection: 'column' }}>
+                    <Text style={{ fontSize: sizes.ExtraSmall }}>{props.rating + " star"}</Text>
+                    <Text style={{ fontSize: 12 }}>{props.price + ' Naira'}</Text>
+                </View>
             </View>
         </TouchableOpacity>
-    );
+    )
 }
-
-export const ProductHorizontal = (props) => {
-    return (
-        <TouchableOpacity
-            style={styles.product_horizontal}
-            onPress={props.method}
-        >
-            <View style={{
-                borderRadius: sizes.ExtraLarge,
-                height: 70,
-                width: 70,
-                backgroundColor: theme.outline,
-                margin: sizes.ExtraSmall,
-                alignItems: "center",
-
-            }}>
-                <Image
-                    style={{
-                        flex: 1,
-                    }}
-                    resizeMode="contain"
-                    source={props.image}/>
-            </View>
-            <View style={{
-                alignItems: "flex-start",
-            }}>
-                <Text style={{
-                    fontSize: sizes.Medium,
-                }}>{props.title}</Text>
-                <Text style={{
-                    fontSize: sizes.Small,
-                }}>{props.price + " Naira"}</Text>
-            </View>
-        </TouchableOpacity>
-    );
-}
-
-export const ProductCategory = (props) => {
-    return (
-        <TouchableOpacity
-            style={styles.productCategory}
-            onPress={props.method}>
-            <View
-                style={{
-                    marginHorizontal: 10,
-                    height: 25,
-                }}
-            >
-                <Text style={{
-                    color: theme.bgColor,
-                    fontSize: sizes.Small + 2,
-                }}>{"#" + props.text}</Text>
-            </View>
-        </TouchableOpacity>
-    );
-}
-
 
 
 export const UserProfile = (props) => {

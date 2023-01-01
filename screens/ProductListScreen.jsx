@@ -115,7 +115,7 @@ function ProductListScreen({route, navigation}) {
                                 }}>You have no products</Text>
                                 <Button
                                     style={{}}
-                                    method={() => navigation.navigate("Accounts", { id: user.id })}
+                                    method={() => navigation.navigate("UploadProduct", { id: userId })}
                                     text={"Upload Your First Product"}
                                     textStyle={{ color: theme.color, fontSize: sizes.Small }}
                                 />

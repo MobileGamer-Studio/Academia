@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { FlatList, ScrollView, Image,  StyleSheet, Text, TouchableOpacity, View, ActivityIndicator } from 'react-native';
 import { categories, colors, sizes, suggestedProducts, images } from '../constants/Data';
-import { NavBar, Loading} from '../constants/Components';
+import { NavBar, Loading, ProductHorizontal, ProductVertical, Button} from '../constants/Components';
 import { firestore } from "../constants/Sever";
 import { collection, setDoc, doc, onSnapshot} from "firebase/firestore";
 import { Entypo, MaterialIcons, FontAwesome } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useDerivedValue } from 'react-native-reanimated';
 //import mobileAds, { GAMBannerAd, BannerAdSize } from 'react-native-google-mobile-ads';
 
 const theme = colors.lightTheme;
@@ -57,7 +56,7 @@ function HomeScreen({ route, navigation }) {
             setSuggestedProducts(doc.data().userInfo.feed.suggestedProducts)
             setActivity(doc.data().userInfo.feed.activity)
             setSales(doc.data().userInfo.feed.sales)
-            setNewProducts(doc.data().userInfo.feed.new)
+            setNewProducts(doc.data().userInfo.feed.newProducts)
             setCart(doc.data().userInfo.cart)
             setBestSellers(doc.data().userInfo.feed.bestSellers)
 
@@ -204,19 +203,41 @@ function HomeScreen({ route, navigation }) {
                         ) : (
                                 <View style={styles.section}>
                                     <SectionHeader text={'Suggested Products'} method= {() => navigation.navigate("Search", { id: userId })} />
-                                    <FlatList
-                                        horizontal
-                                        
-                                        showsHorizontalScrollIndicator={false}
-                                        keyExtractor={(item) => item.id}
-                                        data={defaultProducts}
-                                        renderItem={({ item }) => {
-                                            return (
-                                                <ProductHorizontal title={item.title} image={item.image} price={item.price} discount = {item.discount} seller={item.seller} rating={item.ratings} method={() => navigation.navigate('Product', { id: userId, productId: item.id })}/>
-                                            )
+                                    {
+                                        defaultProducts.length === 0 ? (
+                                        <TouchableOpacity style = {{
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            backgroundColor: theme.color2,
+                                            borderRadius: 10,
+                                            padding: 10,
+                                            elevation: 1,
+                                            width: 250,
+                                            alignSelf: 'center',
                                         }}
+                                        
+                                                onPress={() => navigation.navigate("UploadProduct", { id: userId })}>
+                                            <Text style={{ color: theme.bgColor }}>No Products Available</Text>
+                                            <Text style={{ color: theme.bgColor }}>Upload Your First Product</Text>
+                                        </TouchableOpacity>) : (
+                                            <View>
+                                                <FlatList
+                                                    horizontal
+                                                    
+                                                    showsHorizontalScrollIndicator = { false }
+                                                    keyExtractor = { (item) => item.id }
+                                                    data = { defaultProducts }
+                                                    renderItem = {
+                                                        ({ item }) => {
+                                                            return(
+                                                            <ProductHorizontal title = { item.title } image = { item.image } price = { item.price } discount = { item.discount } seller = { item.seller } rating = { item.ratings } method = {() => navigation.navigate('Product', { id: userId, productId: item.id })}/>
+                                                )
+                                                    }}
 
-                                    />
+                                                />
+                                            </View>
+                                            )
+                                    }
                                 </View>
                         )
                     }
@@ -407,6 +428,7 @@ function SectionHeader(props){
             <Text style={{
                 marginHorizontal: 10,
                 fontSize: 20,
+                color: theme.color2,
             }}>{props.text}</Text>
             <TouchableOpacity style={{
                 marginHorizontal: 10,
@@ -420,121 +442,7 @@ function SectionHeader(props){
     )
 }
 
-export function ProductVertical(props){
-    return(
-        <TouchableOpacity style={{
-            backgroundColor: theme.bgColor,
-            borderRadius: sizes.ExtraSmall,
-            width: 150,
-            height: 200,
-            padding: 5,
-            marginVertical: 5,
-            marginHorizontal: 10,
-            elevation: 1,
-        }} onPress={props.method}>
-            <View style={{
-                height: 100,
-                width: 100,
-                alignSelf: "center",
-                alignItems: "center",
-            }}>
-                <Image
-                    style={{
-                        flex: 1,
-                        height: 70,
-                        width: 70,
-                    }}
-                    resizeMode="contain"
-                    source={{ uri: props.image }} />
-            </View>
-            <View style={{
-                margin: 5,
-                height: 80,
-                justifyContent: "center",
-            }}>
-                {
-                    props.title.length < 15 ? (
-                        <Text style={{ fontSize: sizes.Small }}>{props.title}</Text>
-                    ) : (
-                            <Text style={{ fontSize: sizes.Small }}>{props.title.slice(0, 15)+'...'}</Text>
-                    )
-                }
-                <View style={{ flexDirection: 'column' }}>
-                    <Text style={{ fontSize: sizes.ExtraSmall }}>{props.rating + " star"}</Text>
-                    <Text style={{ fontSize: 12 }}>{props.price + ' Naira'}</Text>
-                </View>
-            </View>
-        </TouchableOpacity>
-    )
-}
 
-export function ProductHorizontal(props){
-    return(
-        <TouchableOpacity style = {{
-            backgroundColor: theme.color2,
-            borderRadius: sizes.ExtraSmall,
-            flexDirection: 'row',
-            margin: 5,
-            elevation: 1,
-            width: 250,
-        }}
-        
-            onPress={props.method}>
-            <View style={{
-                height: 100,
-                width: 100,
-                alignSelf: "center",
-                alignItems: "center",
-                backgroundColor: theme.bgColor,
-                borderRadius: sizes.ExtraSmall,
-                margin: 5,
-                padding: 5,
-            }}>
-                <Image
-                    style={{
-                        flex: 1,
-                        height: 70,
-                        width: 70,
-                    }}
-                    resizeMode="contain"
-                    source={{ uri: props.image }} />
-            </View>
-            <View style = {{
-                marginHorizontal: 10,
-                marginVertical: 5,
-            }}>
-                {
-                    props.title.length < 10? (
-                        <Text style={{ fontSize: sizes.Small, color: theme.bgColor }}>{props.title}</Text>
-                    ) : (
-                            <Text style={{ fontSize: sizes.Small, color: theme.bgColor }}>{props.title.slice(0, 10) + '...'}</Text>
-                    )
-                }
-                <Text style={{ color: theme.bgColor, fontSize: sizes.ExtraSmall }}>{props.rating + " star"}</Text>
-                {
-                    props.discount === 0 ? (
-                        <View>
-                            <Text style={{ color: theme.bgColor, fontSize: 12}}>{props.price + ' Naira'}</Text>
-                        </View>
-                    ):(
-                            <View>
-                                <Text style={{ color: theme.bgColor, fontSize: 12, textDecorationLine: 'line-through', textDecorationStyle: 'solid' }}>{props.price + ' Naira'}</Text>
-                                <Text style={{ color: theme.bgColor, fontSize: 12 }}>{(props.price -(props.discount/100*props.price)) + ' Naira'}</Text>
-
-                                <View style = {{
-                                    backgroundColor: theme.bgColor,
-                                    alignItems: 'center',
-                                    borderRadius: sizes.ExtraSmall,
-                                }}>
-                                    <Text style = {{}}>{'-'+props.discount+'% discount'}</Text>
-                                </View>
-                            </View>
-                    )
-                }
-            </View>
-        </TouchableOpacity>
-    )
-}
 
 const styles = StyleSheet.create({
     container: {

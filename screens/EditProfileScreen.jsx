@@ -78,8 +78,8 @@ function EditProfileScreen({route, navigation}) {
 
             const dpRef = ref(storage, userId+'/'+userId+'.jpg');
             const uploadTask = await uploadBytes(dpRef, blob).then(async () => {
+                console.log(await getDownloadURL(dpRef));
                 setSelectedImage(await getDownloadURL(dpRef));
-                console.log(selectedImage);
             });
 
             blob.close();
@@ -104,7 +104,16 @@ function EditProfileScreen({route, navigation}) {
 
 
         await setDoc(doc(firestore, "Users", userId), updatedUser)
-        navigation.goBack()
+        Alert.alert(
+            "Profile Updated", 
+            "Your profile has been updated successfully", 
+            [
+                {
+                    text: "OK",
+                    onPress: () => navigation.goBack()
+                }
+            ]
+        )
     }
 
 
