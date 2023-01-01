@@ -4,8 +4,9 @@ import {Button, InfoInput, Header} from '../constants/Components';
 import {Category, colors, Product, sizes} from '../constants/Data'
 import * as ImagePicker from "expo-image-picker"
 import {MaterialIcons} from "@expo/vector-icons"
-import { firestore } from "../constants/Sever";
+import { firestore, storage } from "../constants/Sever";
 import {setDoc, doc, collection, onSnapshot } from "firebase/firestore";
+import {uploadBytesResumable, getDownloadURL, ref, } from "firebase/storage";
 
 const theme = colors.lightTheme;
 const UploadProduct = ({route, navigation}) => {
@@ -51,7 +52,6 @@ const UploadProduct = ({route, navigation}) => {
             console.log(result);
             setSelectedImage(result.uri);
         } else {
-            setSelectedImage("https://firebasestorage.googleapis.com/v0/b/academia-c3d0e.appspot.com/o/Images%2FCameraIcon-coloured.png?alt=media&token=0ac47e13-7a64-466b-8027-1f9ae3b006d6")
             alert('You did not select any image.');
         }
     }
@@ -66,17 +66,12 @@ const UploadProduct = ({route, navigation}) => {
 
 
     const uploadProduct = async () => {
-        const newProduct = Product;
-        newProduct.title = title;
-        newProduct.description = description;
-        newProduct.price = price;
-        newProduct.sellersId = userId;
-        newProduct.seller = user.name;
-        newProduct.discount = discount;
-        newProduct.amountAvailable = numAvailable;
-        newProduct.tags = tags;
-        newProduct.image = selectedImage;
-        newProduct.id = userId + "-" + newProduct.title 
+        
+
+        // const imageRef = ref(storage, selectedImage);
+        // const uploadTask = uploadBytesResumable(imageRef, selectedImage);
+
+        // newProduct.image = getDownloadURL(uploadTask.snapshot.ref)
 
 
         if (user.sellerInfo.productList.includes(newProduct.id) === false){
@@ -213,8 +208,19 @@ const UploadProduct = ({route, navigation}) => {
                 <Button
                     style={styles.button}
                     method={() => {
-                        uploadProduct()
-                        navigation.goBack()
+                        const newProduct = Product;
+                        newProduct.title = title;
+                        newProduct.description = description;
+                        newProduct.price = price;
+                        newProduct.sellersId = userId;
+                        newProduct.seller = user.name;
+                        newProduct.discount = discount;
+                        newProduct.amountAvailable = numAvailable;
+                        newProduct.tags = tags;
+                        newProduct.image = selectedImage;
+                        newProduct.id = userId + "-" + newProduct.title 
+
+                        navigation.navigate("ProductPreview", {id: user.id, product: newProduct})
                     }}
                     text={"Upload"}
                     textStyle={{color: colors.white, fontSize: sizes.Medium}}

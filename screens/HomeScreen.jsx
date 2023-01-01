@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { FlatList, ScrollView, Image, StyleSheet, Text, TouchableOpacity, View, ActivityIndicator } from 'react-native';
+import { FlatList, ScrollView, Image,  StyleSheet, Text, TouchableOpacity, View, ActivityIndicator } from 'react-native';
 import { categories, colors, sizes, suggestedProducts, images } from '../constants/Data';
-import { NavBar, Loading } from '../constants/Components';
+import { NavBar, Loading} from '../constants/Components';
 import { firestore } from "../constants/Sever";
-import { collection, setDoc, doc, onSnapshot } from "firebase/firestore";
+import { collection, setDoc, doc, onSnapshot} from "firebase/firestore";
 import { Entypo, MaterialIcons, FontAwesome } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useDerivedValue } from 'react-native-reanimated';
-import mobileAds, { GAMBannerAd, BannerAdSize } from 'react-native-google-mobile-ads';
+//import mobileAds, { GAMBannerAd, BannerAdSize } from 'react-native-google-mobile-ads';
 
 const theme = colors.lightTheme;
 function HomeScreen({ route, navigation }) {
@@ -62,18 +62,19 @@ function HomeScreen({ route, navigation }) {
             setBestSellers(doc.data().userInfo.feed.bestSellers)
 
 
-            if (user !== {}) {
+            if(user !== {}){
                 setLoading(false)
             }
         });
-        mobileAds()
-            .initialize()
-            .setRequestConfiguration({
-                testDeviceIdentifiers: ['EMULATOR'],
-            })
-            .then(adapterStatuses => {
-                // Initialization complete!
-            });
+
+        // mobileAds()
+        //     .initialize()
+        //     .setRequestConfiguration({
+        //         testDeviceIdentifiers: ['EMULATOR'],
+        //     })
+        //     .then(adapterStatuses => {
+        //         // Initialization complete!
+        //     });
 
     }, [])
 
@@ -93,7 +94,7 @@ function HomeScreen({ route, navigation }) {
                 />
             </View>
         )
-    } else {
+    }else{
 
         const sgUsers = []
         const sgProducts = []
@@ -165,26 +166,26 @@ function HomeScreen({ route, navigation }) {
 
         return (
             <View style={styles.container}>
-                <Header method={() => navigation.navigate('Notifications', { id: userId })} />
+                <Header method = {() => navigation.navigate('Notifications', { id: userId })} />
                 <ScrollView showsVerticalScrollIndicator={false}>
                     <View>
-                        <GAMBannerAd
-                            unitId={bannerAdId}
-                            sizes={[BannerAdSize.FULL_BANNER]}
-                            requestOptions={{
-                                requestNonPersonalizedAdsOnly: true,
+                        {/* <GAMBannerAd
+                        unitId={bannerAdId}
+                        sizes={[BannerAdSize.FULL_BANNER]}
+                        requestOptions={{
+                            requestNonPersonalizedAdsOnly: true,
 
-                            }}
-                        />
+                        }}
+                    /> */}
 
                     </View>
                     <View>
-
+                        
                     </View>
                     {
                         sgProducts.length > 0 ? (
                             <View style={styles.section}>
-                                <SectionHeader text={'Suggested Products'} />
+                                <SectionHeader text = {'Suggested Products'}/>
                                 <View>
                                     <FlatList
                                         horizontal
@@ -194,29 +195,29 @@ function HomeScreen({ route, navigation }) {
                                         data={sgProducts}
                                         renderItem={({ item }) => {
                                             return (
-                                                <ProductHorizontal item={item} />
+                                                <ProductHorizontal item = {item}/>
                                             )
                                         }}
                                     />
                                 </View>
                             </View>
                         ) : (
-                            <View style={styles.section}>
-                                <SectionHeader text={'Suggested Products'} method={() => navigation.navigate("Search", { id: userId })} />
-                                <FlatList
-                                    horizontal
+                                <View style={styles.section}>
+                                    <SectionHeader text={'Suggested Products'} method= {() => navigation.navigate("Search", { id: userId })} />
+                                    <FlatList
+                                        horizontal
+                                        
+                                        showsHorizontalScrollIndicator={false}
+                                        keyExtractor={(item) => item.id}
+                                        data={defaultProducts}
+                                        renderItem={({ item }) => {
+                                            return (
+                                                <ProductVertical title={item.title} image={item.image} price={item.price} seller={item.seller} rating={item.ratings} method={() => navigation.navigate('Product', { id: userId, productId: item.id })}/>
+                                            )
+                                        }}
 
-                                    showsHorizontalScrollIndicator={false}
-                                    keyExtractor={(item) => item.id}
-                                    data={defaultProducts}
-                                    renderItem={({ item }) => {
-                                        return (
-                                            <ProductVertical title={item.title} image={item.image} price={item.price} seller={item.seller} rating={item.ratings} method={() => navigation.navigate('Product', { id: userId, productId: item.id })} />
-                                        )
-                                    }}
-
-                                />
-                            </View>
+                                    />
+                                </View>
                         )
                     }
                     {
@@ -356,8 +357,8 @@ function HomeScreen({ route, navigation }) {
 }
 
 
-function Header(props) {
-    return (
+function Header(props){
+    return(
         <View style={{
             flexDirection: "row",
             alignItems: "center",
@@ -396,8 +397,8 @@ function Header(props) {
     )
 }
 
-function SectionHeader(props) {
-    return (
+function SectionHeader(props){
+    return(
         <View style={{
             flexDirection: 'row',
             justifyContent: 'space-between',
@@ -411,7 +412,7 @@ function SectionHeader(props) {
                 marginHorizontal: 10,
                 flexDirection: 'row',
                 alignItems: 'center',
-            }} onPress={props.method}>
+            }} onPress = {props.method}>
                 <Text style={{ fontSize: 12, color: theme.outline }}>See More</Text>
                 <MaterialIcons name="arrow-forward-ios" size={10} color={theme.outline} style={{ marginLeft: 5 }} onPress={() => navigation.goBack()} />
             </TouchableOpacity>
@@ -419,8 +420,8 @@ function SectionHeader(props) {
     )
 }
 
-export function ProductVertical(props) {
-    return (
+export function ProductVertical(props){
+    return(
         <TouchableOpacity style={{
             backgroundColor: theme.outline3,
             borderRadius: sizes.ExtraSmall,
@@ -457,7 +458,7 @@ export function ProductVertical(props) {
                     props.title.length < 15 ? (
                         <Text style={{ fontSize: sizes.Small }}>{props.title}</Text>
                     ) : (
-                        <Text style={{ fontSize: sizes.Small }}>{props.title.slice(0, 15) + '...'}</Text>
+                            <Text style={{ fontSize: sizes.Small }}>{props.title.slice(0, 15)+'...'}</Text>
                     )
                 }
                 <View style={{ flexDirection: 'column' }}>
@@ -469,15 +470,15 @@ export function ProductVertical(props) {
     )
 }
 
-export function ProductHorizontal(props) {
-    return (
-        <TouchableOpacity style={{
-            backgroundColor: theme.color,
+export function ProductHorizontal(props){
+    return(
+        <TouchableOpacity style = {{
+            backgroundColor: theme.color2,
             borderRadius: sizes.ExtraSmall,
             flexDirection: 'row',
             margin: 5,
         }}
-
+        
             onPress={props.method}>
             <View style={{
                 height: 70,
@@ -487,6 +488,7 @@ export function ProductHorizontal(props) {
                 backgroundColor: theme.bgColor,
                 borderRadius: sizes.ExtraSmall,
                 margin: 5,
+                padding: 5,
             }}>
                 <Image
                     style={{
@@ -497,11 +499,17 @@ export function ProductHorizontal(props) {
                     resizeMode="contain"
                     source={{ uri: props.image }} />
             </View>
-            <View style={{
+            <View style = {{
                 marginHorizontal: 10,
                 marginVertical: 5,
             }}>
-                <Text style={{ color: theme.bgColor, fontSize: 15 }}>{props.title}</Text>
+                {
+                    props.title.length < 15 ? (
+                        <Text style={{ fontSize: sizes.Small, color: theme.bgColor }}>{props.title}</Text>
+                    ) : (
+                            <Text style={{ fontSize: sizes.Small, color: theme.bgColor }}>{props.title.slice(0, 15) + '...'}</Text>
+                    )
+                }
                 <Text style={{ color: theme.bgColor, fontSize: sizes.ExtraSmall }}>{props.rating + " star"}</Text>
                 <Text style={{ color: theme.bgColor, fontSize: 12 }}>{props.price + ' Naira'}</Text>
             </View>
@@ -512,7 +520,6 @@ export function ProductHorizontal(props) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: theme.bgColor,
     },
 
     section: {

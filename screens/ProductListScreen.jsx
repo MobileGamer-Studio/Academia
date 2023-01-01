@@ -4,7 +4,6 @@ import { ProfilePicture, Loading, Header, Button } from '../constants/Components
 import { colors, sizes, images} from "../constants/Data";
 import { firestore, logOut } from "../constants/Sever";
 import { collection, doc, onSnapshot } from "firebase/firestore";
-import { ProductVertical } from './HomeScreen';
 
 const theme = colors.lightTheme;
 function ProductListScreen({route, navigation}) {
@@ -73,17 +72,19 @@ function ProductListScreen({route, navigation}) {
                         <View style={{
                             alignItems: "center",
                             justifyContent: "center",
+                            width: '100%',
+
                         }}>
                             <FlatList
                                 vertical
-                                columnWrapperStyle = {{justifyContent: "space-around"}}
-                                numColumns={2}
-                                showsHorizontalScrollIndicator={false}
+                                // columnWrapperStyle = {{justifyContent: "space-around"}}
+                                // numColumns={2}
+                                showsVerticalScrollIndicator={false}
                                 keyExtractor={(item) => item.id}
                                 data={userProducts}
                                 renderItem={({ item }) => {
                                     return (
-                                        <Product title = {item.title} price = {item.price} image = {item.image} seller = {item.seller} />
+                                        <Product title={item.title} image={item.image} price={item.price} seller={item.seller} rating={item.ratings} method={() => navigation.navigate('Product', { id: userId, productId: item.id })} />
                                     )
                                 }}
                             />
@@ -125,46 +126,20 @@ function ProductListScreen({route, navigation}) {
     }
 }
 
-const Product = (props) => {
-    return(
-    <TouchableOpacity style={{
-        backgroundColor: theme.outline3,
-        borderRadius: sizes.ExtraSmall,
-        width: '45%',
-        height: 200,
-        padding: 5,
-        marginVertical: 5,
-        marginHorizontal: 10,
-    }} onPress={() => navigation.navigate('Product', { id: userId, productId: props.id })}>
-        <View style={{
-            height: 10,
-            width: 100,
-            alignSelf: "center",
-            alignItems: "center",
-        }}>
-            <Image
-                style={{
-                    flex: 1,
-                }}
-                resizeMode="contain"
-                source={{ uri: props.image }} />
-        </View>
-        <View style={{
-            margin: 5,
+function Product(props) {
+    return (
+        <TouchableOpacity style = {{
+            height: 200,
+            width: '100%',
+            flexDirection: "row",
+            padding: 10,
             backgroundColor: theme.bgColor,
-            borderRadius: sizes.ExtraSmall,
-            padding: 5,
-            height: 80,
-            justifyContent: "center",
         }}>
-            <Text style={{ fontSize: sizes.Small }}>{props.title}</Text>
-            <View style={{ flexDirection: 'column' }}>
-                <Text style={{ fontSize: sizes.ExtraSmall }}>{props.rating + " star"}</Text>
-                <Text style={{ fontSize: 12 }}>{props.price + ' Naira'}</Text>
+            <View>
+                <Text>{props.title}</Text>
             </View>
-        </View>
-    </TouchableOpacity>
-    );
+        </TouchableOpacity>
+    )
 }
 
 export default ProductListScreen;
@@ -173,14 +148,15 @@ export default ProductListScreen;
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: theme.bgColor,
+        // backgroundColor: theme.bgColor,
         flex: 1,
     },
 
     product: {
         backgroundColor: theme.bgColor,
         flexDirection: "column",
-        padding: sizes.ExtraSmall,
+        paddingHorizontal: sizes.ExtraSmall,
+        paddingBottom: sizes.ExtraLarge,
         borderRadius: sizes.Medium,
         margin: sizes.Small,
         width: 150,

@@ -1,45 +1,38 @@
-import React, {useEffect, useState} from 'react';
-import {FlatList, Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {colors, images, sizes} from '../constants/Data';
-import {Header, Loading} from '../constants/Components';
-import {collection, doc, onSnapshot} from 'firebase/firestore';
+import react, {useState, useEffect} from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Image, FlatList } from 'react-native';
+import { doc, collection, onSnapshot} from 'firebase/firestore';
 import {firestore} from '../constants/Sever';
-import {Entypo, MaterialIcons} from '@expo/vector-icons';
+import {MaterialIcons, Entypo} from '@expo/vector-icons';
+import {colors, sizes, images} from '../constants/Data';
+import { Header, Loading } from '../constants/Components';
 
 const theme = colors.lightTheme;
-function ProductScreen({route, navigation}) {
+function ProductScreen({ route, navigation }) {
     const productId = route.params.productId;
     const userId = route.params.id;
 
-    const [product, setProduct] = React.useState({})
-    const [user, setUser] = React.useState({})
-    const [loading, setLoading] = React.useState(true)
-    const [users, setUsers] = React.useState([])
+    const [product, setProduct] = useState({})
+    const [user, setUser] = useState({})
+    const [users, setUsers] = useState([])
+    const [loading, setLoading] = useState(true)
+    const [optionsAct, setOptionsAct] = useState(false)
+    
 
     useEffect(() => {
-        const usersSub = onSnapshot(collection(firestore, "Users"), querySnapshot => {
-            const data = []
-            querySnapshot.forEach((doc) => {
-                data.push(doc.data())
-            });
-            setUsers(data)
-        });
-
-        const userSub = onSnapshot(doc(firestore, "Users", userId), (doc) => {
+        const userSub = onSnapshot(doc(firestore, 'Users', userId), (doc) => {
             setUser(doc.data())
-        });
+        })
 
-        const productSub = onSnapshot(doc(firestore, "Products", productId), (doc) => {
+        const productSub = onSnapshot(doc(firestore, 'Products', productId), (doc) => {
             setProduct(doc.data())
 
             if (product !== {}) {
                 setLoading(false)
             }
-        });
+        })
     })
-    
 
-    if(loading === true){
+    if (loading === true) {
         return (
             <View style={styles.container}>
                 <Loading />
@@ -169,8 +162,8 @@ function ProductScreen({route, navigation}) {
             </View>
         );
     }
+    
 }
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,

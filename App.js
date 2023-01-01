@@ -26,6 +26,7 @@ import ChatScreen from './screens/ChatScreen';
 import AccountListScreen from './screens/AccountListScreen';
 import SavedScreen from './screens/SavedScreen';
 import NotificationsScreen from './screens/NotificationsScreen';
+import UploadProductPreview from './screens/UploadProductPreview';
 
 
 const Stack = createNativeStackNavigator();
@@ -82,6 +83,11 @@ function App() {
                 <Stack.Screen
                     name="Product"
                     component={ProductScreen}
+                    options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                    name="ProductPreview"
+                    component={UploadProductPreview}
                     options={{ headerShown: false }}
                 />
                 <Stack.Screen

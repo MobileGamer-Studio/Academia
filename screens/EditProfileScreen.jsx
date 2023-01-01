@@ -1,11 +1,11 @@
 import React, {useState, useEffect} from "react"
-import {Text, View, StyleSheet, ScrollView} from "react-native"
+import {Text, View, StyleSheet, ScrollView, Alert} from "react-native"
 import {Button, Header, InfoInput, ProfilePicture} from "../constants/Components";
 import * as ImagePicker from "expo-image-picker";
 import {colors, images, sizes, User} from "../constants/Data";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { firestore } from "../constants/Sever";
-import { getDocs, collection, onSnapshot, doc } from "firebase/firestore";
+import { getDocs, collection, onSnapshot, doc, setDoc } from "firebase/firestore";
 
 const theme = colors.lightTheme;
 
@@ -43,25 +43,42 @@ function EditProfileScreen({route, navigation}) {
     }, [])
 
     const GetImage = async () => {
-        let pickedImage = ImagePicker.launchImageLibraryAsync()
-        console.log(pickedImage);
-        if (pickedImage.cancelled === true) {
-            return images.defaultProfile;
-        }
-        // user.profilePicture = pickedImage.url;
-        setProfilePicture(pickedImage.url);
-    }
+        let result = await ImagePicker.launchImageLibraryAsync({
+            //allowsEditing: true,
+            quality: 1,
+        });
 
-    async function saveUsers() {
-        users.forEach(async (item) => {
-            await setDoc(doc(firestore, "Users", item.id), item);
-        })
+        if (result.cancelled === false) {
+            console.log(result);
+            setSelectedImage(result.uri);
+        } else {
+            alert('You did not select any image.');
+        }
     }
 
     const UpdateProfile = async (newData) => {
-        let index = users.indexOf(user)
-        users[index] = newData;
-        await AsyncStorage.mergeItem("Users", JSON.stringify(users))
+        const updatedUser = user
+        updatedUser.name = newData.name
+        updatedUser.description = newData.description
+        updatedUser.location = newData.location
+        updatedUser.profilePicture = newData.profilePicture
+
+        if (updatedUser === user) {
+            Alert.alert(
+                "No Changes",
+                "You have not made any changes to your profile",
+                [
+                    {
+                        text: "OK",
+                        onPress: () => console.log("OK Pressed"),
+                    }
+                ],
+                { cancelable: true }
+            )
+        }
+
+
+        await setDoc(doc(firestore, "Users", userId), updatedUser)
     }
 
 
@@ -99,16 +116,7 @@ function EditProfileScreen({route, navigation}) {
             <View>
                 <Button
                     style={styles.button}
-                    method={() => {
-                        let newData = User;
-                        newData.name = name;
-                        newData.description = description;
-                        newData.location = location;
-                        newData.profilePicture = profilePicture;
-
-
-                        UpdateProfile(newData);
-                    }}
+                    method={() => UpdateProfile()}
                     text={"Update"}
                     textStyle={{ color: colors.white, fontSize: sizes.Medium }}
                 />
