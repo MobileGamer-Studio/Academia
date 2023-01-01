@@ -29,7 +29,8 @@ export const firebaseConfig = {
 export const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const firestore = getFirestore(app);
-export const storage = getStorage(app, "gs://academia-c3d0e.appspot.com/");
+//export const storage = getStorage(app, "gs://academia-c3d0e.appspot.com/");
+export const storage = getStorage(app);
 
 
 const providerGoogle = new GoogleAuthProvider();
