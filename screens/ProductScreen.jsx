@@ -1,9 +1,9 @@
 import react, {useState, useEffect} from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, FlatList } from 'react-native';
-import { doc, collection, onSnapshot} from 'firebase/firestore';
+import { View, Text, StyleSheet, TouchableOpacity, Image, FlatList, Alert } from 'react-native';
+import { doc, collection, onSnapshot, setDoc} from 'firebase/firestore';
 import {firestore} from '../constants/Sever';
 import {MaterialIcons, Entypo} from '@expo/vector-icons';
-import {colors, sizes, images} from '../constants/Data';
+import {colors, sizes, images, Item} from '../constants/Data';
 import { Header, Loading } from '../constants/Components';
 
 const theme = colors.lightTheme;
@@ -16,6 +16,9 @@ function ProductScreen({ route, navigation }) {
     const [users, setUsers] = useState([])
     const [loading, setLoading] = useState(true)
     const [optionsAct, setOptionsAct] = useState(false)
+
+    const [seeMore, setSeeMore] = useState(false)
+    const [amountSellected, setAmountSellected] = useState(1)
     
 
     useEffect(() => {
@@ -30,7 +33,29 @@ function ProductScreen({ route, navigation }) {
                 setLoading(false)
             }
         })
-    })
+    }, [])
+
+
+    const addToCart = async () => {
+        const newItem = Item;
+        newItem.id = userId+"-ITEM-"+product.id;
+        newItem.product = product.id;
+        newItem.amountSellected = 1;
+
+        user.userInfo.cart.push(newItem);
+        await setDoc(doc(firestore, 'Users', userId), user);
+
+        Alert.alert(
+            "Added to cart",
+            "You can check your cart in the profile section",
+            [
+                {
+                    text: "OK",
+                    onPress: () => navigation.goBack()
+                }
+            ]
+        )
+    }
 
     if (loading === true) {
         return (
@@ -78,11 +103,22 @@ function ProductScreen({ route, navigation }) {
                         color: colors.white,
                         marginHorizontal: sizes.Small
                     }}>{product.title}</Text>
-                    <Text style={{
-                        fontSize: sizes.Medium - 5,
-                        color: colors.white,
-                        marginHorizontal: sizes.Small,
-                    }}>{product.description}</Text>
+                    <TouchableOpacity onPress={() => setSeeMore(!seeMore)}>
+                        <Text style={{
+                            fontSize: sizes.Medium - 5,
+                            color: colors.white,
+                            marginHorizontal: sizes.Small,
+                            marginVertical: sizes.Small
+                        }}>{product.description.length > 100 ? (
+                               seeMore === true ? (
+                                    <Text style={{ fontSize: sizes.Small, color: theme.bgColor }}>{product.description + ' see less'}</Text>
+                                ) : (
+                                    <Text style={{ fontSize: sizes.Small, color: theme.bgColor }}>{product.description.slice(0, 100) + '... see more '}</Text>
+                                )
+                        ): (
+                            <Text style={{ fontSize: sizes.Small, color: theme.bgColor }}>{product.description}</Text>
+                        )}</Text>
+                    </TouchableOpacity>
                     <View>
                         <FlatList
                             horizontal
@@ -137,6 +173,8 @@ function ProductScreen({ route, navigation }) {
                                 alignItems: "center",
                                 // elevation: sizes.Small,
                             }}
+
+                            onPress={() => addToCart()}
                         >
                             <Text style={{
                                 color: colors.white,

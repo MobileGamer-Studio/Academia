@@ -129,14 +129,57 @@ function ProductListScreen({route, navigation}) {
 function Product(props) {
     return (
         <TouchableOpacity style = {{
-            height: 200,
-            width: '100%',
+            height: 150,
+            width: 300,
             flexDirection: "row",
             padding: 10,
             backgroundColor: theme.bgColor,
+            elevation: 1,
+            margin: 5,
+            borderRadius: sizes.Small,
         }}>
-            <View>
-                <Text>{props.title}</Text>
+            <View style={{
+                height: 100,
+                width: 100,
+                alignSelf: "center",
+                alignItems: "center",
+            }}>
+                <Image
+                    style={{
+                        flex: 1,
+                        height: 70,
+                        width: 70,
+                    }}
+                    resizeMode="contain"
+                    source={{ uri: props.image }} />
+            </View>
+            <View style = {{
+                flex:1,
+            }}>
+                <View>
+                    {
+                        props.title.length < 15 ? (
+                            <Text style={{ fontSize: sizes.Small }}>{props.title}</Text>
+                        ) : (
+                            <Text style={{ fontSize: sizes.Small }}>{props.title.slice(0, 15) + '...'}</Text>
+                        )
+                    }
+                    <Text style={{ fontSize: sizes.ExtraSmall }}>{props.rating + " star"}</Text>
+                    <Text style={{ fontSize: 12 }}>{props.price + ' Naira'}</Text>
+                </View>
+                <Button
+                    style={{
+                        borderRadius: sizes.ExtraLarge,
+                        padding: 2,
+                        backgroundColor: theme.color,
+                        marginHorizontal: 5,
+                        marginTop: 20,
+                        alignItems: "center",
+                    }}
+                    method={() => navigation.navigate("Home", { id: user.id })}
+                    text={"edit"}
+                    textStyle={{ color: colors.white, fontSize: sizes.Medium }}
+                />
             </View>
         </TouchableOpacity>
     )
@@ -148,7 +191,7 @@ export default ProductListScreen;
 
 const styles = StyleSheet.create({
     container: {
-        // backgroundColor: theme.bgColor,
+        backgroundColor: theme.bgColor,
         flex: 1,
     },
 

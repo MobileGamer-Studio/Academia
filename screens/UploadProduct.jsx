@@ -111,6 +111,7 @@ const UploadProduct = ({route, navigation}) => {
                     <InfoInput
                         method={(val) => setPrice(val)}
                         placeholder={"Price"}
+                        keyboardType={'numeric'}
                     />
 
                 </View>
@@ -125,6 +126,7 @@ const UploadProduct = ({route, navigation}) => {
                     <InfoInput
                         method={(val) => setDiscount(val)}
                         placeholder={"Discount on item"}
+                        keyboardType={'numeric'}
                     />
 
                 </View>
@@ -133,6 +135,7 @@ const UploadProduct = ({route, navigation}) => {
                     <InfoInput
                         method={(val) => setNumAvailable(val)}
                         placeholder={"Number of items currently available"}
+                        keyboardType = {'numeric'}
                     />
                 </View>
                 <View style={styles.field}>
@@ -144,7 +147,6 @@ const UploadProduct = ({route, navigation}) => {
                         <FlatList
                             horizontal
                             showsHorizontalScrollIndicator={false}
-                            // keyExtractor={(item) => item.id}
                             data={tags}
                             renderItem={({item}) => {
                                 return (

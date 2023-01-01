@@ -39,11 +39,32 @@ function UploadProductPreview({ route, navigation }) {
         newProduct.tags = product.tags;
         newProduct.id = userId + "-" + newProduct.title
 
-        const imageRef = ref(storage, userId+'/'+newProduct.id);
-        const uploadTask = await uploadBytes(imageRef, product.image);
+        const blob = await new Promise((resolve, reject) => {
+            const xhr = new XMLHttpRequest();
+            xhr.onload = function () {
+                resolve(xhr.response);
+            };
+            xhr.onerror = function (e) {
+                console.log(e);
+                reject(new TypeError('Network request failed'));
+            };
+            xhr.responseType = 'blob';
+            xhr.open('GET', product.image, true);
+            xhr.send(null);
+        });
 
-        newProduct.image = await getDownloadURL(imageRef)
-        console.log(newProduct.image)
+
+
+
+        const imageRef = ref(storage, userId + '/' + product.id + '.jpg');
+        const uploadTask = await uploadBytes(imageRef, blob).then(async () => {
+            newProduct.image = await getDownloadURL(imageRef)
+            console.log(newProduct.image)
+        });
+
+        blob.close();
+
+        
 
 
         if (user.sellerInfo.productList.includes(newProduct.id) === false) {
@@ -179,6 +200,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: 'center',
+        backgroundColor: theme.bgColor,
     },
 
     button: {

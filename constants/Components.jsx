@@ -349,7 +349,11 @@ export const NavBar = (props) => {
                   >
                       <Image
                           source={{uri: props.image}}
-                          style={styles.navImages}
+                          style={{
+                              height: sizes.Large,
+                              width: sizes.Large,
+                            borderRadius: sizes.ExtraLarge,
+                          }}
                           resizeMode="contain"
                       />
                   </TouchableOpacity>
@@ -489,8 +493,6 @@ const styles = StyleSheet.create({
         width: "100%",
         padding: 10,
         paddingTop: 40,
-        marginBottom: 10,
-        elevation: 10,
         backgroundColor: theme.color,
         justifyContent: 'flex-start',
         flexDirection: "row",
@@ -500,7 +502,8 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: theme.bgColor
+        backgroundColor: theme.bgColor,
+        width: "100%",
     }
 })
 

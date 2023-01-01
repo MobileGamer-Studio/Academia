@@ -212,7 +212,7 @@ function HomeScreen({ route, navigation }) {
                                         data={defaultProducts}
                                         renderItem={({ item }) => {
                                             return (
-                                                <ProductVertical title={item.title} image={item.image} price={item.price} seller={item.seller} rating={item.ratings} method={() => navigation.navigate('Product', { id: userId, productId: item.id })}/>
+                                                <ProductHorizontal title={item.title} image={item.image} price={item.price} discount = {item.discount} seller={item.seller} rating={item.ratings} method={() => navigation.navigate('Product', { id: userId, productId: item.id })}/>
                                             )
                                         }}
 
@@ -423,13 +423,14 @@ function SectionHeader(props){
 export function ProductVertical(props){
     return(
         <TouchableOpacity style={{
-            backgroundColor: theme.outline3,
+            backgroundColor: theme.bgColor,
             borderRadius: sizes.ExtraSmall,
             width: 150,
             height: 200,
             padding: 5,
             marginVertical: 5,
             marginHorizontal: 10,
+            elevation: 1,
         }} onPress={props.method}>
             <View style={{
                 height: 100,
@@ -448,9 +449,6 @@ export function ProductVertical(props){
             </View>
             <View style={{
                 margin: 5,
-                backgroundColor: theme.bgColor,
-                borderRadius: sizes.ExtraSmall,
-                padding: 5,
                 height: 80,
                 justifyContent: "center",
             }}>
@@ -477,12 +475,14 @@ export function ProductHorizontal(props){
             borderRadius: sizes.ExtraSmall,
             flexDirection: 'row',
             margin: 5,
+            elevation: 1,
+            width: 250,
         }}
         
             onPress={props.method}>
             <View style={{
-                height: 70,
-                width: 70,
+                height: 100,
+                width: 100,
                 alignSelf: "center",
                 alignItems: "center",
                 backgroundColor: theme.bgColor,
@@ -504,14 +504,33 @@ export function ProductHorizontal(props){
                 marginVertical: 5,
             }}>
                 {
-                    props.title.length < 15 ? (
+                    props.title.length < 10? (
                         <Text style={{ fontSize: sizes.Small, color: theme.bgColor }}>{props.title}</Text>
                     ) : (
-                            <Text style={{ fontSize: sizes.Small, color: theme.bgColor }}>{props.title.slice(0, 15) + '...'}</Text>
+                            <Text style={{ fontSize: sizes.Small, color: theme.bgColor }}>{props.title.slice(0, 10) + '...'}</Text>
                     )
                 }
                 <Text style={{ color: theme.bgColor, fontSize: sizes.ExtraSmall }}>{props.rating + " star"}</Text>
-                <Text style={{ color: theme.bgColor, fontSize: 12 }}>{props.price + ' Naira'}</Text>
+                {
+                    props.discount === 0 ? (
+                        <View>
+                            <Text style={{ color: theme.bgColor, fontSize: 12}}>{props.price + ' Naira'}</Text>
+                        </View>
+                    ):(
+                            <View>
+                                <Text style={{ color: theme.bgColor, fontSize: 12, textDecorationLine: 'line-through', textDecorationStyle: 'solid' }}>{props.price + ' Naira'}</Text>
+                                <Text style={{ color: theme.bgColor, fontSize: 12 }}>{(props.price -(props.discount/100*props.price)) + ' Naira'}</Text>
+
+                                <View style = {{
+                                    backgroundColor: theme.bgColor,
+                                    alignItems: 'center',
+                                    borderRadius: sizes.ExtraSmall,
+                                }}>
+                                    <Text style = {{}}>{'-'+props.discount+'% discount'}</Text>
+                                </View>
+                            </View>
+                    )
+                }
             </View>
         </TouchableOpacity>
     )
@@ -520,6 +539,7 @@ export function ProductHorizontal(props){
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor: theme.bgColor,
     },
 
     section: {
