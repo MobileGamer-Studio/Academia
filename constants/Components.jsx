@@ -393,7 +393,7 @@ export function Header(props) {
     )
 }
 
-export function Loading() {
+export function Loading(props) {
     return(
         <View style={styles.loading}>
             <View style={{
@@ -412,6 +412,7 @@ export function Loading() {
                 />
             </View>
             <ActivityIndicator size={sizes.ExtraLarge} color={theme.color} />
+            <Text>{props.message}</Text>
         </View>
     )
 }

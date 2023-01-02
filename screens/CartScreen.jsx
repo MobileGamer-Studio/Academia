@@ -76,7 +76,9 @@ function CartScreen({route, navigation}) {
                                 data={cart}
                                 renderItem={({ item }) => {
                                     return (
-                                        <View></View>
+                                        <View>
+                                            
+                                        </View>
                                     );
                                 }}
                             />

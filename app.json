@@ -3,7 +3,7 @@
     "name": "Academia",
     "slug": "academia",
     "owner": "mobilegamer",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "orientation": "portrait",
     "icon": "./images/AppIcon.png",
     "userInterfaceStyle": "light",
@@ -35,7 +35,16 @@
       "eas": {
         "projectId": "4c1b808a-7d3a-4f5d-a457-25ae00792d49"
       }
-    }
+    },
+    "plugins": [
+      [
+        "expo-notifications",
+        {
+          "icon": "./images/A2.png",
+          "color": "#FFFFFF"
+        }
+      ]
+    ]
   },
 
   "react-native-google-mobile-ads": {

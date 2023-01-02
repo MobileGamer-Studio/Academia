@@ -6,6 +6,15 @@ import { firestore, storage } from '../constants/Sever';
 import { collection, onSnapshot, setDoc, doc } from 'firebase/firestore';
 import { Button } from '../constants/Components';
 import { uploadBytes, getDownloadURL, ref } from 'firebase/storage';
+// import * as Notifications from 'expo-notifications';
+
+// Notifications.setNotificationHandler({
+//     handleNotification: async () => ({
+//         shouldShowAlert: true,
+//         shouldPlaySound: true,
+//         shouldSetBadge: true,
+//     }),
+// });
 
 const theme = colors.lightTheme;
 function UploadProductPreview({ route, navigation }) {
@@ -13,7 +22,15 @@ function UploadProductPreview({ route, navigation }) {
     const userId = route.params.id;
 
     const [loading, setLoading] = react.useState(true);
+    const [loadingMessage, setLoadingMessage] = react.useState('');
     const [user, setUser] = react.useState({});
+
+    //
+    // const [expoPushToken, setExpoPushToken] = useState('');
+    // const [notification, setNotification] = useState(false);
+    // const notificationListener = useRef();
+    // const responseListener = useRef();
+
 
     useEffect(() => {
         const userSub = onSnapshot(doc(firestore, "Users", userId), (doc) => {
@@ -24,10 +41,27 @@ function UploadProductPreview({ route, navigation }) {
             }
 
         });
+
+        // registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
+
+        // notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
+        //     setNotification(notification);
+        // });
+
+        // responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
+        //     console.log(response);
+        // });
+
+        // return () => {
+        //     userSub();
+        //     Notifications.removeNotificationSubscription(notificationListener);
+        //     Notifications.removeNotificationSubscription(responseListener);
+        // }
     }, [])
 
     const uploadProduct = async () => {
         setLoading(true);
+        setLoadingMessage('Uploading Product...')
         const newProduct = Product;
         newProduct.title = product.title;
         newProduct.details = product.details;

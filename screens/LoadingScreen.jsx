@@ -1,14 +1,16 @@
 import {onAuthStateChanged} from 'firebase/auth';
-import React from 'react';
-import {Image, StyleSheet, View, ActivityIndicator} from 'react-native';
+import react, {useState} from 'react';
+import {Image, StyleSheet, View, ActivityIndicator, Text} from 'react-native';
 import {colors, images, sizes} from '../constants/Data';
 import {auth, logOut} from "../constants/Sever";
 
 const theme = colors.lightTheme;
 //
-const LoadingScreen = ({route, navigation}) => {    
+const LoadingScreen = ({route, navigation}) => {   
+    const [loadingMessage, setLoadingMessage] = useState('Getting user data...')
     onAuthStateChanged(auth, (user) => {
         if (user) {
+            setLoadingMessage('Loading...')
             navigation.navigate("Home", { id : user.uid });
         } else {
             console.log("No user logged in")
@@ -36,6 +38,7 @@ const LoadingScreen = ({route, navigation}) => {
                 />
             </View>
             <ActivityIndicator size={sizes.ExtraLarge} color={theme.bgColor}/>
+            <Text style = {{color: colors.white}}>{loadingMessage}</Text>
         </View>
     );
 }

@@ -158,6 +158,7 @@ function ChatListScreen({ navigation, route }) {
                                                         })
                                                     })
                                                     saveData(newChat.id, "Chats", newChat)
+                                                    setOptionsAct(false)
                                                     navigation.navigate('Chat', { chatId: newChat.id, id: userId, recId: item.id })
                                                 }
                                             }}
@@ -166,7 +167,7 @@ function ChatListScreen({ navigation, route }) {
                                                 marginHorizontal: 10
                                             }}>
                                                 <ProfilePicture
-                                                    image={user.profilePicture}
+                                                    image={item.profilePicture}
                                                     height={sizes.Large}
                                                     width={sizes.Large}
                                                     color={colors.white}
@@ -213,16 +214,19 @@ function ChatListScreen({ navigation, route }) {
                                                     alignItems: "center"
                                                 }}
                                                 onPress={() => navigation.navigate("Chat", { chatId: item.id, id: user.id, recId: acc.id })}>
-                                                <View style={{
-                                                    marginHorizontal: 10
-                                                }}>
+                                                <TouchableOpacity style={{
+                                                    marginHorizontal: 10,
+                                                    height: sizes.Large + 10,
+                                                    width: sizes.Large + 10,
+                                                    borderRadius: sizes.Large,
+                                                }} onPress={() => navigation.navigate("Account", {id: userId, accId: recId})}>
                                                     <ProfilePicture
                                                         image={acc.profilePicture}
-                                                        height={sizes.Large}
-                                                        width={sizes.Large}
-                                                        color={colors.white}
+                                                        height={sizes.Large + 10}
+                                                        width={sizes.Large + 10}
+                                                        color={colors.white + 10}
                                                     />
-                                                </View>
+                                                </TouchableOpacity>
                                                 <View>
                                                     <Text style={{ color: theme.textColor , fontSize: sizes.Small}}>{acc.name}</Text>
                                                     {

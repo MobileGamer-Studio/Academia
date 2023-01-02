@@ -1,23 +1,25 @@
-import React, {useState, useEffect} from "react"
-import {Text, View, StyleSheet, ScrollView, Alert, SafeAreaView, TouchableOpacity, Image} from "react-native"
-import {Button, Header, InfoInput, Loading, ProfilePicture} from "../constants/Components";
+import React, { useState, useEffect } from "react"
+import { Text, View, StyleSheet, ScrollView, Alert, SafeAreaView, TouchableOpacity, Image } from "react-native"
+import { Button, Header, InfoInput, Loading, ProfilePicture } from "../constants/Components";
 import * as ImagePicker from "expo-image-picker";
-import {colors, images, sizes, User} from "../constants/Data";
+import { colors, images, sizes, User } from "../constants/Data";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { firestore, storage } from "../constants/Sever";
 import { getDocs, collection, onSnapshot, doc, setDoc } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import * as Location from "expo-location";
 
 const theme = colors.lightTheme;
 
-function EditProfileScreen({route, navigation}) {
+function EditProfileScreen({ route, navigation }) {
 
     const userId = route.params.id;
     const [users, setUsers] = useState([])
     const [user, setUser] = useState({})
     const [selectedImage, setSelectedImage] = useState(null);
     const [loading, setLoading] = useState(true);
-    
+    const [loadingMessage, setLoadingMessage] = useState("")
+
     //Variables
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
@@ -42,14 +44,35 @@ function EditProfileScreen({route, navigation}) {
             setLocation(doc.data().location)
             setProfilePicture(doc.data().profilePicture)
 
-            if(user !== {}){
+            if (user !== {}) {
                 setLoading(false)
             }
         });
 
     }, [])
 
+    const GetCurrentLocation = async () => {
+        let { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== 'granted') {
+            Alert.alert(
+                "Permission Denied",
+                "Permission to access location was denied",
+                [
+                    {
+                        text: "OK",
+                        onPress: () => console.log("OK Pressed")
+                    }
+                ]
+            )
+        }
+
+        setLocation(JSON.stringify(await Location.getCurrentPositionAsync({})));
+        console.log(location);
+    }
+
     const GetImage = async () => {
+        setLoading(true);
+        setLoadingMessage("Getting Profile Picture")
         let result = await ImagePicker.launchImageLibraryAsync({
             allowsEditing: true,
             quality: 1,
@@ -74,9 +97,9 @@ function EditProfileScreen({route, navigation}) {
             });
 
 
-            
 
-            const dpRef = ref(storage, userId+'/'+userId+'.jpg');
+
+            const dpRef = ref(storage, userId + '/' + userId + '.jpg');
             const uploadTask = await uploadBytes(dpRef, blob).then(async () => {
                 console.log(await getDownloadURL(dpRef));
                 setSelectedImage(await getDownloadURL(dpRef));
@@ -84,29 +107,42 @@ function EditProfileScreen({route, navigation}) {
 
             blob.close();
 
-            
 
-            
+
+
         } else {
-            alert('You did not select any image.');
+            Alert.alert(
+                "No Image Selected",
+                "You did not select an image",
+                [
+                    {
+                        text: "OK",
+                        onPress: () => console.log("OK Pressed")
+                    }
+                ]
+            )
         }
+        setLoading(false);
     }
 
     const UpdateProfile = async () => {
+        setLoading(true);
+        setLoadingMessage("Updating User Profile")
         const updatedUser = user
         updatedUser.name = name
         updatedUser.description = description
         updatedUser.location = location
 
-        if(selectedImage !== null){
+        if (selectedImage !== null) {
             updatedUser.profilePicture = selectedImage
         }
 
 
         await setDoc(doc(firestore, "Users", userId), updatedUser)
+        setLoading(false);
         Alert.alert(
-            "Profile Updated", 
-            "Your profile has been updated successfully", 
+            "Profile Updated",
+            "Your profile has been updated successfully",
             [
                 {
                     text: "OK",
@@ -117,27 +153,27 @@ function EditProfileScreen({route, navigation}) {
     }
 
 
-    if(loading === true){
-        return(
+    if (loading === true) {
+        return (
             <View style={styles.container}>
                 <Header method={() => navigation.goBack()} text={'Edit Profile'} />
-                <Loading/>
+                <Loading message = {loadingMessage}/>
             </View>
         )
-    }else{
+    } else {
         return (
             <View style={styles.container}>
                 <Header method={() => navigation.goBack()} text={'Edit Profile'} />
 
 
                 <ScrollView showsVerticalScrollIndicator={false}>
-                    <TouchableOpacity style = {{
+                    <TouchableOpacity style={{
                         alignItems: "center",
                         width: "100%",
                         padding: 20,
                     }}
-                    
-                    onPress = {() => GetImage()}>
+
+                        onPress={() => GetImage()}>
                         {
                             selectedImage !== null ? (
                                 <View style={{
@@ -147,6 +183,8 @@ function EditProfileScreen({route, navigation}) {
                                     height: 100,
                                     width: 100,
                                     borderRadius: sizes.ExtraLarge,
+                                    borderWidth: 1,
+                                    borderColor: theme.color,
 
                                 }}>
                                     <Image style={{
@@ -159,23 +197,23 @@ function EditProfileScreen({route, navigation}) {
                                         source={{ uri: selectedImage }} />
                                 </View>
                             ) : (
-                                    <View style={{
-                                        alignItems: "center",
-                                        justifyContent: "center",
-                                        margin: 10,
+                                <View style={{
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    margin: 10,
+                                    height: 100,
+                                    width: 100,
+                                    borderRadius: sizes.ExtraLarge,
+                                }}>
+                                    <Image style={{
                                         height: 100,
                                         width: 100,
                                         borderRadius: sizes.ExtraLarge,
-                                    }}>
-                                        <Image style={{
-                                            height: 100,
-                                            width: 100,
-                                            borderRadius: sizes.ExtraLarge,
-                                        }}
+                                    }}
 
-                                            resizeMode="contain"
-                                            source={{ uri: profilePicture }} />
-                                    </View>
+                                        resizeMode="contain"
+                                        source={{ uri: profilePicture }} />
+                                </View>
                             )
                         }
                     </TouchableOpacity>
@@ -184,26 +222,39 @@ function EditProfileScreen({route, navigation}) {
                         <InfoInput
                             method={(val) => setName(val)}
                             placeholder={"username"}
-                            value = {name}
+                            value={name}
                         />
                     </View>
                     <View style={styles.field}>
-                        <Text>{"Description: "+ description}</Text>
+                        <Text>{"Description: " + description}</Text>
                         <InfoInput
                             method={(val) => setDescription(val)}
                             placeholder={"description"}
-                            value = {description}
+                            value={description}
                         />
                     </View><View style={styles.field}>
-                        <Text>{"Location "}</Text>
+                        <Text>{"Location: "+ location}</Text>
                         <InfoInput
                             method={(val) => setLocation(val)}
                             placeholder={"Whitesands, Medowhall"}
-                            value = {location}
+                            value={location}
+                        />
+                        <Button
+                            style={{
+                                borderRadius: sizes.ExtraLarge,
+                                padding: 5,
+                                backgroundColor: theme.color,
+                                marginHorizontal: 5,
+                                marginTop: 5,
+                                alignItems: "center",
+                            }}
+                            method={() => GetCurrentLocation()}
+                            text={"Use Current Location"}
+                            textStyle={{ color: colors.white, fontSize: sizes.Medium }}
                         />
                     </View>
                 </ScrollView>
-                <View style = {styles.button_container}>
+                <View style={styles.button_container}>
                     <Button
                         style={styles.button}
                         method={() => UpdateProfile()}

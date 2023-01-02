@@ -65,27 +65,6 @@ const UploadProduct = ({route, navigation}) => {
 
 
 
-    const uploadProduct = async () => {
-        
-
-        // const imageRef = ref(storage, selectedImage);
-        // const uploadTask = uploadBytesResumable(imageRef, selectedImage);
-
-        // newProduct.image = getDownloadURL(uploadTask.snapshot.ref)
-
-
-        if (user.sellerInfo.productList.includes(newProduct.id) === false){
-            user.sellerInfo.productList.push(newProduct.id);
-
-            await setDoc(doc(firestore, "Users", userId), user);
-            await setDoc(doc(firestore, "Products", newProduct.id), newProduct);
-        }else{
-            alert("Product already exists")
-        }
-
-        console.log(newProduct +"\n"+ user)
-    }
-
     return (
         <View style={styles.container}>
             <Header method={() => navigation.goBack()} text={'Upload Product'} />

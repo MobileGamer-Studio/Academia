@@ -13,7 +13,7 @@ export default function SearchScreen({navigation, route}) {
     const [users, setUsers] = useState([])
     const [user, setUser] = useState({})
     const [loading, setLoading] = useState(true)
-    const [searchResult, setSearchResult] = useState(productList)
+    const [searchResult, setSearchResult] = useState([])
     const [relatedTags, setRelatedTags] = useState([])
     
 
@@ -35,9 +35,10 @@ export default function SearchScreen({navigation, route}) {
                 data.push(doc.data())
             });
             setProductList(data)
+            setSearchResult(data)
             
 
-            if (doc.data().length !== 0) {
+            if (data.length !== 0) {
                 setLoading(false)
             }
             
