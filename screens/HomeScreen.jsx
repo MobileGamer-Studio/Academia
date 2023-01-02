@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FlatList, ScrollView, Image,  StyleSheet, Text, TouchableOpacity, View, ActivityIndicator } from 'react-native';
 import { categories, colors, sizes, suggestedProducts, images } from '../constants/Data';
-import { NavBar, Loading, ProductHorizontal, ProductVertical, Button} from '../constants/Components';
+import { NavBar, Loading, ProductHorizontal, ProductVertical, Button, ProfilePicture} from '../constants/Components';
 import { firestore } from "../constants/Sever";
 import { collection, setDoc, doc, onSnapshot} from "firebase/firestore";
 import { Entypo, MaterialIcons, FontAwesome } from '@expo/vector-icons';
@@ -253,7 +253,20 @@ function HomeScreen({ route, navigation }) {
                                         data={sgUsers}
                                         renderItem={({ item }) => {
                                             return (
-                                                <View></View>
+                                                <View style = {{
+                                                    backgroundColor: theme.bgColor,
+                                                    elevation: 1,
+                                                    height: 150,
+                                                    width: 100,
+                                                    borderRadius: 10,
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                }}>
+                                                    <ProfilePicture image = {item.profilePicture} height = {70} width = {70}/>
+                                                    <View>
+                                                        <Text>{item.name}</Text>
+                                                    </View>
+                                                </View>
                                             )
                                         }}
                                     />
