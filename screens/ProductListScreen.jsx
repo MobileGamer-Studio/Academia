@@ -4,6 +4,7 @@ import { ProfilePicture, Loading, Header, Button } from '../constants/Components
 import { colors, sizes, images } from "../constants/Data";
 import { firestore, logOut } from "../constants/Sever";
 import { collection, doc, onSnapshot } from "firebase/firestore";
+import {SimpleLineIcons} from '@expo/vector-icons'
 
 const theme = colors.lightTheme;
 function ProductListScreen({ route, navigation }) {
@@ -138,7 +139,7 @@ function Product(props) {
             margin: 10,
         }} onPress = {props.method}>
             <View style={{
-                height: 100,
+                height: 150,
                 width: 100,
                 alignSelf: "center",
                 alignItems: "center",
@@ -189,8 +190,23 @@ function Product(props) {
                         </View>
                     )
                 }
+
+                <View  style = {{
+                    flexDirection: 'row',
+                    backgroundColor: theme.bgColor,
+                    elevation: 1,
+                    padding: 10,
+                    margin: 5,
+                    borderRadius: sizes.Small,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: '100%',
+                }}>
+                    <SimpleLineIcons name="like" size={12} color={theme.color2} style={{ marginHorizontal: 10}} onPress={props.method} />
+                    <Text style={{ color: theme.color2, fontSize: 12 }}>Likes</Text>
+                </View>
             </View>
-            <TouchableOpacity style={{
+            {/* <TouchableOpacity style={{
                 alignSelf: 'flex-start',
                 backgroundColor: theme.color,
                 paddingHorizontal: 10,
@@ -198,7 +214,7 @@ function Product(props) {
                 margin: 5,
             }} onPress={() => props.edit}>
                 <Text style={{ color: theme.bgColor, fontSize: sizes.Small }} >{'Edit'}</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
         </TouchableOpacity>
     )
 }

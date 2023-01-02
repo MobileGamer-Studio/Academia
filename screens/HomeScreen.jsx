@@ -188,13 +188,13 @@ function HomeScreen({ route, navigation }) {
                                 <View>
                                     <FlatList
                                         horizontal
-                                        numColumns={2}
+                                        //numColumns={2}
                                         showsHorizontalScrollIndicator={false}
                                         keyExtractor={(item) => item.id}
                                         data={sgProducts}
                                         renderItem={({ item }) => {
                                             return (
-                                                <ProductHorizontal item = {item}/>
+                                                <ProductHorizontal title = { item.title } image = { item.image } price = { item.price } discount = { item.discount } seller = { item.seller } rating = { item.ratings } method = {() => navigation.navigate('Product', { id: userId, productId: item.id })}/>
                                             )
                                         }}
                                     />
@@ -273,7 +273,7 @@ function HomeScreen({ route, navigation }) {
                                         data={bs}
                                         renderItem={({ item }) => {
                                             return (
-                                                <View></View>
+                                                <ProductHorizontal title={item.title} image={item.image} price={item.price} discount={item.discount} seller={item.seller} rating={item.ratings} method={() => navigation.navigate('Product', { id: userId, productId: item.id })} />
                                             )
                                         }}
                                     />
@@ -293,7 +293,7 @@ function HomeScreen({ route, navigation }) {
                                         data={categories}
                                         renderItem={({ item }) => {
                                             return (
-                                                <View></View>
+                                                <ProductHorizontal title={item.title} image={item.image} price={item.price} discount={item.discount} seller={item.seller} rating={item.ratings} method={() => navigation.navigate('Product', { id: userId, productId: item.id })} />
                                             )
                                         }}
                                     />
@@ -313,7 +313,7 @@ function HomeScreen({ route, navigation }) {
                                         data={categories}
                                         renderItem={({ item }) => {
                                             return (
-                                                <View></View>
+                                                <ProductHorizontal title={item.title} image={item.image} price={item.price} discount={item.discount} seller={item.seller} rating={item.ratings} method={() => navigation.navigate('Product', { id: userId, productId: item.id })} />
                                             )
                                         }}
                                     />
@@ -333,7 +333,7 @@ function HomeScreen({ route, navigation }) {
                                         data={categories}
                                         renderItem={({ item }) => {
                                             return (
-                                                <View></View>
+                                                <ProductHorizontal title={item.title} image={item.image} price={item.price} discount={item.discount} seller={item.seller} rating={item.ratings} method={() => navigation.navigate('Product', { id: userId, productId: item.id })} />
                                             )
                                         }}
                                     />
