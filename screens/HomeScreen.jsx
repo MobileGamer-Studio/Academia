@@ -166,7 +166,9 @@ function HomeScreen({ route, navigation }) {
         return (
             <View style={styles.container}>
                 <Header method = {() => navigation.navigate('Notifications', { id: userId })} />
-                <ScrollView showsVerticalScrollIndicator={false}>
+                <ScrollView showsVerticalScrollIndicator={false} style = {{
+                    marginBottom: 50,
+                }}>
                     <View>
                         {/* <GAMBannerAd
                         unitId={bannerAdId}
@@ -244,7 +246,7 @@ function HomeScreen({ route, navigation }) {
                     {
                         sgUsers.length > 0 ? (
                             <View style={styles.section}>
-                                <Text>Check Out</Text>
+                                <SectionHeader text={'Suggested Users'} method={() => navigation.navigate("Search", { id: userId })} />
                                 <View>
                                     <FlatList
                                         horizontal
@@ -254,17 +256,22 @@ function HomeScreen({ route, navigation }) {
                                         renderItem={({ item }) => {
                                             return (
                                                 <View style = {{
-                                                    backgroundColor: theme.bgColor,
-                                                    elevation: 1,
+                                                    backgroundColor: theme.color2,
+                                                    elevation: 2,
                                                     height: 150,
                                                     width: 100,
-                                                    borderRadius: 10,
+                                                    borderRadius: sizes.Small,
                                                     alignItems: 'center',
-                                                    justifyContent: 'center',
+                                                    justifyContent: 'space-evenly',
+                                                    margin: 10,
                                                 }}>
                                                     <ProfilePicture image = {item.profilePicture} height = {70} width = {70}/>
-                                                    <View>
-                                                        <Text>{item.name}</Text>
+                                                    <View style = {{
+                                                        alignItems: 'center',
+
+                                                    }}>
+                                                        <Text style = {{color: theme.bgColor}}>{item.name}</Text>
+                                                        <Text style = {{color: theme.bgColor}}>{item.sellerInfo.rating + ' Stars'}</Text>
                                                     </View>
                                                 </View>
                                             )
@@ -277,7 +284,7 @@ function HomeScreen({ route, navigation }) {
                     {
                         bs.length > 0 ? (
                             <View style={styles.section}>
-                                <Text>Check Out</Text>
+                                <SectionHeader text={'Best Sellers'} method={() => navigation.navigate("Search", { id: userId })} />
                                 <View style={{}}>
                                     <FlatList
                                         horizontal
@@ -286,7 +293,7 @@ function HomeScreen({ route, navigation }) {
                                         data={bs}
                                         renderItem={({ item }) => {
                                             return (
-                                                <ProductHorizontal title={item.title} image={item.image} price={item.price} discount={item.discount} seller={item.seller} rating={item.ratings} method={() => navigation.navigate('Product', { id: userId, productId: item.id })} />
+                                                <ProductVertical title={item.title} image={item.image} price={item.price} discount={item.discount} seller={item.seller} rating={item.ratings} method={() => navigation.navigate('Product', { id: userId, productId: item.id })} />
                                             )
                                         }}
                                     />
@@ -297,7 +304,7 @@ function HomeScreen({ route, navigation }) {
                     {
                         act.length > 0 ? (
                             <View style={styles.section}>
-                                <Text>Check Out</Text>
+                                <SectionHeader text={'Recent Activity'} method={() => navigation.navigate("Search", { id: userId })} />
                                 <View style={{}}>
                                     <FlatList
                                         horizontal
@@ -317,7 +324,7 @@ function HomeScreen({ route, navigation }) {
                     {
                         sls.length > 0 ? (
                             <View style={styles.section}>
-                                <Text>Check Out</Text>
+                                <SectionHeader text={'On Sales'} method={() => navigation.navigate("Search", { id: userId })} />
                                 <View style={{}}>
                                     <FlatList
                                         horizontal
@@ -337,7 +344,7 @@ function HomeScreen({ route, navigation }) {
                     {
                         newP.length > 0 ? (
                             <View style={styles.section}>
-                                <Text>Check Out</Text>
+                                <SectionHeader text={'New Products'} method={() => navigation.navigate("Search", { id: userId })} />
                                 <View style={{}}>
                                     <FlatList
                                         horizontal
@@ -357,7 +364,7 @@ function HomeScreen({ route, navigation }) {
                     {
                         crt.length > 0 ? (
                             <View style={styles.section}>
-                                <Text>Check Out</Text>
+                                <SectionHeader text={'Your Cart'} method={() => navigation.navigate("Search", { id: userId })} />
                                 <View style={{}}>
                                     <FlatList
                                         horizontal
