@@ -6,7 +6,7 @@ import { firestore } from "../constants/Sever";
 import { collection, setDoc, doc, onSnapshot} from "firebase/firestore";
 import { Entypo, MaterialIcons, FontAwesome } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-//import mobileAds, { GAMBannerAd, BannerAdSize } from 'react-native-google-mobile-ads';
+import mobileAds, { BannerAd, BannerAdSize, TestIds  } from 'react-native-google-mobile-ads';
 
 const theme = colors.lightTheme;
 function HomeScreen({ route, navigation }) {
@@ -381,6 +381,12 @@ function HomeScreen({ route, navigation }) {
                             </View>
                         ) : null
                     }
+                    <BannerAd
+                        unitId={TestIds.BANNER}
+                        size={BannerAdSize.FULL_BANNER}
+                        requestOptions={{
+                            requestNonPersonalizedAdsOnly: true,
+                        }}/>
 
 
                 </ScrollView>

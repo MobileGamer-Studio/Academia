@@ -27,6 +27,7 @@ import AccountListScreen from './screens/AccountListScreen';
 import SavedScreen from './screens/SavedScreen';
 import NotificationsScreen from './screens/NotificationsScreen';
 import UploadProductPreview from './screens/UploadProductPreview';
+import AdsScreen from './screens/AdsScreen';
 
 
 const Stack = createNativeStackNavigator();
@@ -35,6 +36,11 @@ function App() {
     return (
         <NavigationContainer>
             <Stack.Navigator>
+                {/* <Stack.Screen
+                    name="Ads"
+                    component={AdsScreen}
+                    options={{ headerShown: false }}
+                /> */}
                 <Stack.Screen
                     name="Loading"
                     component={LoadingScreen}
