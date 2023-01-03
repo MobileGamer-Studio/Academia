@@ -312,7 +312,7 @@ const styles = StyleSheet.create({
         backgroundColor: theme.bgColor,
         borderBottomLeftRadius: 75,
         borderBottomRightRadius: 75,
-        paddingTop: 60,
+        paddingTop: 10,
         paddingBottom: 50,
     },
 

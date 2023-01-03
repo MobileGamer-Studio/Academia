@@ -155,7 +155,7 @@ export const ProfilePicture = (props) => {
 export function ProductHorizontal(props) {
     return (
         <TouchableOpacity style={{
-            backgroundColor: theme.bgColor,
+            backgroundColor: colors.white,
             borderRadius: sizes.ExtraSmall,
             flexDirection: 'row',
             margin: 5,
@@ -169,7 +169,7 @@ export function ProductHorizontal(props) {
                 width: 100,
                 alignSelf: "center",
                 alignItems: "center",
-                backgroundColor: theme.bgColor,
+                backgroundColor: colors.white,
                 borderRadius: sizes.ExtraSmall,
                 margin: 5,
                 padding: 5,
@@ -225,7 +225,7 @@ export function ProductHorizontal(props) {
 export function ProductVertical(props) {
     return (
         <TouchableOpacity style={{
-            backgroundColor: theme.bgColor,
+            backgroundColor: colors.white,
             borderRadius: sizes.ExtraSmall,
             width: 150,
             height: 200,
@@ -512,7 +512,6 @@ const styles = StyleSheet.create({
     header: {
         width: "100%",
         padding: 10,
-        paddingTop: 40,
         backgroundColor: theme.color,
         justifyContent: 'flex-start',
         flexDirection: "row",

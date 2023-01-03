@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FlatList, ScrollView, Image,  StyleSheet, Text, TouchableOpacity, View, ActivityIndicator } from 'react-native';
+import { FlatList, ScrollView, Image,  StyleSheet, Text, TouchableOpacity, View, StatusBar, SafeAreaView } from 'react-native';
 import { categories, colors, sizes, suggestedProducts, images } from '../constants/Data';
 import { NavBar, Loading, ProductHorizontal, ProductVertical, Button, ProfilePicture} from '../constants/Components';
 import { firestore } from "../constants/Sever";
@@ -54,7 +54,7 @@ function HomeScreen({ route, navigation }) {
 
             setSuggestedUsers(doc.data().userInfo.feed.suggestedUsers)
             setSuggestedProducts(doc.data().userInfo.feed.suggestedProducts)
-            setActivity(doc.data().userInfo.feed.activity)
+            setActivity(doc.data().userInfo.recentlyViewed)
             setSales(doc.data().userInfo.feed.sales)
             setNewProducts(doc.data().userInfo.feed.newProducts)
             setCart(doc.data().userInfo.cart)
@@ -80,7 +80,10 @@ function HomeScreen({ route, navigation }) {
 
     if (loading === true) {
         return (
-            <View style={styles.container}>
+            <SafeAreaView style={styles.container}>
+                <StatusBar
+                    backgroundColor={theme.color}
+                />
                 <Header method={() => navigation.navigate('Notifications', { id: userId })} />
                 <Loading />
                 <NavBar
@@ -91,7 +94,7 @@ function HomeScreen({ route, navigation }) {
                     profile={() => navigation.navigate("UserAccount", { id: userId, user: user })}
                     image={"https://firebasestorage.googleapis.com/v0/b/academia-c3d0e.appspot.com/o/Images%2FProfile%2FprofileIcon.png?alt=media&token=d0c063e1-d61e-4630-a6af-bba57f100d9d"}
                 />
-            </View>
+            </SafeAreaView>
         )
     }else{
 
@@ -161,14 +164,16 @@ function HomeScreen({ route, navigation }) {
             })
         })
 
-
+        console.log(activity)
+        console.log(user.userInfo.recentlyViewed)
 
         return (
-            <View style={styles.container}>
+            <SafeAreaView style={styles.container}>
+                <StatusBar
+                    backgroundColor= {theme.color}
+                />
                 <Header method = {() => navigation.navigate('Notifications', { id: userId })} />
-                <ScrollView showsVerticalScrollIndicator={false} style = {{
-                    marginBottom: 50,
-                }}>
+                <ScrollView showsVerticalScrollIndicator={false}>
                     <View>
                         {/* <GAMBannerAd
                         unitId={bannerAdId}
@@ -271,7 +276,17 @@ function HomeScreen({ route, navigation }) {
 
                                                     }}>
                                                         <Text style = {{color: theme.bgColor}}>{item.name}</Text>
-                                                        <Text style = {{color: theme.bgColor}}>{item.sellerInfo.rating + ' Stars'}</Text>
+                                                        <TouchableOpacity style = {{
+                                                            backgroundColor: theme.bgColor,
+                                                            margin: 5,
+                                                            padding: 5,
+                                                            borderRadius: sizes.Small,
+                                                            alignItems: 'center',
+                                                            justifyContent: 'center',
+                                                            width: '100%',
+                                                        }}>
+                                                            <Text style = {{color: theme.color2}}>Follow</Text>
+                                                        </TouchableOpacity>
                                                     </View>
                                                 </View>
                                             )
@@ -301,26 +316,7 @@ function HomeScreen({ route, navigation }) {
                             </View>
                         ) : null
                     }
-                    {
-                        act.length > 0 ? (
-                            <View style={styles.section}>
-                                <SectionHeader text={'Recent Activity'} method={() => navigation.navigate("Search", { id: userId })} />
-                                <View style={{}}>
-                                    <FlatList
-                                        horizontal
-                                        showsHorizontalScrollIndicator={false}
-                                        keyExtractor={(item) => item.id}
-                                        data={categories}
-                                        renderItem={({ item }) => {
-                                            return (
-                                                <ProductHorizontal title={item.title} image={item.image} price={item.price} discount={item.discount} seller={item.seller} rating={item.ratings} method={() => navigation.navigate('Product', { id: userId, productId: item.id })} />
-                                            )
-                                        }}
-                                    />
-                                </View>
-                            </View>
-                        ) : null
-                    }
+                    
                     {
                         sls.length > 0 ? (
                             <View style={styles.section}>
@@ -330,7 +326,7 @@ function HomeScreen({ route, navigation }) {
                                         horizontal
                                         showsHorizontalScrollIndicator={false}
                                         keyExtractor={(item) => item.id}
-                                        data={categories}
+                                        data={sls}
                                         renderItem={({ item }) => {
                                             return (
                                                 <ProductHorizontal title={item.title} image={item.image} price={item.price} discount={item.discount} seller={item.seller} rating={item.ratings} method={() => navigation.navigate('Product', { id: userId, productId: item.id })} />
@@ -370,7 +366,7 @@ function HomeScreen({ route, navigation }) {
                                         horizontal
                                         showsHorizontalScrollIndicator={false}
                                         keyExtractor={(item) => item.id}
-                                        data={categories}
+                                        data={crt}
                                         renderItem={({ item }) => {
                                             return (
                                                 <View></View>
@@ -381,12 +377,52 @@ function HomeScreen({ route, navigation }) {
                             </View>
                         ) : null
                     }
-                    <BannerAd
+                    {/* <BannerAd
                         unitId={TestIds.BANNER}
                         size={BannerAdSize.FULL_BANNER}
                         requestOptions={{
                             requestNonPersonalizedAdsOnly: true,
-                        }}/>
+                        }}
+                    /> */}
+                    {
+                        act.length > 0 ? (
+                            <View style={styles.section_bottom}>
+                                {/* <SectionHeader text={'Recent Activity'} method={() => navigation.navigate("Search", { id: userId })} /> */}
+                                <View style={{
+                                    flexDirection: 'row',
+                                    justifyContent: 'space-between',
+                                    marginVertical: 10,
+                                }}>
+                                    <Text style={{
+                                        marginHorizontal: 10,
+                                        fontSize: 20,
+                                        color: theme.bgColor,
+                                    }}>{'Recent Activity'}</Text>
+                                    <TouchableOpacity style={{
+                                        marginHorizontal: 10,
+                                        flexDirection: 'row',
+                                        alignItems: 'center',
+                                    }} onPress={() => navigation.navigate('Lists')}>
+                                        <Text style={{ fontSize: 12, color: theme.bgColor }}>See More</Text>
+                                        <MaterialIcons name="arrow-forward-ios" size={10} color={theme.outline} style={{ marginLeft: 5 }} onPress={() => navigation.goBack()} />
+                                    </TouchableOpacity>
+                                </View>
+                                <View style={{}}>
+                                    <FlatList
+                                        horizontal
+                                        showsHorizontalScrollIndicator={false}
+                                        keyExtractor={(item) => item.id}
+                                        data={act}
+                                        renderItem={({ item }) => {
+                                            return (
+                                                <ProductHorizontal title={item.title} image={item.image} price={item.price} discount={item.discount} seller={item.seller} rating={item.ratings} method={() => navigation.navigate('Product', { id: userId, productId: item.id })} />
+                                            )
+                                        }}
+                                    />
+                                </View>
+                            </View>
+                        ) : null
+                    }
 
 
                 </ScrollView>
@@ -398,7 +434,7 @@ function HomeScreen({ route, navigation }) {
                     profile={() => navigation.navigate("UserAccount", { id: userId, user: user })}
                     image={user.profilePicture}
                 />
-            </View>
+            </SafeAreaView>
         );
     }
 }
@@ -410,8 +446,9 @@ function Header(props){
             flexDirection: "row",
             alignItems: "center",
             justifyContent: "space-between",
-            backgroundColor: colors.white,
-            paddingTop: 40,
+            backgroundColor: theme.bgColor,
+            //paddingTop: 40,
+            paddingVertical: 10,
             paddingBottom: 5,
             elevation: 0,
             borderBottomColor: theme.outline,
@@ -429,7 +466,7 @@ function Header(props){
                         alignSelf: "center",
                     }}
                     resizeMode="contain"
-                    source={images.academia}
+                    source={theme.name === 'light' ? images.academia_light : images.academia_dark}
                 />
             </View>
             <View style={{ flexDirection: 'row' }}>
@@ -480,6 +517,12 @@ const styles = StyleSheet.create({
         marginVertical: sizes.ExtraSmall,
         // borderBottomColor: theme.outline3,
         // borderBottomWidth: 5,
+    },
+
+    section_bottom: {
+        marginVertical: sizes.ExtraSmall,
+        backgroundColor: theme.color2,
+        paddingBottom: 50,
     },
 })
 

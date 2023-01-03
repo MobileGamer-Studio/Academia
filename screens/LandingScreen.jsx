@@ -20,7 +20,7 @@ function LandingScreen({navigation}) {
                         width: 350,
                     }}
                     resizeMode="contain"
-                    source={images.academia}
+                    source={images.academia_light}
                 />
             </View>
             <View style={{

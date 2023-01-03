@@ -59,8 +59,8 @@ function UserAccount({ route, navigation }) {
                 backgroundColor: theme.color,
                 borderBottomLeftRadius: 75,
                 borderBottomRightRadius: 75,
-                paddingTop: 60,
                 paddingBottom: 50,
+                paddingTop: 10,
                 marginBottom: 10,
             }}>
                 <Modal 

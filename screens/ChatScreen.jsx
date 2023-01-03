@@ -71,8 +71,8 @@ function ChatScreen({ route, navigation }) {
 
     return (
         <View style={styles.container}>
-            <View style={{ flexDirection: 'row', backgroundColor: theme.bgColor, marginTop: 30, borderBottomColor: theme.outline, borderBottomWidth: 1, padding: 10, alignItems: 'center', marginBottom: 10}}>
-                <MaterialIcons name="arrow-back-ios" size={24} color="black" style ={{marginLeft: 10}} onPress = {() => navigation.goBack()}/>
+            <View style={{ flexDirection: 'row', backgroundColor: theme.bgColor, borderBottomColor: theme.outline, borderBottomWidth: 1, padding: 10, alignItems: 'center', marginBottom: 10}}>
+                <MaterialIcons name="arrow-back-ios" size={24} color= {theme.textColor} style ={{marginLeft: 10}} onPress = {() => navigation.goBack()}/>
                 <View style={{ flexDirection: 'row', alignItems: 'center'}}>
                     <TouchableOpacity style={{ marginLeft: 10, marginRight: 20 }} onPress = {() => navigation.navigate("Account", {id: userId, accId: recId})}>
                         <ProfilePicture
@@ -83,8 +83,8 @@ function ChatScreen({ route, navigation }) {
                         />
                     </TouchableOpacity>
                     <View>
-                        <Text style ={{fontSize: 20}}>{receiver.name}</Text>
-                        <Text>{'online'}</Text>
+                        <Text style ={{fontSize: 20, color: theme.textColor}}>{receiver.name}</Text>
+                        <Text style={{ color: theme.textColor }}>{'online'}</Text>
                     </View>
                 </View>
             </View>
@@ -116,6 +116,7 @@ function ChatScreen({ route, navigation }) {
                     }}
                     placeholder="Message....."
                     value= {inputText}
+                    placeholderTextColor={theme.outline}
                 />
                 <TouchableOpacity onPress={() => sendMessage(inputText)}>
                     <FontAwesome name="send" color={theme.color} size={35} />

@@ -16,7 +16,6 @@ function ProductScreen({ route, navigation }) {
     const [users, setUsers] = useState([])
     const [loading, setLoading] = useState(true)
     const [optionsAct, setOptionsAct] = useState(false)
-
     const [seeMore, setSeeMore] = useState(false)
     const [amountSellected, setAmountSellected] = useState(1)
     
@@ -24,6 +23,8 @@ function ProductScreen({ route, navigation }) {
     useEffect(() => {
         const userSub = onSnapshot(doc(firestore, 'Users', userId), (doc) => {
             setUser(doc.data())
+
+            
         })
 
         const productSub = onSnapshot(doc(firestore, 'Products', productId), (doc) => {
@@ -57,6 +58,13 @@ function ProductScreen({ route, navigation }) {
         )
     }
 
+    const addToRecentActivity = async () => {
+        if (loading === false && user.userInfo.recentlyViewed.includes(productId) === false) {
+            user.userInfo.recentlyViewed.push(productId)
+            await setDoc(doc(firestore, 'Users', userId), user)
+        }
+    }
+
     if (loading === true) {
         return (
             <View style={styles.container}>
@@ -64,6 +72,9 @@ function ProductScreen({ route, navigation }) {
             </View>
         )
     } else {
+
+        addToRecentActivity()
+
         return (
             <View style={styles.container}>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 10 }}>
@@ -206,7 +217,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: theme.bgColor,
-        paddingTop: sizes.ExtraLarge,
+        paddingTop: 10,
         justifyContent: "space-between",
     },
 })

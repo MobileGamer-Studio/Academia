@@ -109,10 +109,10 @@ export default function SearchScreen({navigation, route}) {
                     flexDirection: "row",
                     alignItems: "center",
                     backgroundColor: theme.color,
-                    paddingTop: 40,
                     marginBottom: 10,
                     elevation: 10,
                     paddingBottom: 10,
+                    paddingTop: 10,
                 }}>
                     <MaterialIcons name="arrow-back-ios" size={24} color={colors.white} style={{ marginLeft: 10 }} onPress={() => navigation.goBack()} />
                     <View>
