@@ -1,6 +1,6 @@
 import react, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, FlatList, Alert, StatusBar } from 'react-native';
-import { doc, collection, onSnapshot, setDoc, updateDoc, arrayRemove, arrayUnion } from 'firebase/firestore';
+import { doc, collection, onSnapshot, setDoc, updateDoc, arrayRemove, arrayUnion, increment } from 'firebase/firestore';
 import { firestore } from '../constants/Sever';
 import { MaterialIcons, Entypo, AntDesign } from '@expo/vector-icons';
 import { colors, sizes, images, Item } from '../constants/Data';
@@ -54,19 +54,40 @@ function ProductScreen({ route, navigation }) {
         newItem.product = product.id;
         newItem.amountSellected = 1;
 
-        user.userInfo.cart.push(newItem);
-        await setDoc(doc(firestore, 'Users', userId), user);
+        if (user.userInfo.cart.includes(newItem) === false) {
+            user.userInfo.cart.push(newItem);
+            await setDoc(doc(firestore, 'Users', userId), user);
 
-        Alert.alert(
-            "Added to cart",
-            "You can check your cart in the profile section",
-            [
-                {
-                    text: "OK",
-                    onPress: () => navigation.goBack()
-                }
-            ]
-        )
+            Alert.alert(
+                "Added to cart",
+                "Do you want to checkout now?",
+                [
+                    {
+                        text: "Continue Shopping",
+                        onPress: () => navigation.goBack()
+                    },
+                    {
+                        text: "Checkout",
+                        onPress: () => navigation.navigate('Checkout')
+                    }
+                ]
+            )
+        }else{
+            Alert.alert(
+                "Already in cart",
+                "Do you want to see your cart?",
+                [
+                    {
+                        text: "Continue Shopping",
+                        onPress: () => navigation.goBack()
+                    },
+                    {
+                        text: "Cart",
+                        onPress: () => navigation.navigate('Cart')
+                    }
+                ]
+            )
+        }
     }
 
     const addToRecentActivity = async () => {
@@ -82,6 +103,9 @@ function ProductScreen({ route, navigation }) {
             await updateDoc(userRef, {
                 'userInfo.liked': arrayRemove(productId)
             })
+            await updateDoc(productRef, {
+                likes: increment(-1)
+            })
 
         } else if (rating === null|| rating === 'dislike'){
             setRating('like')
@@ -92,6 +116,11 @@ function ProductScreen({ route, navigation }) {
                 'userInfo.disliked': arrayRemove(productId)
             })
 
+            await updateDoc(productRef, {
+                likes: increment(1)
+            })
+
+
         }
     }
 
@@ -101,6 +130,12 @@ function ProductScreen({ route, navigation }) {
             await updateDoc(userRef, {
                 'userInfo.disliked': arrayRemove(productId)
             })
+
+            await updateDoc(productRef, {
+                dislikes: increment(-1)
+            })
+
+
         } else if (rating === null || rating === 'like') {
             setRating('dislike')
             await updateDoc(userRef, {
@@ -110,6 +145,11 @@ function ProductScreen({ route, navigation }) {
             await updateDoc(userRef, {
                 'userInfo.liked': arrayRemove(productId)
             })
+
+            await updateDoc(productRef, {
+                dislikes: increment(1)
+            })
+
         }
     }
 

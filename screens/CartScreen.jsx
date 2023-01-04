@@ -1,9 +1,9 @@
 import React, {useState, useEffect} from 'react';
-import {FlatList, StyleSheet, View, Image, Text, StatusBar} from 'react-native';
+import {FlatList, StyleSheet, View, Image, Text, StatusBar, TouchableOpacity} from 'react-native';
 import {colors, sizes, images} from '../constants/Data';
 import { firestore } from "../constants/Sever";
 import { getDocs, collection, setDoc, doc, onSnapshot } from "firebase/firestore";
-import { Entypo } from '@expo/vector-icons';
+import { Entypo, SimpleLineIcons } from '@expo/vector-icons';
 import { Header, Loading, Button } from '../constants/Components';
 
 const theme = colors.lightTheme;
@@ -66,6 +66,16 @@ function CartScreen({route, navigation}) {
             </View>
         )
     } else {
+
+        let crtProducts = []
+        cart.forEach((item) => {
+            products.forEach((product) => {
+                if (item.product === product.id) {
+                    crtProducts.push(product)
+                }
+            })
+        })
+
         return (
             <View style={styles.container}>
                 <StatusBar
@@ -78,15 +88,12 @@ function CartScreen({route, navigation}) {
                         <View>
                             <FlatList
                                 vertical
-                                numColumns={2}
                                 showsHorizontalScrollIndicator={false}
                                 keyExtractor={(item) => item.id}
-                                data={cart}
+                                data={crtProducts}
                                 renderItem={({ item }) => {
                                     return (
-                                        <View>
-                                            
-                                        </View>
+                                        <Product title={item.title} image={item.image} price={item.price} discount={item.discount} seller={item.seller} rating={item.ratings} method={() => navigation.navigate('Product', { id: userId, productId: item.id })} />
                                     );
                                 }}
                             />
@@ -127,76 +134,99 @@ function CartScreen({route, navigation}) {
     }
 }
 
-function CartItem(props) {
+function Product(props) {
     return (
-        <View style={{
-            elevation: sizes.ExtraSmall,
-            marginVertical: sizes.ExtraSmall,
-        }}>
-            <TouchableOpacity
-                style={{
-                    flexDirection: "row",
-                    backgroundColor: colors.white,
+        <TouchableOpacity style={{
+            flexDirection: 'row',
+            backgroundColor: theme.bgColor,
+            elevation: 2,
+            borderRadius: sizes.Medium,
+            padding: 10,
+            margin: 10,
+        }} onPress={props.method}>
+            <View style={{
+                height: 150,
+                width: 100,
+                alignSelf: "center",
+                alignItems: "center",
+                backgroundColor: theme.bgColor,
+                borderRadius: sizes.ExtraSmall,
+                margin: 5,
+                padding: 5,
+            }}>
+                <Image
+                    style={{
+                        flex: 1,
+                        height: 100,
+                        width: 100,
+                    }}
+                    resizeMode="contain"
+                    source={{ uri: props.image }} />
+            </View>
+            <View style={{
+                marginHorizontal: 10,
+                marginVertical: 5,
+            }}>
+                {
+                    props.title.length < 25 ? (
+                        <Text style={{ fontSize: sizes.Medium, color: theme.color2 }}>{props.title}</Text>
+                    ) : (
+                            <Text style={{ fontSize: sizes.Medium, color: theme.color2 }}>{props.title.slice(0, 25) + '...'}</Text>
+                    )
+                }
+                <Text style={{ color: theme.color2, fontSize: sizes.ExtraSmall }}>{props.rating + " star"}</Text>
+                {
+                    props.discount === 0 ? (
+                        <View>
+                            <Text style={{ color: theme.color2, fontSize: 12 }}>{props.price + ' Naira'}</Text>
+                        </View>
+                    ) : (
+                        <View>
+                            <Text style={{ color: theme.color2, fontSize: 12, textDecorationLine: 'line-through', textDecorationStyle: 'solid' }}>{props.price + ' Naira'}</Text>
+                            <Text style={{ color: theme.color2, fontSize: 12 }}>{(props.price - (props.discount / 100 * props.price)) + ' Naira'}</Text>
+
+                            <View style={{
+                                flexDirection: 'row',
+                                backgroundColor: theme.color2,
+                                elevation: 1,
+                                padding: 2.5,
+                                margin: 5,
+                                borderRadius: sizes.Small,
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                width: '100%',
+                            }}>
+                                <Text style={{ color: theme.bgColor }}>{'-' + props.discount + '% discount'}</Text>
+                            </View>
+                        </View>
+                    )
+                }
+
+                <View style={{
+                    flexDirection: 'row',
+                    backgroundColor: theme.bgColor,
+                    elevation: 1,
+                    padding: 10,
+                    margin: 5,
                     borderRadius: sizes.Small,
-                    height: 150,
-                    alignItems: 'flex-start',
-                    justifyContent: "flex-start",
-                    padding: 5,
-                }}
-
-                onPress={props.method}
-            >
-                <View style={{
-                    height: 100,
-                    alignSelf: "center",
-                    justifyContent: "center",
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: '100%',
                 }}>
-                    <Image
-                        style={{
-                            flex: 1,
-                            alignSelf: "center",
-                        }}
-                        resizeMode="contain"
-                        source={props.product.image} />
+                    <SimpleLineIcons name="like" size={12} color={theme.color2} style={{ marginHorizontal: 10 }} onPress={props.method} />
+                    <Text style={{ color: theme.color2, fontSize: 12 }}>Likes</Text>
                 </View>
-                <View>
-                    <Text style={{ fontSize: sizes.Medium, color: colors.black }}>{props.title}</Text>
-                    <Text style={{ fontSize: sizes.Small, color: colors.grey }}>{props.description}</Text>
-                </View>
-                <View style={{
-                    flexDirection: "row",
-                    justifyContent: "flex-start"
-                }}>
-                    <Button
-                        style={{
-                            borderRadius: sizes.ExtraLarge,
-                            borderWidth: 1,
-                            borderColor: colors.defaultBG4,
-                            padding: 5,
-                            alignItems: "center",
-                            justifyContent: "center",
-                            marginHorizontal: 10,
-                        }}
-                        method={() => RemoveItem(props.item)}
-                        text={"Cancel"}
-                        textStyle={{ fontSize: sizes.Small, color: colors.white }}
-                    /><Button
-                        style={{
-                            borderRadius: sizes.ExtraLarge,
-                            backgroundColor: colors.defaultBG4,
-                            padding: 5,
-                            alignItems: "center",
-                            justifyContent: "center",
-                            marginHorizontal: 10,
-                        }}
-                        method={() => RemoveItem(props.item)}
-                        text={"Edit"}
-                        textStyle={{ fontSize: sizes.Small, color: colors.white }}
-                    />
-
-                </View>
-            </TouchableOpacity>
-        </View>
+            </View>
+            {/* <TouchableOpacity style={{
+                alignSelf: 'flex-start',
+                backgroundColor: theme.color,
+                paddingHorizontal: 10,
+                borderRadius: sizes.Small,
+                margin: 5,
+            }} onPress={() => props.edit}>
+                <Text style={{ color: theme.bgColor, fontSize: sizes.Small }} >{'Edit'}</Text>
+            </TouchableOpacity> */}
+        </TouchableOpacity>
     )
 }
 

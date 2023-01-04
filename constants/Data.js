@@ -199,6 +199,7 @@ export const Product = {
     sold: 0,
     ratings: 0,
     likes: 0,
+    dislikes: 0,
     comments: [],
     discount: 0,
     views: [],
@@ -207,7 +208,7 @@ export const Product = {
 }
 
 export const Item = {
-    product: Product,
+    product: '',
     amountSellected: 0,
     id: "0"
 }

@@ -28,6 +28,7 @@ import SavedScreen from './screens/SavedScreen';
 import NotificationsScreen from './screens/NotificationsScreen';
 import UploadProductPreview from './screens/UploadProductPreview';
 import AdsScreen from './screens/AdsScreen';
+import ListScreens from './screens/ListScreens';
 
 
 const Stack = createNativeStackNavigator();
@@ -166,6 +167,11 @@ function App() {
                 <Stack.Screen
                     name="Saved"
                     component={SavedScreen}
+                    options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                    name="List"
+                    component={ListScreens}
                     options={{ headerShown: false }}
                 />
                 <Stack.Screen

@@ -228,7 +228,6 @@ export function ProductVertical(props) {
             backgroundColor: colors.white,
             borderRadius: sizes.ExtraSmall,
             width: 150,
-            height: 200,
             padding: 5,
             marginVertical: 5,
             marginHorizontal: 10,
@@ -250,21 +249,38 @@ export function ProductVertical(props) {
                     source={{ uri: props.image }} />
             </View>
             <View style={{
-                margin: 5,
-                height: 80,
-                justifyContent: "center",
+                marginHorizontal: 10,
+                marginVertical: 5,
             }}>
                 {
-                    props.title.length < 15 ? (
+                    props.title.length < 10 ? (
                         <Text style={{ fontSize: sizes.Small, color: theme.color2 }}>{props.title}</Text>
                     ) : (
-                            <Text style={{ fontSize: sizes.Small, color: theme.color2 }}>{props.title.slice(0, 15) + '...'}</Text>
+                        <Text style={{ fontSize: sizes.Small, color: theme.color2 }}>{props.title.slice(0, 10) + '...'}</Text>
                     )
                 }
-                <View style={{ flexDirection: 'column' }}>
-                    <Text style={{ fontSize: sizes.ExtraSmall, color: theme.color2 }}>{props.rating + " star"}</Text>
-                    <Text style={{ fontSize: 12, color: theme.color2 }}>{props.price + ' Naira'}</Text>
-                </View>
+                <Text style={{ color: theme.color2, fontSize: sizes.ExtraSmall }}>{props.rating + " star"}</Text>
+                {
+                    props.discount === 0 ? (
+                        <View>
+                            <Text style={{ color: theme.color2, fontSize: 12 }}>{props.price + ' Naira'}</Text>
+                        </View>
+                    ) : (
+                        <View>
+                            <Text style={{ color: theme.color2, fontSize: 12, textDecorationLine: 'line-through', textDecorationStyle: 'solid' }}>{props.price + ' Naira'}</Text>
+                            <Text style={{ color: theme.color2, fontSize: 12 }}>{(props.price - (props.discount / 100 * props.price)) + ' Naira'}</Text>
+
+                            <View style={{
+                                backgroundColor: theme.color2,
+                                alignItems: 'center',
+                                borderRadius: sizes.ExtraSmall,
+                                paddingHorizontal: 5,
+                            }}>
+                                <Text style={{ color: theme.bgColor }}>{'-' + props.discount + '% discount'}</Text>
+                            </View>
+                        </View>
+                    )
+                }
             </View>
         </TouchableOpacity>
     )
