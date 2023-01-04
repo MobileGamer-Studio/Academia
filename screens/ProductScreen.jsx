@@ -1,15 +1,18 @@
-import react, {useState, useEffect} from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, FlatList, Alert } from 'react-native';
-import { doc, collection, onSnapshot, setDoc} from 'firebase/firestore';
-import {firestore} from '../constants/Sever';
-import {MaterialIcons, Entypo} from '@expo/vector-icons';
-import {colors, sizes, images, Item} from '../constants/Data';
+import react, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Image, FlatList, Alert, StatusBar } from 'react-native';
+import { doc, collection, onSnapshot, setDoc, updateDoc, arrayRemove, arrayUnion } from 'firebase/firestore';
+import { firestore } from '../constants/Sever';
+import { MaterialIcons, Entypo, AntDesign } from '@expo/vector-icons';
+import { colors, sizes, images, Item } from '../constants/Data';
 import { Header, Loading } from '../constants/Components';
 
 const theme = colors.lightTheme;
 function ProductScreen({ route, navigation }) {
     const productId = route.params.productId;
     const userId = route.params.id;
+
+    const userRef = doc(firestore, 'Users', userId);
+    const productRef = doc(firestore, 'Products', productId);
 
     const [product, setProduct] = useState({})
     const [user, setUser] = useState({})
@@ -18,13 +21,21 @@ function ProductScreen({ route, navigation }) {
     const [optionsAct, setOptionsAct] = useState(false)
     const [seeMore, setSeeMore] = useState(false)
     const [amountSellected, setAmountSellected] = useState(1)
-    
+    const [rating, setRating] = useState(null)
+
 
     useEffect(() => {
         const userSub = onSnapshot(doc(firestore, 'Users', userId), (doc) => {
             setUser(doc.data())
 
-            
+            if (doc.data().userInfo.liked.includes(productId)) {
+                setRating('like')
+            }
+
+            if (doc.data().userInfo.disliked.includes(productId)) {
+                setRating('dislike')
+            }
+
         })
 
         const productSub = onSnapshot(doc(firestore, 'Products', productId), (doc) => {
@@ -39,7 +50,7 @@ function ProductScreen({ route, navigation }) {
 
     const addToCart = async () => {
         const newItem = Item;
-        newItem.id = userId+"-ITEM-"+product.id;
+        newItem.id = userId + "-ITEM-" + product.id;
         newItem.product = product.id;
         newItem.amountSellected = 1;
 
@@ -59,9 +70,46 @@ function ProductScreen({ route, navigation }) {
     }
 
     const addToRecentActivity = async () => {
-        if (loading === false && user.userInfo.recentlyViewed.includes(productId) === false) {
+        if (user.userInfo.recentlyViewed.includes(productId) === false) {
             user.userInfo.recentlyViewed.push(productId)
             await setDoc(doc(firestore, 'Users', userId), user)
+        }
+    }
+
+    const like = async () => {
+        if (rating === 'like') {
+            setRating(null)
+            await updateDoc(userRef, {
+                'userInfo.liked': arrayRemove(productId)
+            })
+
+        } else if (rating === null|| rating === 'dislike'){
+            setRating('like')
+            await updateDoc(userRef, {
+                'userInfo.liked': arrayUnion(productId)
+            })
+            await updateDoc(userRef, {
+                'userInfo.disliked': arrayRemove(productId)
+            })
+
+        }
+    }
+
+    const dislike = async () => {
+        if (rating === 'dislike') {
+            setRating(null)
+            await updateDoc(userRef, {
+                'userInfo.disliked': arrayRemove(productId)
+            })
+        } else if (rating === null || rating === 'like') {
+            setRating('dislike')
+            await updateDoc(userRef, {
+                'userInfo.disliked': arrayUnion(productId)
+            })
+
+            await updateDoc(userRef, {
+                'userInfo.liked': arrayRemove(productId)
+            })
         }
     }
 
@@ -77,6 +125,11 @@ function ProductScreen({ route, navigation }) {
 
         return (
             <View style={styles.container}>
+                <StatusBar
+                    backgroundColor={theme.bgColor}
+                    barStyle='dark-content'
+                />
+
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 10 }}>
                     <MaterialIcons name="arrow-back-ios" size={24} color={theme.color} style={{ marginLeft: 10 }} onPress={() => navigation.goBack()} />
                     <View style={{ alignSelf: "flex-end", marginBottom: 20 }}>
@@ -100,6 +153,60 @@ function ProductScreen({ route, navigation }) {
                         }}
                         resizeMode="contain"
                         source={{ uri: product.image }} />
+                    {
+                        rating === null ? (
+                            <View style={{
+                                position: "absolute",
+                                backgroundColor: colors.white,
+                                right: 0,
+                                top: 0,
+                                padding: 10,
+                                borderRadius: sizes.Medium,
+                                margin: 10,
+                                flexDirection: "row",
+                                justifyContent: 'space-around',
+                                elevation: 2,
+                            }}>
+                                <AntDesign name="like2" size={20} color={theme.color} style={{ marginHorizontal: 10 }} onPress={() => like()} />
+                                <AntDesign name="dislike2" size={20} color={theme.color} style={{ marginHorizontal: 10 }} onPress={() => dislike()} />
+                            </View>
+
+                        ) : (
+                            rating === 'like' ? (
+                                <View style={{
+                                    position: "absolute",
+                                    backgroundColor: colors.white,
+                                    right: 0,
+                                    top: 0,
+                                    padding: 10,
+                                    borderRadius: sizes.Medium,
+                                    margin: 10,
+                                    flexDirection: "row",
+                                    justifyContent: 'space-around',
+                                    elevation: 2,
+                                }}>
+                                    <AntDesign name="like1" size={20} color={theme.color} style={{ marginHorizontal: 10 }} onPress={() => like()} />
+                                    <AntDesign name="dislike2" size={20} color={theme.color} style={{ marginHorizontal: 10 }} onPress={() => dislike()} />
+                                </View>
+                            ) : (
+                                <View style={{
+                                    position: "absolute",
+                                    backgroundColor: colors.white,
+                                    right: 0,
+                                    top: 0,
+                                    padding: 10,
+                                    borderRadius: sizes.Medium,
+                                    margin: 10,
+                                    flexDirection: "row",
+                                    justifyContent: 'space-around',
+                                    elevation: 2,
+                                }}>
+                                    <AntDesign name="like2" size={20} color={theme.color} style={{ marginHorizontal: 10 }} onPress={() => like()} />
+                                    <AntDesign name="dislike1" size={20} color={theme.color} style={{ marginHorizontal: 10 }} onPress={() => dislike()} />
+                                </View>
+                            )
+                        )
+                    }
                 </View>
                 <View style={{
                     backgroundColor: theme.color,
@@ -121,12 +228,12 @@ function ProductScreen({ route, navigation }) {
                             marginHorizontal: sizes.Small,
                             marginVertical: sizes.Small
                         }}>{product.description.length > 100 ? (
-                               seeMore === true ? (
-                                    <Text style={{ fontSize: sizes.Small, color: theme.bgColor }}>{product.description + ' see less'}</Text>
-                                ) : (
-                                    <Text style={{ fontSize: sizes.Small, color: theme.bgColor }}>{product.description.slice(0, 100) + '... see more '}</Text>
-                                )
-                        ): (
+                            seeMore === true ? (
+                                <Text style={{ fontSize: sizes.Small, color: theme.bgColor }}>{product.description + ' see less'}</Text>
+                            ) : (
+                                <Text style={{ fontSize: sizes.Small, color: theme.bgColor }}>{product.description.slice(0, 100) + '... see more '}</Text>
+                            )
+                        ) : (
                             <Text style={{ fontSize: sizes.Small, color: theme.bgColor }}>{product.description}</Text>
                         )}</Text>
                     </TouchableOpacity>
@@ -211,7 +318,7 @@ function ProductScreen({ route, navigation }) {
             </View>
         );
     }
-    
+
 }
 const styles = StyleSheet.create({
     container: {

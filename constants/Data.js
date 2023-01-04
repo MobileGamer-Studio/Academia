@@ -155,6 +155,10 @@ export const User = {
     userInfo: {
         tags: [],
         cart: [],
+        liked: [],
+        disliked: [],
+        savedList: [],
+        recentlyViewed: [],
         notifications: [],
         feed: {
             suggestedProducts: [],
@@ -166,8 +170,7 @@ export const User = {
         },
         rating: 0,
         amountSpent: "0",
-        savedList: [],
-        recentlyViewed: [],
+        
     },
     appInfo: {
         settings: {

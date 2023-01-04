@@ -1,5 +1,5 @@
 import react, {useEffect, useState} from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList, Alert } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList, Alert,StatusBar } from 'react-native';
 import { colors, sizes, images, Product } from '../constants/Data';
 import { Header, Loading } from '../constants/Components';
 import { firestore, storage } from '../constants/Sever';
@@ -139,6 +139,10 @@ function UploadProductPreview({ route, navigation }) {
     if (loading === true) {
         return (
             <View style={styles.container}>
+                <StatusBar
+                    backgroundColor={theme.color}
+                    barStyle='light-content'
+                />
                 <Header method={() => navigation.goBack()} text={'Preview'} />
                 <Loading />
             </View>
@@ -146,6 +150,10 @@ function UploadProductPreview({ route, navigation }) {
     } else {
         return (
             <View style={styles.container}>
+                <StatusBar
+                    backgroundColor={theme.color}
+                    barStyle='light-content'
+                />
                 <Header method={() => navigation.goBack()} text={'Preview'} />
 
                 <View style={{

@@ -1,11 +1,10 @@
 import React, {useEffect, useState} from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image, StatusBar } from 'react-native';
 import { Chat, colors, sizes } from '../constants/Data';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Header, Loading, SearchBar, ProfilePicture } from '../constants/Components';
 import { firestore } from "../constants/Sever";
 import { collection, doc, onSnapshot } from "firebase/firestore";
-import { async } from '@firebase/util';
 
 const theme = colors.lightTheme;
 function AccountListScreen({ navigation, route }) {
@@ -37,6 +36,10 @@ function AccountListScreen({ navigation, route }) {
     if (loading === true) {
         return (
             <View style={styles.container}>
+                <StatusBar
+                    backgroundColor={theme.color}
+                    barStyle='light-content'
+                />
                 <Header text={"Accounts"} method={() => navigation.goBack()} />
                 <Loading/>
             </View>

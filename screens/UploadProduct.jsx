@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react'
-import {FlatList, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {FlatList, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View, StatusBar} from 'react-native'
 import {Button, InfoInput, Header} from '../constants/Components';
 import {Category, colors, Product, sizes} from '../constants/Data'
 import * as ImagePicker from "expo-image-picker"
@@ -67,6 +67,10 @@ const UploadProduct = ({route, navigation}) => {
 
     return (
         <View style={styles.container}>
+            <StatusBar
+                backgroundColor={theme.color}
+                barStyle='light-content'
+            />
             <Header method={() => navigation.goBack()} text={'Upload Product'} />
             <ScrollView showsVerticalScrollIndicator = {false}>
                 <View style={styles.field}>

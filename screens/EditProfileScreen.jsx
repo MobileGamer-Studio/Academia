@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { Text, View, StyleSheet, ScrollView, Alert, SafeAreaView, TouchableOpacity, Image } from "react-native"
+import { Text, View, StyleSheet, ScrollView, Alert, SafeAreaView, TouchableOpacity, Image, StatusBar } from "react-native"
 import { Button, Header, InfoInput, Loading, ProfilePicture } from "../constants/Components";
 import * as ImagePicker from "expo-image-picker";
 import { colors, images, sizes, User } from "../constants/Data";
@@ -156,6 +156,10 @@ function EditProfileScreen({ route, navigation }) {
     if (loading === true) {
         return (
             <View style={styles.container}>
+                <StatusBar
+                    backgroundColor={theme.color}
+                    barStyle='light-content'
+                />
                 <Header method={() => navigation.goBack()} text={'Edit Profile'} />
                 <Loading message = {loadingMessage}/>
             </View>
@@ -163,6 +167,10 @@ function EditProfileScreen({ route, navigation }) {
     } else {
         return (
             <View style={styles.container}>
+                <StatusBar
+                    backgroundColor={theme.color}
+                    barStyle='light-content'
+                />
                 <Header method={() => navigation.goBack()} text={'Edit Profile'} />
 
 

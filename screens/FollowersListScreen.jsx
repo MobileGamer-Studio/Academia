@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, TouchableOpacity, StyleSheet, FlatList, Text, Image } from "react-native";
+import { View, TouchableOpacity, StyleSheet, FlatList, Text, Image, StatusBar } from "react-native";
 import { ProfilePicture, RoundButton, Header, Loading, Button} from '../constants/Components';
 import { colors, sizes, testUsers, images} from "../constants/Data";
 import { firestore, logOut } from "../constants/Sever";
@@ -22,7 +22,7 @@ function FollowersListScreen({ route, navigation }) {
             querySnapshot.forEach((doc) => {
                 data.push(doc.data())
             });
-            //console.log("Current data: ", data);
+            console.log("Current data: ", data);
             setUsers(data)
         });
 
@@ -42,6 +42,10 @@ function FollowersListScreen({ route, navigation }) {
     if (loading === true) {
         return (
             <View style={styles.container}>
+                <StatusBar
+                    backgroundColor={theme.color}
+                    barStyle='light-content'
+                />
                 <Header method={() => navigation.goBack()} text={'Followers'} />
                 <Loading />
             </View>
@@ -56,6 +60,10 @@ function FollowersListScreen({ route, navigation }) {
 
         return (
             <View style={styles.container}>
+                <StatusBar
+                    backgroundColor={theme.color}
+                    barStyle='light-content'
+                />
                 <Header method={() => navigation.goBack()} text={'Followers'} />
                 {
                     followers.length !== 0 ? (
@@ -113,17 +121,18 @@ function FollowersListScreen({ route, navigation }) {
 function User(props) {
     return (
         <View style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'flex-start',
             borderBottomWidth: 1,
             borderBottomColor: theme.outline,
             padding: 10,
         }}>
-            <TouchableOpacity 
+            <TouchableOpacity style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'flex-start',
+            }}
                 onPress={props.method}>
                 <ProfilePicture color={colors.white} image={props.image} height={40} width={40} />
-                <Text style={{ marginHorizontal: 10 }}>{props.name}</Text>
+                <Text style={{ marginHorizontal: 10, fontSize: sizes.Small }}>{props.name}</Text>
             </TouchableOpacity>
         </View>
     );

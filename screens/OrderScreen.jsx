@@ -1,5 +1,5 @@
 import React from 'react'
-import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {FlatList, StyleSheet, Text, TouchableOpacity, View, StatusBar} from 'react-native'
 import {colors, sizes} from '../constants/Data'
 import {ProductMax} from '../constants/Components'
 
@@ -8,7 +8,10 @@ const OrderScreen = ({navigation}) => {
     let user = User;
     return (
         <View style={styles.container}>
-
+            <StatusBar
+                backgroundColor={theme.color}
+                barStyle='light-content'
+            />
             <View>
                 <FlatList
                     vaertical

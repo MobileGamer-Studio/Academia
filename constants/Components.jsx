@@ -256,17 +256,41 @@ export function ProductVertical(props) {
             }}>
                 {
                     props.title.length < 15 ? (
-                        <Text style={{ fontSize: sizes.Small }}>{props.title}</Text>
+                        <Text style={{ fontSize: sizes.Small, color: theme.color2 }}>{props.title}</Text>
                     ) : (
-                        <Text style={{ fontSize: sizes.Small }}>{props.title.slice(0, 15) + '...'}</Text>
+                            <Text style={{ fontSize: sizes.Small, color: theme.color2 }}>{props.title.slice(0, 15) + '...'}</Text>
                     )
                 }
                 <View style={{ flexDirection: 'column' }}>
-                    <Text style={{ fontSize: sizes.ExtraSmall }}>{props.rating + " star"}</Text>
-                    <Text style={{ fontSize: 12 }}>{props.price + ' Naira'}</Text>
+                    <Text style={{ fontSize: sizes.ExtraSmall, color: theme.color2 }}>{props.rating + " star"}</Text>
+                    <Text style={{ fontSize: 12, color: theme.color2 }}>{props.price + ' Naira'}</Text>
                 </View>
             </View>
         </TouchableOpacity>
+    )
+}
+
+export function SectionHeader(props) {
+    return (
+        <View style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            marginBottom: 10,
+        }}>
+            <Text style={{
+                marginHorizontal: 10,
+                fontSize: 20,
+                color: theme.color2,
+            }}>{props.text}</Text>
+            <TouchableOpacity style={{
+                marginHorizontal: 10,
+                flexDirection: 'row',
+                alignItems: 'center',
+            }} onPress={props.method}>
+                <Text style={{ fontSize: 12, color: theme.outline }}>See More</Text>
+                <MaterialIcons name="arrow-forward-ios" size={10} color={theme.outline} style={{ marginLeft: 5 }} onPress={() => navigation.goBack()} />
+            </TouchableOpacity>
+        </View>
     )
 }
 
@@ -515,6 +539,7 @@ const styles = StyleSheet.create({
         backgroundColor: theme.color,
         justifyContent: 'flex-start',
         flexDirection: "row",
+        paddingTop: 5,
     },
 
     loading: {

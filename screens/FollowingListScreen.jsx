@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {View, TouchableOpacity, StyleSheet, FlatList, Text, Image} from "react-native";
+import {View, TouchableOpacity, StyleSheet, FlatList, Text, Image, StatusBar} from "react-native";
 import { ProfilePicture, RoundButton, Header, Loading, Button} from '../constants/Components';
 import {colors, sizes, testUsers, images} from "../constants/Data";
 import { firestore, logOut } from "../constants/Sever";
@@ -42,6 +42,10 @@ function FollowingListScreen({route, navigation}) {
     if (loading === true) {
         return(
             <View style = {styles.container}>
+                <StatusBar
+                    backgroundColor = {theme.color}
+                    barStyle = 'light-content'
+                />
                 <Header method = {() => navigation.goBack()} text = {'Following'}/>
                 <Loading/>
             </View>
@@ -56,6 +60,10 @@ function FollowingListScreen({route, navigation}) {
 
         return (
             <View style={styles.container}>
+                <StatusBar
+                    backgroundColor={theme.color}
+                    barStyle='light-content'
+                />
                 <Header method={() => navigation.goBack()} text={'Following'} />
                 {
                     following.length !== 0 ? (
@@ -120,7 +128,7 @@ function User(props) {
                 justifyContent: 'flex-start',
 }}            
             onPress = {props.method}>
-                <ProfilePicture color={colors.white} image={props.image} height={30} width={30} />
+                <ProfilePicture color={colors.white} image={props.image} height={40} width={40} />
                 <Text style = {{marginHorizontal: 10, fontSize: sizes.Small}}>{props.name}</Text>
             </TouchableOpacity>
         </View>

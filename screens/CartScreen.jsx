@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {FlatList, StyleSheet, View, Image, Text} from 'react-native';
+import {FlatList, StyleSheet, View, Image, Text, StatusBar} from 'react-native';
 import {colors, sizes, images} from '../constants/Data';
 import { firestore } from "../constants/Sever";
 import { getDocs, collection, setDoc, doc, onSnapshot } from "firebase/firestore";
@@ -57,6 +57,10 @@ function CartScreen({route, navigation}) {
     if (loading === true) {
         return (
             <View style={styles.container}>
+                <StatusBar
+                    backgroundColor={theme.color}
+                    barStyle='light-content'
+                />
                 <Header method={() => navigation.goBack()} text={'Cart'} />
                 <Loading />
             </View>
@@ -64,6 +68,10 @@ function CartScreen({route, navigation}) {
     } else {
         return (
             <View style={styles.container}>
+                <StatusBar
+                    backgroundColor={theme.color}
+                    barStyle='light-content'
+                />
                 <Header method={() => navigation.goBack()} text={"Cart"} />
                 {
                     cart.length !== 0 ? (

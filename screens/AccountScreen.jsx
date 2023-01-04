@@ -1,9 +1,9 @@
 import React, {useState, useEffect} from 'react';
-import {FlatList, ScrollView, StyleSheet, Text, View, TouchableOpacity, Modal} from 'react-native';
+import {FlatList, ScrollView, StyleSheet, Text, View, TouchableOpacity, Modal, StatusBar} from 'react-native';
 import {colors, sizes, testUsers, testProducts, Chat} from '../constants/Data';
-import {Button, ProductSmall, ProfilePicture, ProductVertical} from '../constants/Components';
+import {Button, ProductSmall, ProfilePicture, ProductHorizontal, SectionHeader} from '../constants/Components';
 import { firestore } from "../constants/Sever";
-import { setDoc, collection, onSnapshot, doc} from "firebase/firestore";
+import { setDoc, collection, onSnapshot, doc, updateDoc, arrayRemove, arrayUnion} from "firebase/firestore";
 import { Entypo, MaterialIcons} from '@expo/vector-icons';
 
 const theme = colors.lightTheme;
@@ -12,11 +12,16 @@ function AccountScreen({route, navigation}) {
     const userId = route.params.id;
     const accId = route.params.accId
     const [users, setUsers] = useState([])
+    const [products, setProducts] = useState([])
     const [user, setUser] = useState({})
     const [acc, setAcc] = useState({})
     const [chats, setChats] = useState([])
     const [chatList, setChatList] = useState([])
     const [optionsAct, setOptionsAct] = useState(false)
+    const [loading, setLoading] = useState(true)
+
+    const userRef = doc(firestore, "Users", userId);
+    const accRef = doc(firestore, "Users", accId);
 
 
     //
@@ -25,24 +30,30 @@ function AccountScreen({route, navigation}) {
     const [productsLength, setProductsLength] = useState(0);
     const [following, setFollowing] = useState(false)
 
+    const [productsList, setProductsList] = useState([])
+
     useEffect(() => {
         const usersSub = onSnapshot(collection(firestore, "Users"), querySnapshot => {
             const data = []
             querySnapshot.forEach((doc) => {
                 data.push(doc.data())
             });
-            console.log("Current data: ", data);
+            //console.log("Current data: ", data);
             setUsers(data)
         });
 
         const userSub = onSnapshot(doc(firestore, "Users", userId), (doc) => {
             setUser(doc.data())
 
-            if (doc.data().following.length !== 0 && doc.data().following.includes(accId)) {
-                setFollowing(true)
-            }else{
-                setFollowing(false)
-            }
+            setFollowing(doc.data().following.includes(accId))
+
+            setChatList(doc.data().chatList)
+        });
+
+        const accSub = onSnapshot(doc(firestore, "Users", accId), (doc) => {
+            
+            setAcc(doc.data())
+            console.log(doc.data());
 
             if (doc.data().following.length !== 0) {
                 setFollowingLength(doc.data().following.length)
@@ -54,19 +65,12 @@ function AccountScreen({route, navigation}) {
 
             if (doc.data().sellerInfo.productList.length !== 0) {
                 setProductsLength(doc.data().sellerInfo.productList.length)
+                setProductsList(doc.data().sellerInfo.productList)
             }
 
-            if (doc.data().following.includes(accId) === true) {
-                setFollowing(true)
-            } else {
-                setFollowing(false)
+            if(acc !== {}){
+                setLoading(false)
             }
-
-            setChatList(doc.data().chatList)
-        });
-
-        const accSub = onSnapshot(doc(firestore, "Users", accId), (doc) => {
-            setAcc(doc.data())
         });
 
         const chatsSub = onSnapshot(collection(firestore, "Chats"), querySnapshot => {
@@ -81,16 +85,23 @@ function AccountScreen({route, navigation}) {
     }, [])
 
     async function follow() {
-        if (following === true) {
-            user.followers.splice(user.following.indexOf(acc.id), 1)
-            acc.following.splice(user.following.indexOf(user.id), 1)
-            await setDoc(doc(firestore, 'Users', userId), user)
-            await setDoc(doc(firestore, 'Users', accId), acc)
-        }else{
-            user.followers.push(acc.id)
-            acc.following.push(user.id)
-            await setDoc(doc(firestore, 'Users', userId), user)
-            await setDoc(doc(firestore, 'Users', accId), acc)
+        if (following === true && user.following.includes(accId)) {
+            await updateDoc(userRef, {
+                following: arrayRemove(accId)
+            })
+
+            await updateDoc(accRef, {
+                followers: arrayRemove(userId)
+            })
+
+        }else if(following === false && user.following.includes(accId) === false){
+            await updateDoc(userRef, {
+                following: arrayUnion(accId)
+            })
+
+            await updateDoc(accRef, {
+                followers: arrayUnion(userId)
+            })
             
         }
     }
@@ -99,8 +110,22 @@ function AccountScreen({route, navigation}) {
         await setDoc(doc(firestore, path, id), data)
     }
 
+    const list = []
+    if (loading === false) {
+        productsList.forEach((product) => {
+            if (product !== undefined) {
+                products.forEach((item) => {
+                    if (item.id === product) {
+                        list.push(item)
+                    }
+                })
+            }
+        })
+    }
+
     return (
         <View style={styles.container}>
+            <StatusBar  backgroundColor={theme.bgColor} barStyle = 'light-content'/>
             <Modal
                 visible={optionsAct}
                 animationType="slide"
@@ -204,7 +229,7 @@ function AccountScreen({route, navigation}) {
                             style={styles.follow}
                             method={() => follow()}
                             text={"Follow"}
-                                textStyle={{ color: theme.bgColor, fontSize: sizes.Medium }}
+                            textStyle={{ color: theme.bgColor, fontSize: sizes.Medium }}
                         />}
                         <Button
                             style={styles.message_btn}
@@ -241,27 +266,28 @@ function AccountScreen({route, navigation}) {
                 </View>
             </View>
 
-            <View>
-                <Text style={{ marginLeft: 15, marginTop: 15, fontSize: 25, color: colors.white }}>Products</Text>
-                <FlatList
-                    horizontal
-                    showsHorizontalScrollIndicator={false}
-                    keyExtractor={(item) => item.id}
-                    data={[]}
-                    renderItem={({ item }) => {
-                        return (
-                            <ProductVertical
-                                product={item}
-                                title={item.title}
-                                price={item.price}
-                                image={item.image}
-                                seller={item.seller}
-                                method={() => navigation.navigate("Product", { item })}
-                            />
-                        )
-                    }}
-                />
-            </View>
+            <ScrollView>
+                {
+                    list.length > 0 ? (
+                        <View style={styles.section}>
+                            <SectionHeader text={'User Products'} method={() => navigation.navigate("Search", { id: userId })} />
+                            <View style={{}}>
+                                <FlatList
+                                    horizontal
+                                    showsHorizontalScrollIndicator={false}
+                                    keyExtractor={(item) => item.id}
+                                    data={list}
+                                    renderItem={({ item }) => {
+                                        return (
+                                            <ProductHorizontal title={item.title} image={item.image} price={item.price} discount={item.discount} seller={item.seller} rating={item.ratings} method={() => navigation.navigate('Product', { id: userId, productId: item.id })} />
+                                        )
+                                    }}
+                                />
+                            </View>
+                        </View>
+                    ) : null
+                }
+            </ScrollView>
             
         </View>
     );

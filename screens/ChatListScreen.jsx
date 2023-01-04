@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Modal, Image } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Modal, Image, StatusBar } from 'react-native';
 import { colors, sizes, Chat, images } from '../constants/Data';
 import { MaterialIcons, Entypo } from "@expo/vector-icons";
 import { SearchBar, ProfilePicture, Header, Loading } from '../constants/Components';
@@ -83,6 +83,10 @@ function ChatListScreen({ navigation, route }) {
     if (loading === true) {
         return (
             <View style={styles.container}>
+                <StatusBar
+                    backgroundColor={theme.color}
+                    barStyle='light-content'
+                />
                 <Header method={() => navigation.goBack()} text={"Chats"} />
                 <Loading/>
             </View>
@@ -97,6 +101,10 @@ function ChatListScreen({ navigation, route }) {
 
         return (
             <View style={styles.container}>
+                <StatusBar
+                    backgroundColor={theme.color}
+                    barStyle='light-content'
+                />
                 <Modal
                     visible={optionsAct}
                     animationType="slide"

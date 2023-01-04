@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, TouchableOpacity, StyleSheet, FlatList, Text, Image } from "react-native";
+import { View, TouchableOpacity, StyleSheet, FlatList, Text, Image, StatusBar } from "react-native";
 import { ProfilePicture, Header, Loading} from '../constants/Components';
 import { colors, sizes, images } from "../constants/Data";
 import { firestore, logOut } from "../constants/Sever";
@@ -40,6 +40,10 @@ function NotificationsScreen({ route, navigation }) {
     if (loading === true) {
         return (
             <View style={styles.container}>
+                <StatusBar
+                    backgroundColor={theme.color}
+                    barStyle='light-content'
+                />
                 <Header method={() => navigation.goBack()} text={'Notifications'} />
                 <Loading />
             </View>
@@ -47,6 +51,10 @@ function NotificationsScreen({ route, navigation }) {
     } else {
         return (
             <View style={styles.container}>
+                <StatusBar
+                    backgroundColor={theme.color}
+                    barStyle='light-content'
+                />
                 <Header method={() => navigation.goBack()} text={'Notifications'} />
                 {
                     notificationList.length !== 0 ? (

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, TextInput, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, TextInput, ScrollView, StatusBar } from 'react-native';
 import { colors, Message, sizes } from '../constants/Data';
 import { firestore } from "../constants/Sever";
 import { collection, setDoc, doc, onSnapshot } from "firebase/firestore";
@@ -71,6 +71,10 @@ function ChatScreen({ route, navigation }) {
 
     return (
         <View style={styles.container}>
+            <StatusBar
+                backgroundColor={theme.bgColor}
+                barStyle='dark-content'
+            />
             <View style={{ flexDirection: 'row', backgroundColor: theme.bgColor, borderBottomColor: theme.outline, borderBottomWidth: 1, padding: 10, alignItems: 'center', marginBottom: 10}}>
                 <MaterialIcons name="arrow-back-ios" size={24} color= {theme.textColor} style ={{marginLeft: 10}} onPress = {() => navigation.goBack()}/>
                 <View style={{ flexDirection: 'row', alignItems: 'center'}}>

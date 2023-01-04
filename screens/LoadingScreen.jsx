@@ -13,7 +13,6 @@ const LoadingScreen = ({route, navigation}) => {
             setLoadingMessage('Starting App')
             navigation.navigate("Home", { id : user.uid });
         } else {
-            setLoadingMessage('User not logged in')
             navigation.navigate("Landing");
         }
     })

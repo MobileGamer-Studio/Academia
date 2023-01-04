@@ -1,7 +1,7 @@
 import React, { useState, useEffect} from 'react'
-import { StyleSheet, Text, TouchableOpacity, View, ScrollView, FlatList, Modal, Share } from 'react-native'
+import { StyleSheet, Text, TouchableOpacity, View, ScrollView, FlatList, Modal, Share, StatusBar } from 'react-native'
 import { colors, sizes } from '../constants/Data'
-import { RoundButton, ProductVertical } from "../constants/Components";
+import { RoundButton, ProductHorizontal, SectionHeader } from "../constants/Components";
 import { firestore, logOut } from "../constants/Sever";
 import { collection, doc, onSnapshot } from "firebase/firestore";
 import { MaterialIcons, Entypo } from "@expo/vector-icons";
@@ -14,11 +14,15 @@ function UserAccount({ route, navigation }) {
     const userId = route.params.id;
     const [users, setUsers] = useState([])
     const [user, setUser] = useState({})
+    const [products, setProducts] = useState([])
+    const [loading, setLoading] = useState(true)
 
     //
     const [followingLength, setFollowingLength] = useState(0);
     const [followersLength, setFollowersLength] = useState(0);
     const [productsLength, setProductsLength] = useState(0);
+
+    const [productsList, setProductsList] = useState([]);
 
 
     useEffect(() => {
@@ -30,6 +34,16 @@ function UserAccount({ route, navigation }) {
             //console.log("Current data: ", data);
             setUsers(data)
         });
+
+        const productsSub = onSnapshot(collection(firestore, "Products"), querySnapshot => {
+            const data = []
+            querySnapshot.forEach((doc) => {
+                data.push(doc.data())
+            });
+            //console.log("Current data: ", data);
+            setProducts(data)
+        });
+
 
         const userSub = onSnapshot(doc(firestore, "Users", userId), (doc) => {
             setUser(doc.data())
@@ -44,14 +58,35 @@ function UserAccount({ route, navigation }) {
 
             if (doc.data().sellerInfo.productList.length !== 0) {
                 setProductsLength(doc.data().sellerInfo.productList.length)
+                setProductsList(doc.data().sellerInfo.productList)
+            }
+
+            if (user !== {}) {
+                setLoading(false)
             }
         });
 
     }, [])
+    const list = []
+    if (loading === false) {
+        productsList.forEach((product) => {
+            if (product !== undefined) {
+                products.forEach((item) => {
+                    if (item.id === product) {
+                        list.push(item)
+                    }
+                })
+            }
+        })
+    }
 
     //Return
     return (
         <View style={styles.container}>
+            <StatusBar
+                backgroundColor={theme.color}
+                barStyle='light-content'
+            />
             <View style={{
                 flexDirection: 'column',
                 padding: sizes.Small,
@@ -213,9 +248,26 @@ function UserAccount({ route, navigation }) {
                 backgroundColor: colors.white,
                 bottom: 0,
             }}>
-                <View>
-
-                </View>
+                {
+                    list.length > 0 ? (
+                        <View style={styles.section}>
+                            <SectionHeader text={'Your Products'} method={() => navigation.navigate("Search", { id: userId })} />
+                            <View style={{}}>
+                                <FlatList
+                                    horizontal
+                                    showsHorizontalScrollIndicator={false}
+                                    keyExtractor={(item) => item.id}
+                                    data={list}
+                                    renderItem={({ item }) => {
+                                        return (
+                                            <ProductHorizontal title={item.title} image={item.image} price={item.price} discount={item.discount} seller={item.seller} rating={item.ratings} method={() => navigation.navigate('Product', { id: userId, productId: item.id })} />
+                                        )
+                                    }}
+                                />
+                            </View>
+                        </View>
+                    ) : null
+                }
             </ScrollView>
             
             <View style={{
@@ -247,8 +299,9 @@ const styles = StyleSheet.create({
     },
 
     section: {
-        borderTopWidth: 1,
-        borderColor: theme.outline,
+        marginVertical: sizes.ExtraSmall,
+        // borderTopWidth: 1,
+        // borderColor: theme.outline,
     },
 
     popUpSection: {

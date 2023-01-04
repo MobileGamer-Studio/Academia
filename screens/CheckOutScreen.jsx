@@ -1,5 +1,5 @@
 import React  from "react";
-import { FlatList, StyleSheet, View } from 'react-native';
+import { FlatList, StyleSheet, View, StatusBar } from 'react-native';
 import {colors, testUsers} from "../constants/Data"
 import { CartItem, Header } from "../constants/Components";
 
@@ -10,6 +10,10 @@ function CheckOutScreen({route, navigation}) {
 
     return (
         <View style = {styles.container}>
+            <StatusBar
+                backgroundColor={theme.color}
+                barStyle='light-content'
+            />
             <Header method = {() => navigation.goBack()} text = {'Check Out'}/>
             <View>
                 <FlatList

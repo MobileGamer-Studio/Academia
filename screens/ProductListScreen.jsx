@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, TouchableOpacity, StyleSheet, FlatList, Text, Image } from "react-native";
+import { View, TouchableOpacity, StyleSheet, FlatList, Text, Image, StatusBar} from "react-native";
 import { ProfilePicture, Loading, Header, Button } from '../constants/Components';
 import { colors, sizes, images } from "../constants/Data";
 import { firestore, logOut } from "../constants/Sever";
@@ -52,6 +52,10 @@ function ProductListScreen({ route, navigation }) {
     if (loading === true) {
         return (
             <View style={styles.container}>
+                <StatusBar
+                    backgroundColor={theme.color}
+                    barStyle='light-content'
+                />
                 <Header method={() => navigation.goBack()} text={'Products'} />
                 <Loading message={loadingMessage} />
             </View>
@@ -68,6 +72,10 @@ function ProductListScreen({ route, navigation }) {
 
         return (
             <View style={styles.container}>
+                <StatusBar
+                    backgroundColor={theme.color}
+                    barStyle='light-content'
+                />
                 <Header method={() => navigation.goBack()} text={'Products'} />
                 {
                     userProducts.length !== 0 ? (
@@ -162,10 +170,10 @@ function Product(props) {
                 marginVertical: 5,
             }}>
                 {
-                    props.title.length < 10 ? (
+                    props.title.length < 25 ? (
                         <Text style={{ fontSize: sizes.Small, color: theme.color2 }}>{props.title}</Text>
                     ) : (
-                        <Text style={{ fontSize: sizes.Small, color: theme.color2 }}>{props.title.slice(0, 10) + '...'}</Text>
+                        <Text style={{ fontSize: sizes.Small, color: theme.color2 }}>{props.title.slice(0, 25) + '...'}</Text>
                     )
                 }
                 <Text style={{ color: theme.color2, fontSize: sizes.ExtraSmall }}>{props.rating + " star"}</Text>
@@ -180,10 +188,15 @@ function Product(props) {
                             <Text style={{ color: theme.color2, fontSize: 12 }}>{(props.price - (props.discount / 100 * props.price)) + ' Naira'}</Text>
 
                             <View style={{
-                                backgroundColor: theme.color2,
-                                alignItems: 'center',
-                                borderRadius: sizes.ExtraSmall,
-                                paddingHorizontal: 5,
+                                    flexDirection: 'row',
+                                    backgroundColor: theme.color2,
+                                    elevation: 1,
+                                    padding: 2.5,
+                                    margin: 5,
+                                    borderRadius: sizes.Small,
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    width: '100%',
                             }}>
                                 <Text style={{ color: theme.bgColor }}>{'-' + props.discount + '% discount'}</Text>
                             </View>

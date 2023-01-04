@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { FlatList, ScrollView, Image,  StyleSheet, Text, TouchableOpacity, View, StatusBar, SafeAreaView } from 'react-native';
 import { categories, colors, sizes, suggestedProducts, images } from '../constants/Data';
-import { NavBar, Loading, ProductHorizontal, ProductVertical, Button, ProfilePicture} from '../constants/Components';
+import { NavBar, Loading, ProductHorizontal, ProductVertical, Button, ProfilePicture, SectionHeader} from '../constants/Components';
 import { firestore } from "../constants/Sever";
 import { collection, setDoc, doc, onSnapshot} from "firebase/firestore";
-import { Entypo, MaterialIcons, FontAwesome } from '@expo/vector-icons';
+import { Entypo, MaterialIcons, Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import mobileAds, { BannerAd, BannerAdSize, TestIds  } from 'react-native-google-mobile-ads';
 
@@ -23,6 +23,7 @@ function HomeScreen({ route, navigation }) {
     const [newProducts, setNewProducts] = useState([])
     const [cart, setCart] = useState([])
     const [bestSellers, setBestSellers] = useState([])
+    const [likedList, setLikedList] = useState([])
 
 
 
@@ -59,6 +60,7 @@ function HomeScreen({ route, navigation }) {
             setNewProducts(doc.data().userInfo.feed.newProducts)
             setCart(doc.data().userInfo.cart)
             setBestSellers(doc.data().userInfo.feed.bestSellers)
+            setLikedList(doc.data().userInfo.liked)
 
 
             if(user !== {}){
@@ -105,6 +107,7 @@ function HomeScreen({ route, navigation }) {
         const newP = []
         const crt = []
         const bs = []
+        const liked = []
 
         const defaultProducts = products.slice(0, 9)
 
@@ -164,13 +167,19 @@ function HomeScreen({ route, navigation }) {
             })
         })
 
-        console.log(activity)
-        console.log(user.userInfo.recentlyViewed)
+        likedList.forEach((item) => {
+            products.forEach((product) => {
+                if (item === product.id) {
+                    liked.push(product)
+                }
+            })
+        })
 
         return (
             <SafeAreaView style={styles.container}>
                 <StatusBar
-                    backgroundColor= {theme.color}
+                    backgroundColor= {theme.bgColor}
+                    barStyle = 'dark-content'
                 />
                 <Header method = {() => navigation.navigate('Notifications', { id: userId })} />
                 <ScrollView showsVerticalScrollIndicator={false}>
@@ -260,7 +269,7 @@ function HomeScreen({ route, navigation }) {
                                         data={sgUsers}
                                         renderItem={({ item }) => {
                                             return (
-                                                <View style = {{
+                                                <TouchableOpacity style = {{
                                                     backgroundColor: theme.color2,
                                                     elevation: 2,
                                                     height: 150,
@@ -269,6 +278,14 @@ function HomeScreen({ route, navigation }) {
                                                     alignItems: 'center',
                                                     justifyContent: 'space-evenly',
                                                     margin: 10,
+                                                }}
+                                                
+                                                onPress = {() => {
+                                                    if (item.id === userId) {
+                                                        navigation.navigate("UserAccount", { id: userId })
+                                                    }else{
+                                                        navigation.navigate('Account', { id: userId, accId: item.id })
+                                                    }
                                                 }}>
                                                     <ProfilePicture image = {item.profilePicture} height = {70} width = {70}/>
                                                     <View style = {{
@@ -276,19 +293,8 @@ function HomeScreen({ route, navigation }) {
 
                                                     }}>
                                                         <Text style = {{color: theme.bgColor}}>{item.name}</Text>
-                                                        <TouchableOpacity style = {{
-                                                            backgroundColor: theme.bgColor,
-                                                            margin: 5,
-                                                            padding: 5,
-                                                            borderRadius: sizes.Small,
-                                                            alignItems: 'center',
-                                                            justifyContent: 'center',
-                                                            width: '100%',
-                                                        }}>
-                                                            <Text style = {{color: theme.color2}}>Follow</Text>
-                                                        </TouchableOpacity>
                                                     </View>
-                                                </View>
+                                                </TouchableOpacity>
                                             )
                                         }}
                                     />
@@ -347,6 +353,26 @@ function HomeScreen({ route, navigation }) {
                                         showsHorizontalScrollIndicator={false}
                                         keyExtractor={(item) => item.id}
                                         data={categories}
+                                        renderItem={({ item }) => {
+                                            return (
+                                                <ProductHorizontal title={item.title} image={item.image} price={item.price} discount={item.discount} seller={item.seller} rating={item.ratings} method={() => navigation.navigate('Product', { id: userId, productId: item.id })} />
+                                            )
+                                        }}
+                                    />
+                                </View>
+                            </View>
+                        ) : null
+                    }
+                    {
+                        liked.length > 0 ? (
+                            <View style={styles.section}>
+                                <SectionHeader text={'Your Liked Products'} method={() => navigation.navigate("Search", { id: userId })} />
+                                <View style={{}}>
+                                    <FlatList
+                                        horizontal
+                                        showsHorizontalScrollIndicator={false}
+                                        keyExtractor={(item) => item.id}
+                                        data={liked}
                                         renderItem={({ item }) => {
                                             return (
                                                 <ProductHorizontal title={item.title} image={item.image} price={item.price} discount={item.discount} seller={item.seller} rating={item.ratings} method={() => navigation.navigate('Product', { id: userId, productId: item.id })} />
@@ -473,34 +499,10 @@ function Header(props){
                 <TouchableOpacity style={{
                     marginHorizontal: 15,
                 }} onPress={props.method}>
-                    <FontAwesome name="bell-o" size={24} color={theme.color} />
+                    <Ionicons name="notifications" size={24} color={theme.color} />
                 </TouchableOpacity>
             </View>
 
-        </View>
-    )
-}
-
-function SectionHeader(props){
-    return(
-        <View style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            marginBottom: 10,
-        }}>
-            <Text style={{
-                marginHorizontal: 10,
-                fontSize: 20,
-                color: theme.color2,
-            }}>{props.text}</Text>
-            <TouchableOpacity style={{
-                marginHorizontal: 10,
-                flexDirection: 'row',
-                alignItems: 'center',
-            }} onPress = {props.method}>
-                <Text style={{ fontSize: 12, color: theme.outline }}>See More</Text>
-                <MaterialIcons name="arrow-forward-ios" size={10} color={theme.outline} style={{ marginLeft: 5 }} onPress={() => navigation.goBack()} />
-            </TouchableOpacity>
         </View>
     )
 }

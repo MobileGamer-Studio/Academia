@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, Text, TouchableOpacity, View, ScrollView} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View, ScrollView, StatusBar} from 'react-native';
 import { colors, themeData, User} from '../constants/Data'
 import {logOut} from "../constants/Sever"
 import {MaterialIcons} from "@expo/vector-icons"
@@ -40,6 +40,10 @@ function SettingScreen({route, navigation}) {
 
     return (
         <View style = {styles.container}>
+            <StatusBar
+                backgroundColor={theme.color}
+                barStyle='light-content'
+            />
             <Header method = {() => navigation.goBack()} text = {'Settings'}/>
             <ScrollView>
                 <View>
