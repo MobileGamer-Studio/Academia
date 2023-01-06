@@ -18,6 +18,7 @@ function ProductScreen({ route, navigation }) {
     const [user, setUser] = useState({})
     const [users, setUsers] = useState([])
     const [loading, setLoading] = useState(true)
+    const [loadingMessage, setLoadingMessage] =  useState('Getting Product')
     const [optionsAct, setOptionsAct] = useState(false)
     const [seeMore, setSeeMore] = useState(false)
     const [amountSellected, setAmountSellected] = useState(1)
@@ -49,6 +50,8 @@ function ProductScreen({ route, navigation }) {
 
 
     const addToCart = async () => {
+        setLoadingMessage('Adding To Cart')
+        setLoading(true)
         const newItem = Item;
         newItem.id = userId + "-ITEM-" + product.id;
         newItem.product = product.id;
@@ -57,28 +60,29 @@ function ProductScreen({ route, navigation }) {
         if (user.userInfo.cart.includes(newItem) === false) {
             user.userInfo.cart.push(newItem);
             await setDoc(doc(firestore, 'Users', userId), user);
-
+            setLoading(false)
             Alert.alert(
                 "Added to cart",
                 "Do you want to checkout now?",
                 [
                     {
-                        text: "Continue Shopping",
+                        text: "Continue",
                         onPress: () => navigation.goBack()
                     },
                     {
                         text: "Checkout",
-                        onPress: () => navigation.navigate('Checkout')
+                        onPress: () => navigation.navigate('Checkout', {id: userId})
                     }
                 ]
             )
         }else{
+            setLoading(false)
             Alert.alert(
                 "Already in cart",
                 "Do you want to see your cart?",
                 [
                     {
-                        text: "Continue Shopping",
+                        text: "Continue",
                         onPress: () => navigation.goBack()
                     },
                     {
@@ -92,8 +96,10 @@ function ProductScreen({ route, navigation }) {
 
     const addToRecentActivity = async () => {
         if (user.userInfo.recentlyViewed.includes(productId) === false) {
+            setLoading(true)
             user.userInfo.recentlyViewed.push(productId)
             await setDoc(doc(firestore, 'Users', userId), user)
+            setLoading(false)
         }
     }
 
@@ -156,7 +162,7 @@ function ProductScreen({ route, navigation }) {
     if (loading === true) {
         return (
             <View style={styles.container}>
-                <Loading />
+                <Loading message  = {loadingMessage}/>
             </View>
         )
     } else {

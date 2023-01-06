@@ -84,7 +84,8 @@ function HomeScreen({ route, navigation }) {
         return (
             <SafeAreaView style={styles.container}>
                 <StatusBar
-                    backgroundColor={theme.color}
+                    backgroundColor={theme.bgColor}
+                    barStyle = 'dark-content'
                 />
                 <Header method={() => navigation.navigate('Notifications', { id: userId })} />
                 <Loading />

@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {View, TouchableOpacity, StyleSheet, FlatList, Text, Image, StatusBar} from "react-native";
 import { ProfilePicture, RoundButton, Header, Loading, Button} from '../constants/Components';
-import {colors, sizes, testUsers, images} from "../constants/Data";
+import {colors, sizes,   images} from "../constants/Data";
 import { firestore, logOut } from "../constants/Sever";
 import { collection, doc, onSnapshot } from "firebase/firestore";
 

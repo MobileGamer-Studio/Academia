@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react'
-import {FlatList, Image, StyleSheet, Text, TouchableOpacity, View, ScrollView, TextInput} from 'react-native'
-import {colors, sizes, testProducts, images} from '../constants/Data';
+import {FlatList, Image, StyleSheet, Text, TouchableOpacity, View, ScrollView, TextInput, StatusBar} from 'react-native'
+import {colors, sizes,    images} from '../constants/Data';
 import {ProductCategory, ProductVertical, SearchBar, Loading} from '../constants/Components';
 import { MaterialIcons } from '@expo/vector-icons';
 import { firestore } from '../constants/Sever';
@@ -11,13 +11,15 @@ const theme = colors.lightTheme;
 export default function SearchScreen({navigation, route}) {
     const userId = route.params.id;
     const [users, setUsers] = useState([])
+    const [products, setProducts] = useState([])
     const [user, setUser] = useState({})
     const [loading, setLoading] = useState(true)
+    const [searchText, setSearchText] = useState('')
     const [searchResult, setSearchResult] = useState([])
     const [relatedTags, setRelatedTags] = useState([])
     
 
-    const [productList, setProductList] = useState([])
+    
 
     useEffect(() => {
         const usersSub = onSnapshot(collection(firestore, "Users"), querySnapshot => {
@@ -34,8 +36,7 @@ export default function SearchScreen({navigation, route}) {
             querySnapshot.forEach((doc) => {
                 data.push(doc.data())
             });
-            setProductList(data)
-            setSearchResult(data)
+            setProducts(data)
             
 
             if (data.length !== 0) {
@@ -46,47 +47,43 @@ export default function SearchScreen({navigation, route}) {
 
         const userSub = onSnapshot(doc(firestore, "Users", userId), (doc) => {
             setUser(doc.data()) 
-            
-            
         });
 
-    }, [])
-
-    function Search(val) {
-        if (val === "null" || val === '') {
-            return setSearchResult(testProducts);
+        if (products.length !== 0) {
+            Search()
         }
-        val = val.toLowerCase();
-        setSearchResult([])
-        let list = []
-        testProducts.forEach(product => {
-            if (product.title.includes(val) === true || product.tags.includes(val) === true) {
-                console.log("found one")
-                list.push(product)
-            }
-        })
-        setSearchResult(list)  
-        console.log(val, "found in: ", searchResult);
 
-        //GetRelatedTags()
+    }, [searchText, products])
+
+    function Search() {
+        if (searchText === "null" || searchText === '' || searchText === null) {
+            return setSearchResult(products);
+        }
+        const val = searchText.toLowerCase();
+        const result = products.filter(item => item.title.toLowerCase().includes(val));
+        setSearchResult(result);
+        console.log(result)
     }
 
     if(loading === true){
         return(
             <View style = {styles.container}>
+                <StatusBar
+                backgroundColor={theme.color}
+                barStyle='light-content'
+            />
                 <View style={{
                     flexDirection: "row",
                     alignItems: "center",
                     backgroundColor: theme.color,
-                    paddingTop: 40,
                     marginBottom: 10,
                     elevation: 10,
-                    paddingBottom: 10,
+                    padding: 10,
                 }}>
                     <MaterialIcons name="arrow-back-ios" size={24} color={colors.white} style={{ marginLeft: 10 }} onPress={() => navigation.goBack()} />
                     <View>
                         <TextInput
-                            onChangeText={(val) => Search(val)}
+                            onChangeText={val => setSearchText(val)}
                             style={{
                                 borderRadius: sizes.ExtraLarge,
                                 paddingHorizontal: sizes.Small,
@@ -96,6 +93,7 @@ export default function SearchScreen({navigation, route}) {
                                 marginHorizontal: sizes.ExtraSmall,
                             }}
                             placeholder="snacks, assignments, stationaries..."
+                            value = {searchText}
                         />
                     </View>
                 </View>
@@ -105,19 +103,23 @@ export default function SearchScreen({navigation, route}) {
     }else{
         return (
             <View style={styles.container}>
+                <StatusBar
+                backgroundColor={theme.color}
+                barStyle='light-content'
+                />
                 <View style={{
                     flexDirection: "row",
                     alignItems: "center",
                     backgroundColor: theme.color,
                     marginBottom: 10,
                     elevation: 10,
-                    paddingBottom: 10,
-                    paddingTop: 10,
+                    padding: 10,
+                    padding: 10,
                 }}>
-                    <MaterialIcons name="arrow-back-ios" size={24} color={colors.white} style={{ marginLeft: 10 }} onPress={() => navigation.goBack()} />
+                    <MaterialIcons name="arrow-back-ios" size={24} color={colors.white} onPress={() => navigation.goBack()} />
                     <View>
                         <TextInput
-                            onChangeText={(val) => Search(val)}
+                            onChangeText={val => setSearchText(val)}
                             style={{
                                 borderRadius: sizes.ExtraLarge,
                                 paddingHorizontal: sizes.Small,
@@ -144,11 +146,7 @@ export default function SearchScreen({navigation, route}) {
                                 renderItem={({ item }) => {
                                     return (
 
-                                        <ProductVertical
-                                            title={item.title}
-                                            image={item.image}
-                                            method={() => navigation.navigate("Product", { item })}
-                                        />
+                                        <ProductVertical title={item.title} image={item.image} price={item.price} discount={item.discount} seller={item.seller} rating={item.ratings} method={() => navigation.navigate('Product', { id: userId, productId: item.id })} />
                                     );
                                 }}
                             />

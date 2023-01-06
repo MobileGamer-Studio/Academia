@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {FlatList, ScrollView, StyleSheet, Text, View, TouchableOpacity, Modal, StatusBar} from 'react-native';
-import {colors, sizes, testUsers, testProducts, Chat} from '../constants/Data';
+import {colors, sizes,      Chat} from '../constants/Data';
 import {Button, ProductSmall, ProfilePicture, ProductHorizontal, SectionHeader} from '../constants/Components';
 import { firestore } from "../constants/Sever";
 import { setDoc, collection, onSnapshot, doc, updateDoc, arrayRemove, arrayUnion} from "firebase/firestore";

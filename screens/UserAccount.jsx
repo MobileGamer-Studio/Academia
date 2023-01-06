@@ -130,6 +130,10 @@ function UserAccount({ route, navigation }) {
                                 <MaterialIcons name="bookmark" size={24} color={colors.defaultBG} />
                                 <Text style={{ color: theme.outline, marginHorizontal: 2.5 }}>Saved</Text>
                             </TouchableOpacity>
+                            <TouchableOpacity style={styles.popUpSection} onPress={() => { setOptionsAct(false); navigation.navigate("Checkout", { id: userId })}}>
+                                <MaterialIcons name="cart" size={24} color={colors.defaultBG} />
+                                <Text style={{ color: theme.outline, marginHorizontal: 2.5 }}>Check Out</Text>
+                            </TouchableOpacity>
                             <TouchableOpacity style={styles.popUpSection} onPress={() => { setOptionsAct(false); navigation.navigate("EditProfile", { id: userId })}}>
                                 <MaterialIcons name="edit" size={24} color={colors.defaultBG} />
                                 <Text style={{ color: theme.outline, marginHorizontal: 2.5 }}>Edit Profile</Text>
