@@ -17,7 +17,7 @@
       "developmentClient": true
     },
     "production": {}
-  }
+  },
   "submit": {
     "production": {}
   }
