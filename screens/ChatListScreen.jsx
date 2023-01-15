@@ -43,7 +43,7 @@ function ChatListScreen({ navigation, route }) {
 
             setChats(data)
 
-            
+
         });
 
         return (
@@ -57,7 +57,7 @@ function ChatListScreen({ navigation, route }) {
 
 
 
-    //Funtions 
+    //Functions
     async function saveData(id, path, data) {
         await setDoc(doc(firestore, path, id), data)
     }

@@ -4,7 +4,7 @@ import {colors, images, sizes} from "./Data";
 import {MaterialIcons} from "@expo/vector-icons";
 
 
-const theme = colors.lightTheme;    
+const theme = colors.lightTheme;
 
 //Buttons, Input, Images
 export const Button = (props) => {
@@ -113,7 +113,7 @@ export const SearchBar = (props) => {
                     borderColor: theme.color2,
                     borderWidth: 1,
                 }}
-                placeholder="snacks, assignments, stationaries..."
+                placeholder="snacks, assignments, stationary..."
                 value = {props.value}
             />
         </View>
@@ -396,7 +396,7 @@ export const NavBar = (props) => {
 
               <View style = {styles.navItem}>
                   <TouchableOpacity
-                      onPress={props.profile}  
+                      onPress={props.profile}
                       style={{
                           backgroundColor: theme.bgColor,
                           borderRadius: sizes.ExtraLarge,
@@ -501,7 +501,7 @@ const styles = StyleSheet.create({
     userProfile: {
         alignItems: "center",
         margin: sizes.Small,
-        
+
     },
 
     navContainer: {

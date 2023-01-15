@@ -1,11 +1,15 @@
 import React, {useEffect, useState} from 'react';
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Image, StyleSheet, Text, TouchableOpacity, View, StatusBar} from 'react-native';
 import {colors, images, sizes} from '../constants/Data';
 
 function LandingScreen({navigation}) {
 
     return (
         <View style={styles.container}>
+            <StatusBar
+                backgroundColor={theme.bgColor}
+                barStyle='dark-content'
+            />
             <View style={{
                 height: 350,
                 width: 350,

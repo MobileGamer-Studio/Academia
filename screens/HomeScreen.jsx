@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { FlatList, ScrollView, Image,  StyleSheet, Text, TouchableOpacity, View, StatusBar, SafeAreaView } from 'react-native';
+import { FlatList, ScrollView, Image, StyleSheet, Text, TouchableOpacity, View, StatusBar, SafeAreaView } from 'react-native';
 import { categories, colors, sizes, suggestedProducts, images } from '../constants/Data';
-import { NavBar, Loading, ProductHorizontal, ProductVertical, Button, ProfilePicture, SectionHeader} from '../constants/Components';
+import { NavBar, Loading, ProductHorizontal, ProductVertical, Button, ProfilePicture, SectionHeader } from '../constants/Components';
 import { firestore } from "../constants/Sever";
-import { collection, setDoc, doc, onSnapshot} from "firebase/firestore";
+import { collection, setDoc, doc, onSnapshot } from "firebase/firestore";
 import { Entypo, MaterialIcons, Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import mobileAds, { BannerAd, BannerAdSize, TestIds  } from 'react-native-google-mobile-ads';
+import mobileAds, { BannerAd, BannerAdSize, TestIds } from 'react-native-google-mobile-ads';
 
 const theme = colors.lightTheme;
 function HomeScreen({ route, navigation }) {
@@ -63,19 +63,12 @@ function HomeScreen({ route, navigation }) {
             setLikedList(doc.data().userInfo.liked)
 
 
-            if(user !== {}){
+            if (user !== {}) {
                 setLoading(false)
             }
         });
 
-        // mobileAds()
-        //     .initialize()
-        //     .setRequestConfiguration({
-        //         testDeviceIdentifiers: ['EMULATOR'],
-        //     })
-        //     .then(adapterStatuses => {
-        //         // Initialization complete!
-        //     });
+        mobileAds().initialize()
 
     }, [])
 
@@ -85,7 +78,7 @@ function HomeScreen({ route, navigation }) {
             <SafeAreaView style={styles.container}>
                 <StatusBar
                     backgroundColor={theme.bgColor}
-                    barStyle = 'dark-content'
+                    barStyle='dark-content'
                 />
                 <Header method={() => navigation.navigate('Notifications', { id: userId })} />
                 <Loading />
@@ -99,7 +92,7 @@ function HomeScreen({ route, navigation }) {
                 />
             </SafeAreaView>
         )
-    }else{
+    } else {
 
         const sgUsers = []
         const sgProducts = []
@@ -179,29 +172,23 @@ function HomeScreen({ route, navigation }) {
         return (
             <SafeAreaView style={styles.container}>
                 <StatusBar
-                    backgroundColor= {theme.bgColor}
-                    barStyle = 'dark-content'
+                    backgroundColor={theme.bgColor}
+                    barStyle='dark-content'
                 />
-                <Header method = {() => navigation.navigate('Notifications', { id: userId })} />
+                <Header method={() => navigation.navigate('Notifications', { id: userId })} />
                 <ScrollView showsVerticalScrollIndicator={false}>
                     <View>
-                        {/* <GAMBannerAd
-                        unitId={bannerAdId}
-                        sizes={[BannerAdSize.FULL_BANNER]}
-                        requestOptions={{
-                            requestNonPersonalizedAdsOnly: true,
-
-                        }}
-                    /> */}
-
-                    </View>
-                    <View>
-                        
+                        {/* <BannerAd
+                            unitId={bannerAdId}
+                            size={BannerAdSize.LARGE_BANNER}
+                            requestOptions={{
+                                requestNonPersonalizedAdsOnly: true,
+                            }}></BannerAd> */}
                     </View>
                     {
                         sgProducts.length > 0 ? (
                             <View style={styles.section}>
-                                <SectionHeader text = {'Suggested Products'}/>
+                                <SectionHeader text={'Suggested Products'} />
                                 <View>
                                     <FlatList
                                         horizontal
@@ -211,18 +198,18 @@ function HomeScreen({ route, navigation }) {
                                         data={sgProducts}
                                         renderItem={({ item }) => {
                                             return (
-                                                <ProductHorizontal title = { item.title } image = { item.image } price = { item.price } discount = { item.discount } seller = { item.seller } rating = { item.ratings } method = {() => navigation.navigate('Product', { id: userId, productId: item.id })}/>
+                                                <ProductHorizontal title={item.title} image={item.image} price={item.price} discount={item.discount} seller={item.seller} rating={item.ratings} method={() => navigation.navigate('Product', { id: userId, productId: item.id })} />
                                             )
                                         }}
                                     />
                                 </View>
                             </View>
                         ) : (
-                                <View style={styles.section}>
-                                    <SectionHeader text={'Suggested Products'} method= {() => navigation.navigate("Search", { id: userId })} />
-                                    {
-                                        defaultProducts.length === 0 ? (
-                                        <TouchableOpacity style = {{
+                            <View style={styles.section}>
+                                <SectionHeader text={'Suggested Products'} method={() => navigation.navigate("Search", { id: userId })} />
+                                {
+                                    defaultProducts.length === 0 ? (
+                                        <TouchableOpacity style={{
                                             alignItems: 'center',
                                             justifyContent: 'center',
                                             backgroundColor: theme.color2,
@@ -232,30 +219,30 @@ function HomeScreen({ route, navigation }) {
                                             width: 250,
                                             alignSelf: 'center',
                                         }}
-                                        
-                                                onPress={() => navigation.navigate("UploadProduct", { id: userId })}>
+
+                                            onPress={() => navigation.navigate("UploadProduct", { id: userId })}>
                                             <Text style={{ color: theme.bgColor }}>No Products Available</Text>
                                             <Text style={{ color: theme.bgColor }}>Upload Your First Product</Text>
                                         </TouchableOpacity>) : (
-                                            <View>
-                                                <FlatList
-                                                    horizontal
-                                                    
-                                                    showsHorizontalScrollIndicator = { false }
-                                                    keyExtractor = { (item) => item.id }
-                                                    data = { defaultProducts }
-                                                    renderItem = {
-                                                        ({ item }) => {
-                                                            return(
-                                                            <ProductHorizontal title = { item.title } image = { item.image } price = { item.price } discount = { item.discount } seller = { item.seller } rating = { item.ratings } method = {() => navigation.navigate('Product', { id: userId, productId: item.id })}/>
-                                                )
+                                        <View>
+                                            <FlatList
+                                                horizontal
+
+                                                showsHorizontalScrollIndicator={false}
+                                                keyExtractor={(item) => item.id}
+                                                data={defaultProducts}
+                                                renderItem={
+                                                    ({ item }) => {
+                                                        return (
+                                                            <ProductHorizontal title={item.title} image={item.image} price={item.price} discount={item.discount} seller={item.seller} rating={item.ratings} method={() => navigation.navigate('Product', { id: userId, productId: item.id })} />
+                                                        )
                                                     }}
 
-                                                />
-                                            </View>
-                                            )
-                                    }
-                                </View>
+                                            />
+                                        </View>
+                                    )
+                                }
+                            </View>
                         )
                     }
                     {
@@ -270,7 +257,7 @@ function HomeScreen({ route, navigation }) {
                                         data={sgUsers}
                                         renderItem={({ item }) => {
                                             return (
-                                                <TouchableOpacity style = {{
+                                                <TouchableOpacity style={{
                                                     backgroundColor: theme.color2,
                                                     elevation: 2,
                                                     height: 150,
@@ -280,20 +267,20 @@ function HomeScreen({ route, navigation }) {
                                                     justifyContent: 'space-evenly',
                                                     margin: 10,
                                                 }}
-                                                
-                                                onPress = {() => {
-                                                    if (item.id === userId) {
-                                                        navigation.navigate("UserAccount", { id: userId })
-                                                    }else{
-                                                        navigation.navigate('Account', { id: userId, accId: item.id })
-                                                    }
-                                                }}>
-                                                    <ProfilePicture image = {item.profilePicture} height = {70} width = {70}/>
-                                                    <View style = {{
+
+                                                    onPress={() => {
+                                                        if (item.id === userId) {
+                                                            navigation.navigate("UserAccount", { id: userId })
+                                                        } else {
+                                                            navigation.navigate('Account', { id: userId, accId: item.id })
+                                                        }
+                                                    }}>
+                                                    <ProfilePicture image={item.profilePicture} height={70} width={70} />
+                                                    <View style={{
                                                         alignItems: 'center',
 
                                                     }}>
-                                                        <Text style = {{color: theme.bgColor}}>{item.name}</Text>
+                                                        <Text style={{ color: theme.bgColor }}>{item.name}</Text>
                                                     </View>
                                                 </TouchableOpacity>
                                             )
@@ -323,7 +310,7 @@ function HomeScreen({ route, navigation }) {
                             </View>
                         ) : null
                     }
-                    
+
                     {
                         sls.length > 0 ? (
                             <View style={styles.section}>
@@ -404,13 +391,14 @@ function HomeScreen({ route, navigation }) {
                             </View>
                         ) : null
                     }
-                    {/* <BannerAd
-                        unitId={TestIds.BANNER}
-                        size={BannerAdSize.FULL_BANNER}
-                        requestOptions={{
-                            requestNonPersonalizedAdsOnly: true,
-                        }}
-                    /> */}
+                    <View>
+                        {/* <BannerAd
+                            unitId={bannerAdId}
+                            size={BannerAdSize.FULL_BANNER}
+                            requestOptions={{
+                                requestNonPersonalizedAdsOnly: true,
+                            }}></BannerAd> */}
+                    </View>
                     {
                         act.length > 0 ? (
                             <View style={styles.section_bottom}>
@@ -467,8 +455,8 @@ function HomeScreen({ route, navigation }) {
 }
 
 
-function Header(props){
-    return(
+function Header(props) {
+    return (
         <View style={{
             flexDirection: "row",
             alignItems: "center",

@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {Image, StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native";
+import {Image, StyleSheet, Text, TextInput, TouchableOpacity, View, StatusBar} from "react-native";
 import {colors, images, sizes} from "../constants/Data";
 import {SignIn_Google, SignUp} from "../constants/Sever"
 
@@ -11,6 +11,10 @@ const SignUpScreen = ({navigation}) => {
 
     return (
         <View style={styles.container}>
+            <StatusBar
+                backgroundColor={theme.bgColor}
+                barStyle='dark-content'
+            />
             <View>
                 <Text style={{
                     fontSize: sizes.ExtraLarge,

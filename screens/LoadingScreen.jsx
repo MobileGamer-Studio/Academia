@@ -1,8 +1,9 @@
 import {onAuthStateChanged} from 'firebase/auth';
 import react, {useState} from 'react';
-import {Image, StyleSheet, View, ActivityIndicator, Text} from 'react-native';
+import {Image, StyleSheet, View, ActivityIndicator, Text, StatusBar} from 'react-native';
 import {colors, images, sizes} from '../constants/Data';
 import {auth, logOut} from "../constants/Sever";
+import { LinearGradient } from 'expo-linear-gradient';
 
 const theme = colors.lightTheme;
 //
@@ -18,7 +19,11 @@ const LoadingScreen = ({route, navigation}) => {
     })
 
     return (
-        <View style={styles.container}>
+        <LinearGradient style={styles.container} colors = {[theme.color,theme.color2]}>
+            <StatusBar
+                backgroundColor={theme.color}
+                barStyle='light-content'
+            />
             <View style={{
                 height: 300,
                 width: 300,
@@ -37,7 +42,7 @@ const LoadingScreen = ({route, navigation}) => {
             </View>
             <ActivityIndicator size={sizes.ExtraLarge} color={theme.bgColor}/>
             <Text style = {{color: colors.white}}>{loadingMessage}</Text>
-        </View>
+        </LinearGradient>
     );
 }
 
@@ -45,7 +50,7 @@ export default LoadingScreen;
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: theme.color,
+        //backgroundColor: theme.color,
         flex: 1,
         alignItems: 'center',
         justifyContent: "center"

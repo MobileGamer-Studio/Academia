@@ -98,11 +98,11 @@ function UserAccount({ route, navigation }) {
                 paddingTop: 10,
                 marginBottom: 10,
             }}>
-                <Modal 
+                <Modal
                     visible = {optionsAct}
                     animationType = "slide"
                     transparent = {true}
-                    
+
                 >
                     <View style = {{
                         backgroundColor: colors.white,
@@ -124,7 +124,7 @@ function UserAccount({ route, navigation }) {
                         <View showsVerticalScrollIndicator={false}>
                             <TouchableOpacity style = {styles.popUpSection} onPress = {() => {setOptionsAct(false); navigation.navigate("Settings", {id: userId})}}>
                                 <MaterialIcons name="settings" size={24} color={colors.defaultBG} />
-                                <Text style={{ color: theme.outline, marginHorizontal: 2.5 }}>Settigs</Text>
+                                <Text style={{ color: theme.outline, marginHorizontal: 2.5 }}>Settings</Text>
                             </TouchableOpacity>
                             <TouchableOpacity style={styles.popUpSection} onPress={() => { setOptionsAct(false); navigation.navigate("Saved", { id: userId })}}>
                                 <MaterialIcons name="bookmark" size={24} color={colors.defaultBG} />
@@ -228,7 +228,7 @@ function UserAccount({ route, navigation }) {
                             alignItems: 'center',
                             marginHorizontal: 10,
                         }}
-                        
+
                             onPress={() => navigation.navigate("ProductList", { id: userId })}>
                             <Text style={{ color: theme.bgColor }}>Products</Text>
                             <Text style={{ color: theme.bgColor }}>{productsLength}</Text>
@@ -245,7 +245,7 @@ function UserAccount({ route, navigation }) {
                         <MaterialIcons name="location-on" size={24} color={colors.white} />
                         <Text style={{ color: colors.white }}>{user.location}</Text>
                     </View>
-                    
+
                 </View>
             </View>
             <ScrollView style={{
@@ -273,7 +273,7 @@ function UserAccount({ route, navigation }) {
                     ) : null
                 }
             </ScrollView>
-            
+
             <View style={{
                 alignItems: "center",
                 backgroundColor: theme.color,
@@ -282,7 +282,7 @@ function UserAccount({ route, navigation }) {
                 bottom: sizes.Small,
                 right: sizes.Small,
                 padding: sizes.ExtraSmall,
-                
+
             }}>
                 <TouchableOpacity onPress={() => navigation.navigate("Chats", { id: userId, user: user })}>
                     <MaterialIcons name="chat" size={30} color={colors.white} />

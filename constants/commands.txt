@@ -26,3 +26,5 @@ npx eas-cli build --profile development
 npm i react-native-chart-kit
 
 npm install --save @react-native-clipboard/clipboard
+
+eas build -p android --profile preview

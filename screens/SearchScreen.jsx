@@ -17,9 +17,9 @@ export default function SearchScreen({navigation, route}) {
     const [searchText, setSearchText] = useState('')
     const [searchResult, setSearchResult] = useState([])
     const [relatedTags, setRelatedTags] = useState([])
-    
 
-    
+
+
 
     useEffect(() => {
         const usersSub = onSnapshot(collection(firestore, "Users"), querySnapshot => {
@@ -27,7 +27,7 @@ export default function SearchScreen({navigation, route}) {
             querySnapshot.forEach((doc) => {
                 data.push(doc.data())
             });
-            
+
             setUsers(data)
         });
 
@@ -37,16 +37,16 @@ export default function SearchScreen({navigation, route}) {
                 data.push(doc.data())
             });
             setProducts(data)
-            
+
 
             if (data.length !== 0) {
                 setLoading(false)
             }
-            
+
         })
 
         const userSub = onSnapshot(doc(firestore, "Users", userId), (doc) => {
-            setUser(doc.data()) 
+            setUser(doc.data())
         });
 
         if (products.length !== 0) {
@@ -92,7 +92,7 @@ export default function SearchScreen({navigation, route}) {
                                 width: 350,
                                 marginHorizontal: sizes.ExtraSmall,
                             }}
-                            placeholder="snacks, assignments, stationaries..."
+                            placeholder="snacks, assignments, stationary..."
                             value = {searchText}
                         />
                     </View>
@@ -114,7 +114,6 @@ export default function SearchScreen({navigation, route}) {
                     marginBottom: 10,
                     elevation: 10,
                     padding: 10,
-                    padding: 10,
                 }}>
                     <MaterialIcons name="arrow-back-ios" size={24} color={colors.white} onPress={() => navigation.goBack()} />
                     <View>
@@ -128,7 +127,7 @@ export default function SearchScreen({navigation, route}) {
                                 width: 350,
                                 marginHorizontal: sizes.ExtraSmall,
                             }}
-                            placeholder="snacks, assignments, stationaries..."
+                            placeholder="snacks, assignments, stationary..."
                         />
                     </View>
                 </View>

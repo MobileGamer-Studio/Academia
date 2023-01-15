@@ -21,7 +21,7 @@ function ProductScreen({ route, navigation }) {
     const [loadingMessage, setLoadingMessage] =  useState('Getting Product')
     const [optionsAct, setOptionsAct] = useState(false)
     const [seeMore, setSeeMore] = useState(false)
-    const [amountSellected, setAmountSellected] = useState(1)
+    const [amountSelected, setAmountSelected] = useState(1)
     const [rating, setRating] = useState(null)
 
 

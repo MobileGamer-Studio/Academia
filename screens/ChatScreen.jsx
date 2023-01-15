@@ -43,7 +43,7 @@ function ChatScreen({ route, navigation }) {
             setChat(doc.data())
             setMessages(doc.data().messages)
         });
-        //console.log("User: " + user + "\n" + "Receiver: " + receiver + "\n" + "Chta: " + chat)
+        //console.log("User: " + user + "\n" + "Receiver: " + receiver + "\n" + "Chat: " + chat)
 
     }, [])
 
