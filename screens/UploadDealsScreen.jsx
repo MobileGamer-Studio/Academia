@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import {FlatList, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View, StatusBar} from 'react-native'
 import {Button, InfoInput, Header} from '../constants/Components';
-import {Category, colors, Product, sizes} from '../constants/Data'
+import {Category, colors, Deal, sizes} from '../constants/Data'
 import * as ImagePicker from "expo-image-picker"
 import {MaterialIcons} from "@expo/vector-icons"
 import { firestore, storage } from "../constants/Sever";
@@ -10,31 +10,33 @@ import {uploadBytesResumable, getDownloadURL, ref, } from "firebase/storage";
 
 const theme = colors.lightTheme;
 const UploadProduct = ({route, navigation}) => {
+    const userId = route.params.id;
+    const [deals, setDeals] = useState([])
+    const [user, setUser] = useState({})
 
 
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
-    const [price, setPrice] = useState("0");
     const [discount, setDiscount] = useState(0);
-    const [numAvailable, setNumAvailable] = useState(0);
+    const [expiryDate, setExpiryDate] = useState('');
     const [tags, setTags] = useState([]);
     const [tag, setTag] = useState('');
+    const [numAvailable, setNumAvailable] = useState(0);
     const [selectedImage, setSelectedImage] = useState("https://firebasestorage.googleapis.com/v0/b/academia-c3d0e.appspot.com/o/Images%2FCameraIcon-coloured.png?alt=media&token=0ac47e13-7a64-466b-8027-1f9ae3b006d6");
 
 
-    const userId = route.params.id;
-    const [products, setProducts] = useState([])
-    const [user, setUser] = useState({})
+
 
 
     useEffect(() => {
-        const productsSub = onSnapshot(collection(firestore, "Products"), querySnapshot => {
-            const data = []
+        const dealsSub = onSnapshot(collection(firestore, "Deals"), (querySnapshot) => {
+            const data = [];
             querySnapshot.forEach((doc) => {
-                data.push(doc.data())
+                data.push(doc.data());
             });
-            setProducts(data)
+            setDeals(data);
         });
+
 
         const userSub = onSnapshot(doc(firestore, "Users", userId), (doc) => {
             setUser(doc.data())
@@ -42,25 +44,25 @@ const UploadProduct = ({route, navigation}) => {
 
     }, [])
 
-    const GetImage = async () => {
-        let result = await ImagePicker.launchImageLibraryAsync({
-            //allowsEditing: true,
-            quality: 1,
-        });
-
-        if (result.cancelled === false) {
-            console.log(result);
-            setSelectedImage(result.uri);
-        } else {
-            alert('You did not select any image.');
-        }
-    }
 
     const addTag = (val) => {
         //tagsList.push(val);
         tags.push(val);
         console.log(tags);
         setTag('');
+    }
+
+    const uploadDeal = () => {
+        const newDeal =  Deal
+        newDeal.title = title
+        newDeal.colors[1] = "#" + ((1 << 24) * Math.random() | 0).toString(16).padStart(6, "0")
+        newDeal.colors[2] = "#" + ((1 << 24) * Math.random() | 0).toString(16).padStart(6, "0")
+        newDeal.details = description
+        newDeal.discount = discount
+        newDeal.expiryDate = expiryDate
+        newDeal.numAvailable = numAvailable
+        newDeal.tags = tags
+
     }
 
 
@@ -71,7 +73,7 @@ const UploadProduct = ({route, navigation}) => {
                 backgroundColor={theme.color}
                 barStyle='light-content'
             />
-            <Header method={() => navigation.goBack()} text={'Upload Product'} />
+            <Header method={() => navigation.goBack()} text={'Upload Deal'} />
             <ScrollView showsVerticalScrollIndicator = {false}>
                 <View style={styles.field}>
                     <Text style={{ marginHorizontal: 5 }}>{"Product: " + title}</Text>
@@ -90,15 +92,6 @@ const UploadProduct = ({route, navigation}) => {
 
                 </View>
                 <View style={styles.field}>
-                    <Text>{"  ₦ " + price}</Text>
-                    <InfoInput
-                        method={(val) => setPrice(val)}
-                        placeholder={"Price"}
-                        keyboardType={'numeric'}
-                    />
-
-                </View>
-                <View style={styles.field}>
                     <View  style = {{
                         flexDirection: "row",
                         justifyContent: "space-between",
@@ -108,7 +101,7 @@ const UploadProduct = ({route, navigation}) => {
                     </View>
                     <InfoInput
                         method={(val) => setDiscount(val)}
-                        placeholder={"Discount on item"}
+                        placeholder={"Discount given"}
                         keyboardType={'numeric'}
                     />
 
@@ -177,10 +170,6 @@ const UploadProduct = ({route, navigation}) => {
                         />
 
                     </View>
-                    <ImageViewer
-                        placeholderImageSource={"https://firebasestorage.googleapis.com/v0/b/academia-c3d0e.appspot.com/o/Images%2FCameraIcon-coloured.png?alt=media&token=0ac47e13-7a64-466b-8027-1f9ae3b006d6"}
-                        selectedImage={selectedImage}
-                    />
                     
                 </View>
             </ScrollView>
@@ -221,29 +210,6 @@ const UploadProduct = ({route, navigation}) => {
             </View>
         </View>
     )
-}
-
-function ImageViewer({ placeholderImageSource, selectedImage }) {
-    const imageSource = selectedImage !== null
-        ? selectedImage
-        : placeholderImageSource;
-
-    return (
-    <View style = {{
-        alignItems: "center",
-        justifyContent: "center",
-        margin: 10,
-        height: 100,
-        width: 100,
-    }}>
-        <Image style={{
-            height: 100,
-            width: 100,
-        }}
-        
-        resizeMode="contain"
-        source={{ uri: imageSource }} />
-    </View>)
 }
 
 const Tag = (props) => {

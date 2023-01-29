@@ -110,7 +110,7 @@ export const SearchBar = (props) => {
                     paddingHorizontal: sizes.Small,
                     backgroundColor: theme.bgColor,
                     height: 40,
-                    borderColor: theme.color2,
+                    borderColor: theme.outline,
                     borderWidth: 1,
                 }}
                 placeholder="snacks, assignments, stationary..."
@@ -198,12 +198,12 @@ export function ProductHorizontal(props) {
                 {
                     props.discount === 0 ? (
                         <View>
-                            <Text style={{ color: theme.color2, fontSize: 12 }}>{props.price + ' Naira'}</Text>
+                            <Text style={{ color: theme.color2, fontSize: 12 }}>{props.price + '   ₦'}</Text>
                         </View>
                     ) : (
                         <View>
-                                <Text style={{ color: theme.color2, fontSize: 12, textDecorationLine: 'line-through', textDecorationStyle: 'solid' }}>{props.price + ' Naira'}</Text>
-                                <Text style={{ color: theme.color2, fontSize: 12 }}>{(props.price - (props.discount / 100 * props.price)) + ' Naira'}</Text>
+                                <Text style={{ color: theme.color2, fontSize: 12, textDecorationLine: 'line-through', textDecorationStyle: 'solid' }}>{props.price + '   ₦'}</Text>
+                                <Text style={{ color: theme.color2, fontSize: 12 }}>{(props.price - (props.discount / 100 * props.price)) + '   ₦'}</Text>
 
                             <View style={{
                                 backgroundColor: theme.color2,
@@ -263,12 +263,12 @@ export function ProductVertical(props) {
                 {
                     props.discount === 0 ? (
                         <View>
-                            <Text style={{ color: theme.color2, fontSize: 12 }}>{props.price + ' Naira'}</Text>
+                            <Text style={{ color: theme.color2, fontSize: 12 }}>{props.price + '   ₦'}</Text>
                         </View>
                     ) : (
                         <View>
-                            <Text style={{ color: theme.color2, fontSize: 12, textDecorationLine: 'line-through', textDecorationStyle: 'solid' }}>{props.price + ' Naira'}</Text>
-                            <Text style={{ color: theme.color2, fontSize: 12 }}>{(props.price - (props.discount / 100 * props.price)) + ' Naira'}</Text>
+                            <Text style={{ color: theme.color2, fontSize: 12, textDecorationLine: 'line-through', textDecorationStyle: 'solid' }}>{props.price + '   ₦'}</Text>
+                            <Text style={{ color: theme.color2, fontSize: 12 }}>{(props.price - (props.discount / 100 * props.price)) + '   ₦'}</Text>
 
                             <View style={{
                                 backgroundColor: theme.color2,

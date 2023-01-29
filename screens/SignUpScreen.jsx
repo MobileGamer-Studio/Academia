@@ -3,7 +3,7 @@ import {Image, StyleSheet, Text, TextInput, TouchableOpacity, View, StatusBar} f
 import {colors, images, sizes} from "../constants/Data";
 import {SignIn_Google, SignUp} from "../constants/Sever"
 
-
+const theme = colors.lightTheme;
 const SignUpScreen = ({navigation}) => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');

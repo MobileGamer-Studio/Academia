@@ -6,6 +6,7 @@ import { firestore, logOut } from "../constants/Sever";
 import { collection, doc, onSnapshot } from "firebase/firestore";
 import { MaterialIcons, Entypo } from "@expo/vector-icons";
 import { LineChart, ProgressChart } from 'react-native-chart-kit';
+import { LinearGradient } from 'expo-linear-gradient';
 
 const theme = colors.lightTheme;
 function UserAccount({ route, navigation }) {
@@ -87,7 +88,7 @@ function UserAccount({ route, navigation }) {
                 backgroundColor={theme.color}
                 barStyle='light-content'
             />
-            <View style={{
+            <LinearGradient colors={[theme.color, theme.color2]} style={{
                 flexDirection: 'column',
                 padding: sizes.Small,
                 justifyContent: 'space-between',
@@ -247,7 +248,7 @@ function UserAccount({ route, navigation }) {
                     </View>
 
                 </View>
-            </View>
+            </LinearGradient>
             <ScrollView style={{
                 backgroundColor: colors.white,
                 bottom: 0,

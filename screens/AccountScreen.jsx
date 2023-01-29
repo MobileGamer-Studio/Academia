@@ -5,6 +5,7 @@ import {Button, ProductSmall, ProfilePicture, ProductHorizontal, SectionHeader} 
 import { firestore } from "../constants/Sever";
 import { setDoc, collection, onSnapshot, doc, updateDoc, arrayRemove, arrayUnion} from "firebase/firestore";
 import { Entypo, MaterialIcons} from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
 
 const theme = colors.lightTheme;
 function AccountScreen({route, navigation}) {

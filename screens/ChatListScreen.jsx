@@ -88,7 +88,7 @@ function ChatListScreen({ navigation, route }) {
                     barStyle='light-content'
                 />
                 <Header method={() => navigation.goBack()} text={"Chats"} />
-                <Loading/>
+                <Loading />
             </View>
         )
     } else {
@@ -109,15 +109,19 @@ function ChatListScreen({ navigation, route }) {
                     visible={optionsAct}
                     animationType="slide"
                     transparent={true}
+                    style = {{
+                        alignItems: "center",
+                        justifyContent: "center",
+                    }}
                 >
                     <View style={{
                         backgroundColor: theme.bgColor,
                         elevation: 5,
-                        width: "80%",
-                        height: "50%",
-                        margin: 100,
+                        marginVertical: 100,
+                        padding: 5,
                         alignSelf: "center",
                         borderRadius: 10,
+                        width: "80%",
                     }}>
                         <View style={{
                             flexDirection: "row",
@@ -144,45 +148,50 @@ function ChatListScreen({ navigation, route }) {
                                 data={searchResult}
                                 renderItem={({ item }) => {
                                     return (
-                                        <TouchableOpacity
-                                            style={styles.popUpSection}
-                                            onPress={() => {
-                                                if (user.chatList.includes(userId + "-" + item.id)) {
-                                                    navigation.navigate('Chat', { chatId: userId + "-" + item.id, id: userId, recId: item.id })
-                                                } else if (user.chatList.includes(item.id + "-" + userId)) {
-                                                    navigation.navigate('Chat', { chatId: item.id + "-" + userId, id: userId, recId: item.id })
-                                                } else {
-                                                    const newChat = Chat;
-                                                    newChat.id = userId + "-" + item.id;
+                                        <View style = {{
+                                            borderBottomWidth: 1,
+                                            borderBottomColor: theme.outline2
+                                        }}>
+                                            <TouchableOpacity
+                                                style={styles.popUpSection}
+                                                onPress={() => {
+                                                    if (user.chatList.includes(userId + "-" + item.id)) {
+                                                        navigation.navigate('Chat', { chatId: userId + "-" + item.id, id: userId, recId: item.id })
+                                                    } else if (user.chatList.includes(item.id + "-" + userId)) {
+                                                        navigation.navigate('Chat', { chatId: item.id + "-" + userId, id: userId, recId: item.id })
+                                                    } else {
+                                                        const newChat = Chat;
+                                                        newChat.id = userId + "-" + item.id;
 
-                                                    newChat.members.push(userId, item.id)
+                                                        newChat.members.push(userId, item.id)
 
-                                                    newChat.members.forEach(y => {
-                                                        users.forEach(x => {
-                                                            if (x.id === y) {
-                                                                x.chatList.push(newChat.id)
-                                                                saveData(x.id, "Users", x)
-                                                            }
+                                                        newChat.members.forEach(y => {
+                                                            users.forEach(x => {
+                                                                if (x.id === y) {
+                                                                    x.chatList.push(newChat.id)
+                                                                    saveData(x.id, "Users", x)
+                                                                }
+                                                            })
                                                         })
-                                                    })
-                                                    saveData(newChat.id, "Chats", newChat)
-                                                    setOptionsAct(false)
-                                                    navigation.navigate('Chat', { chatId: newChat.id, id: userId, recId: item.id })
-                                                }
-                                            }}
-                                        >
-                                            <View style={{
-                                                marginHorizontal: 10
-                                            }}>
-                                                <ProfilePicture
-                                                    image={item.profilePicture}
-                                                    height={sizes.Large}
-                                                    width={sizes.Large}
-                                                    color={colors.white}
-                                                />
-                                            </View>
-                                            <Text>{item.name}</Text>
-                                        </TouchableOpacity>
+                                                        saveData(newChat.id, "Chats", newChat)
+                                                        setOptionsAct(false)
+                                                        navigation.navigate('Chat', { chatId: newChat.id, id: userId, recId: item.id })
+                                                    }
+                                                }}
+                                            >
+                                                <View style={{
+                                                    marginHorizontal: 10
+                                                }}>
+                                                    <ProfilePicture
+                                                        image={item.profilePicture}
+                                                        height={sizes.Large}
+                                                        width={sizes.Large}
+                                                        color={colors.white}
+                                                    />
+                                                </View>
+                                                <Text>{item.name}</Text>
+                                            </TouchableOpacity>
+                                        </View>
 
                                     )
                                 }}
@@ -215,7 +224,7 @@ function ChatListScreen({ navigation, route }) {
                                         <View>
                                             <TouchableOpacity
                                                 style={{
-                                                    borderBottomColor: theme.outline,
+                                                    borderBottomColor: theme.outline2,
                                                     borderBottomWidth: 1,
                                                     padding: 10,
                                                     flexDirection: "row",
@@ -227,7 +236,7 @@ function ChatListScreen({ navigation, route }) {
                                                     height: sizes.Large + 10,
                                                     width: sizes.Large + 10,
                                                     borderRadius: sizes.Large,
-                                                }} onPress={() => navigation.navigate("Account", {id: userId, accId: recId})}>
+                                                }} onPress={() => navigation.navigate("Account", { id: userId, accId: recId })}>
                                                     <ProfilePicture
                                                         image={acc.profilePicture}
                                                         height={sizes.Large + 10}
@@ -236,7 +245,7 @@ function ChatListScreen({ navigation, route }) {
                                                     />
                                                 </TouchableOpacity>
                                                 <View>
-                                                    <Text style={{ color: theme.textColor , fontSize: sizes.Small}}>{acc.name}</Text>
+                                                    <Text style={{ color: theme.textColor, fontSize: sizes.Small }}>{acc.name}</Text>
                                                     {
                                                         item.messages.length > 0 ? (<Text style={{ color: theme.textColor, fontSize: sizes.ExtraSmall }}>{item.messages[item.messages.length - 1].message}</Text>) : null
                                                     }
@@ -249,26 +258,26 @@ function ChatListScreen({ navigation, route }) {
                             />
                         </View>
                     ) : (
-                        <View style = {{
+                        <View style={{
                             alignItems: "center",
                             justifyContent: "center",
                             flex: 1,
                         }}>
-                                <View style={{
-                                    height: 300,
-                                    width: 300,
-                                    alignItems: "center",
-                                }}>
-                                    <Image
-                                        source={images.chat}
-                                        style={{
-                                            height: 300,
-                                            width: 300,
-                                            flex: 1,
-                                        }}
-                                        resizeMode="contain"
-                                    />
-                                </View>
+                            <View style={{
+                                height: 300,
+                                width: 300,
+                                alignItems: "center",
+                            }}>
+                                <Image
+                                    source={images.chat}
+                                    style={{
+                                        height: 300,
+                                        width: 300,
+                                        flex: 1,
+                                    }}
+                                    resizeMode="contain"
+                                />
+                            </View>
                         </View>)
                 }
                 <View style={{

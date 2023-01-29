@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {Image, StyleSheet, Text, TouchableOpacity, View, StatusBar} from 'react-native';
 import {colors, images, sizes} from '../constants/Data';
 
+const theme = colors.lightTheme;
 function LandingScreen({navigation}) {
 
     return (

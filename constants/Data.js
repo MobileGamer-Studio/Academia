@@ -22,6 +22,18 @@ export const colors = {
     violet: '#EE82EE',
     transparent: 'transparent',
 
+    combination: [
+        {
+            1: '#0000FF',
+            2: '#FF0000',
+        },
+        {
+            1: '#00FF00',
+            2: '#FFFF00',
+        },
+
+    ],
+
 
     //default colors
     defaultBG: "#c4d8dd",
@@ -132,7 +144,28 @@ export const sizes = {
     ExtraLarge: 50,
 };
 
-
+export const currency = {
+    rupee: "₹",
+    dollar: "$",
+    pound: "£",
+    euro: "€",
+    yen: "¥",
+    yuan: "¥",
+    won: "₩",
+    bitcoin: "₿",
+    ethereum: "Ξ",
+    litecoin: "Ł",
+    ripple: "XRP",
+    tether: "USDT",
+    bitcoinCash: "BCH",
+    cardano: "ADA",
+    stellar: "XLM",
+    monero: "XMR",
+    tron: "TRX",
+    dash: "DASH",
+    neo: "NEO",
+    naira: "₦",
+}
 
 
 
@@ -181,6 +214,7 @@ export const User = {
             notifications: true,
             location: true,
             language: "English",
+            currency: currency.naira,
         },
     },
     chatList: [
@@ -209,6 +243,20 @@ export const Product = {
     views: [],
     id: "0",
 
+}
+
+export const Deal = {
+    title: '',
+    details: '',
+    colors: {
+        color1: '',
+        color2: '',
+    },
+    tags: [],
+    discount: 0,
+    expiryDate: "dd/mm/yr",
+    numAvailable: 0,
+    id: "0",
 }
 
 export const Item = {

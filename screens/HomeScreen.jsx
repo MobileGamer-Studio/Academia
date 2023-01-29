@@ -6,13 +6,15 @@ import { firestore } from "../constants/Sever";
 import { collection, setDoc, doc, onSnapshot } from "firebase/firestore";
 import { Entypo, MaterialIcons, Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import mobileAds, { BannerAd, BannerAdSize, TestIds } from 'react-native-google-mobile-ads';
+//import mobileAds, { BannerAd, BannerAdSize, TestIds } from 'react-native-google-mobile-ads';
+import { LinearGradient } from 'expo-linear-gradient';
 
 const theme = colors.lightTheme;
 function HomeScreen({ route, navigation }) {
     const userId = route.params.id;
     const [users, setUsers] = useState([])
     const [products, setProducts] = useState([])
+    const [deals, setDeals] = useState([])
     const [user, setUser] = useState({})
     const [loading, setLoading] = useState(true)
 
@@ -36,9 +38,7 @@ function HomeScreen({ route, navigation }) {
             querySnapshot.forEach((doc) => {
                 data.push(doc.data())
             });
-            //console.log("Current data: ", data);
             setUsers(data)
-            //setUser(ans.data)
         });
 
         const productsSub = onSnapshot(collection(firestore, "Products"), querySnapshot => {
@@ -46,9 +46,17 @@ function HomeScreen({ route, navigation }) {
             querySnapshot.forEach((doc) => {
                 data.push(doc.data())
             });
-            //console.log("Current data: ", data);
             setProducts(data)
         });
+
+        const dealsSub = onSnapshot(collection(firestore, "Deals"), querySnapshot => {
+            const data = []
+            querySnapshot.forEach((doc) => {
+                data.push(doc.data())
+            });
+            setDeals(data)
+        });
+
 
         const userSub = onSnapshot(doc(firestore, "Users", userId), (doc) => {
             setUser(doc.data())
@@ -68,7 +76,7 @@ function HomeScreen({ route, navigation }) {
             }
         });
 
-        mobileAds().initialize()
+        //mobileAds().initialize()
 
     }, [])
 
@@ -257,16 +265,10 @@ function HomeScreen({ route, navigation }) {
                                         data={sgUsers}
                                         renderItem={({ item }) => {
                                             return (
-                                                <TouchableOpacity style={{
-                                                    backgroundColor: theme.color2,
-                                                    elevation: 2,
-                                                    height: 150,
-                                                    width: 100,
-                                                    borderRadius: sizes.Small,
-                                                    alignItems: 'center',
-                                                    justifyContent: 'space-evenly',
-                                                    margin: 10,
-                                                }}
+                                                <TouchableOpacity
+                                                    style={{
+                                                        elevation: 2,
+                                                    }}
 
                                                     onPress={() => {
                                                         if (item.id === userId) {
@@ -275,14 +277,47 @@ function HomeScreen({ route, navigation }) {
                                                             navigation.navigate('Account', { id: userId, accId: item.id })
                                                         }
                                                     }}>
-                                                    <ProfilePicture image={item.profilePicture} height={70} width={70} />
-                                                    <View style={{
-                                                        alignItems: 'center',
+                                                    <LinearGradient colors={[theme.color, theme.color2]} style={{
+                                                        //backgroundColor: theme.color2,
 
+                                                        height: 150,
+                                                        width: 100,
+                                                        borderRadius: sizes.Small,
+                                                        alignItems: 'center',
+                                                        justifyContent: 'space-evenly',
+                                                        margin: 10,
                                                     }}>
-                                                        <Text style={{ color: theme.bgColor }}>{item.name}</Text>
-                                                    </View>
+
+                                                        <ProfilePicture image={item.profilePicture} height={70} width={70} />
+                                                        <View style={{
+                                                            alignItems: 'center',
+
+                                                        }}>
+                                                            <Text style={{ color: theme.bgColor }}>{item.name}</Text>
+                                                        </View>
+
+                                                    </LinearGradient>
                                                 </TouchableOpacity>
+                                            )
+                                        }}
+                                    />
+                                </View>
+                            </View>
+                        ) : null
+                    }
+                    {
+                        deals.length > 0 ? (
+                            <View>
+                                <SectionHeader text={'Deals'} method={() => navigation.navigate("Search", { id: userId })} />
+                                <View style={{}}>
+                                    <FlatList
+                                        horizontal
+                                        showsHorizontalScrollIndicator={false}
+                                        keyExtractor={(item) => item.id}
+                                        data={deals}
+                                        renderItem={({ item }) => {
+                                            return (
+                                                <DealsCard title={item.title} details={item.details} color1={item.colors.color1} color2={item.colors.color2} />
                                             )
                                         }}
                                     />
@@ -310,7 +345,6 @@ function HomeScreen({ route, navigation }) {
                             </View>
                         ) : null
                     }
-
                     {
                         sls.length > 0 ? (
                             <View style={styles.section}>
@@ -383,7 +417,9 @@ function HomeScreen({ route, navigation }) {
                                         data={crt}
                                         renderItem={({ item }) => {
                                             return (
-                                                <View></View>
+                                                <View>
+
+                                                </View>
                                             )
                                         }}
                                     />
@@ -391,14 +427,14 @@ function HomeScreen({ route, navigation }) {
                             </View>
                         ) : null
                     }
-                    <View>
-                        {/* <BannerAd
+                    {/* <View>
+                        <BannerAd
                             unitId={bannerAdId}
                             size={BannerAdSize.FULL_BANNER}
                             requestOptions={{
                                 requestNonPersonalizedAdsOnly: true,
-                            }}></BannerAd> */}
-                    </View>
+                            }}></BannerAd>
+                    </View> */}
                     {
                         act.length > 0 ? (
                             <View style={styles.section_bottom}>
@@ -496,6 +532,39 @@ function Header(props) {
     )
 }
 
+function DealsCard(props) {
+    return (
+        <TouchableOpacity 
+        style = {{
+            margin: 10,
+            elevation: 2,
+        }}
+        onPress={props.method}>
+            <LinearGradient colors={[props.color1, props.color2]} style={{
+                height: 175,
+                width: 300,
+                borderRadius: sizes.Medium,
+                padding: 10,
+            }}>
+                <View>
+                    <Text style={{
+                        color: theme.bgColor,
+                        fontSize: 20,
+                        fontWeight: 'bold',
+                        margin: 5,
+                    }}>{props.title}</Text>
+                    {
+                    props.title.length < 15 ? (
+                        <Text style={{ fontSize: 12, color: theme.bgColor, margin: 5 }}>{props.details}</Text>
+                    ) : (
+                        <Text style={{ fontSize: 12, color: theme.bgColor, margin: 5 }}>{props.details.slice(0, 15) + '...'}</Text>
+                    )
+                    }
+                </View>
+            </LinearGradient>
+        </TouchableOpacity>
+    )
+}
 
 
 const styles = StyleSheet.create({
