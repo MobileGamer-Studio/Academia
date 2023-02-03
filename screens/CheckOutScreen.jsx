@@ -88,6 +88,23 @@ function CheckOutScreen({route, navigation}) {
                         }}
                     />
                 </View>
+
+                
+                <TouchableOpacity style = {{
+                    height: 50,
+                    width: 100,
+                    backgroundColor: theme.color,
+                    borderRadius: sizes.Large,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    alignSelf: "center",
+                    position: "absolute",
+                    bottom: 10,
+                    elevation: 2,
+                    flexDirection: "row",
+                }} onPress = {() => console.log('')}>
+                    <Text style={{color: theme.bgColor, fontSize: 18}}>Buy</Text>
+                </TouchableOpacity>
             </View>
         );
     }

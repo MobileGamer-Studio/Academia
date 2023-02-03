@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
 import { colors, sizes } from '../constants/Data';
 import { Header, Loading } from '../constants/Components';
-import { AntDesign } from '@expo/vector-icons';
+import { MaterialIcons, AntDesign } from '@expo/vector-icons';
 
 const theme = colors.lightTheme;
 export default function DealScreen({ route, navigation }) {
@@ -114,6 +114,13 @@ export default function DealScreen({ route, navigation }) {
                     barStyle='dark-content'
                 />
                 <LinearGradient colors={[deal.colors.color1, deal.colors.color2]} style={{ flexDirection: 'row', padding: 10, alignItems: 'flex-end', justifyContent: 'space-between', height: 200 }}>
+                    <TouchableOpacity onPress={() => navigation.goBack()} style = {{
+                        borderRadius: sizes.ExtraLarge,
+                        position: 'absolute',
+                        top: 10,
+                        left: 10,
+                        padding: 10,
+                    }}><MaterialIcons name="arrow-back-ios" size={24} color={theme.bgColor} /></TouchableOpacity>
                     <View style={{ width: '80%' }}>
                         <Text style={{ color: theme.bgColor, fontSize: sizes.Large, fontWeight: 'bold', margin: 10 }}>{deal.title}</Text>
                     </View>
@@ -131,19 +138,25 @@ export default function DealScreen({ route, navigation }) {
                         }}>{'-' + deal.discount + '%'}</Text>
                     </View>
                 </LinearGradient>
+
+                <View>
+                    <Text style={{ color: deal.colors.color2, fontSize: sizes.Small, fontWeight: 'bold', margin: 10 }}>{deal.details}</Text>
+                </View>
                 {
                     rating === null ? (
                         <View style={{
                             position: "absolute",
                             backgroundColor: colors.white,
-                            right: 0,
-                            top: 110,
+                            bottom: 10,
+                            width: 100,
+                            alignSelf: 'center',
                             padding: 10,
                             borderRadius: sizes.Medium,
                             margin: 10,
                             flexDirection: "row",
                             justifyContent: 'space-around',
                             elevation: 2,
+
                         }}>
                             <AntDesign name="like2" size={20} color={deal.colors.color2} style={{ marginHorizontal: 10 }} onPress={() => like()} />
                             <AntDesign name="dislike2" size={20} color={deal.colors.color2} style={{ marginHorizontal: 10 }} onPress={() => dislike()} />
@@ -154,8 +167,9 @@ export default function DealScreen({ route, navigation }) {
                             <View style={{
                                 position: "absolute",
                                 backgroundColor: colors.white,
-                                right: 0,
-                                top: 110,
+                                bottom: 10,
+                                width: 100,
+                                alignSelf: 'center',
                                 padding: 10,
                                 borderRadius: sizes.Medium,
                                 margin: 10,
@@ -170,8 +184,9 @@ export default function DealScreen({ route, navigation }) {
                             <View style={{
                                 position: "absolute",
                                 backgroundColor: colors.white,
-                                right: 0,
-                                top: 110,
+                                bottom: 10,
+                                width: 100,
+                                alignSelf: 'center',
                                 padding: 10,
                                 borderRadius: sizes.Medium,
                                 margin: 10,
@@ -185,9 +200,6 @@ export default function DealScreen({ route, navigation }) {
                         )
                     )
                 }
-                <View>
-                    <Text style={{ color: deal.colors.color2, fontSize: sizes.Small, fontWeight: 'bold', margin: 10 }}>{deal.details}</Text>
-                </View>
             </View>
         )
     }
