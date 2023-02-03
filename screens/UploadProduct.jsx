@@ -90,7 +90,7 @@ const UploadProduct = ({route, navigation}) => {
 
                 </View>
                 <View style={styles.field}>
-                    <Text>{"  ₦ " + price}</Text>
+                    <Text>{'₦' + price}</Text>
                     <InfoInput
                         method={(val) => setPrice(val)}
                         placeholder={"Price"}
@@ -104,7 +104,7 @@ const UploadProduct = ({route, navigation}) => {
                         justifyContent: "space-between",
                     }}>
                         <Text style={{ marginHorizontal: 5 }}>{"Discount: -" + discount + '%'}</Text>
-                        <Text style={{ marginHorizontal: 5 }}>{"NewPrice:   ₦ " + (price - (discount / 100 * price)).toString()}</Text>
+                        <Text style={{ marginHorizontal: 5 }}>{"NewPrice: ₦" + (price - (discount / 100 * price)).toString()}</Text>
                     </View>
                     <InfoInput
                         method={(val) => setDiscount(val)}

@@ -323,7 +323,7 @@ function ProductScreen({ route, navigation }) {
                             style={{
                                 fontSize: sizes.Large,
                                 color: theme.color,
-                            }}>{product.price + "   ₦"}
+                            }}>{'₦'+product.price}
                         </Text>
 
                         <TouchableOpacity

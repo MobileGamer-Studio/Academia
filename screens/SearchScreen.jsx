@@ -145,7 +145,7 @@ export default function SearchScreen({navigation, route}) {
                                 renderItem={({ item }) => {
                                     return (
 
-                                        <ProductVertical title={item.title} image={item.image} price={item.price} discount={item.discount} seller={item.seller} rating={item.ratings} method={() => navigation.navigate('Product', { id: userId, productId: item.id })} />
+                                        <Product title={item.title} image={item.image} price={item.price} discount={item.discount} seller={item.seller} rating={item.ratings} method={() => navigation.navigate('Product', { id: userId, productId: item.id })} />
                                     );
                                 }}
                             />
@@ -185,24 +185,63 @@ export default function SearchScreen({navigation, route}) {
 
 const Product = (props) => {
     return (
-        <TouchableOpacity onPress = {props.method} style ={{
-            height: 200,
-            width: 200,
-        }}>
+        <TouchableOpacity style={{
+            backgroundColor: colors.white,
+            borderRadius: sizes.ExtraSmall,
+            width: '45%',
+            padding: 5,
+            marginVertical: 5,
+            marginHorizontal: 10,
+            elevation: 1,
+        }} onPress={props.method}>
             <View style={{
                 height: 100,
                 width: 100,
+                alignSelf: "center",
+                alignItems: "center",
             }}>
                 <Image
                     style={{
                         flex: 1,
+                        height: 70,
+                        width: 70,
                     }}
                     resizeMode="contain"
-                    source={props.image}
-                />
+                    source={{ uri: props.image }} />
             </View>
-            <View>
-                    <Text>{props.title}</Text>
+            <View style={{
+                marginHorizontal: 10,
+                marginVertical: 5,
+            }}>
+                {
+                    props.title.length < 10 ? (
+                        <Text style={{ fontSize: sizes.Small, color: theme.color2 }}>{props.title}</Text>
+                    ) : (
+                        <Text style={{ fontSize: sizes.Small, color: theme.color2 }}>{props.title.slice(0, 10) + '...'}</Text>
+                    )
+                }
+                <Text style={{ color: theme.color2, fontSize: sizes.ExtraSmall }}>{props.rating + " star"}</Text>
+                {
+                    props.discount === 0 ? (
+                        <View>
+                            <Text style={{ color: theme.color2, fontSize: 12 }}>{'₦ '+props.price}</Text>
+                        </View>
+                    ) : (
+                        <View>
+                            <Text style={{ color: theme.color2, fontSize: 12, textDecorationLine: 'line-through', textDecorationStyle: 'solid' }}>{'₦ '+props.price}</Text>
+                            <Text style={{ color: theme.color2, fontSize: 12 }}>{'₦ '+(props.price - (props.discount / 100 * props.price))}</Text>
+
+                            <View style={{
+                                backgroundColor: theme.color2,
+                                alignItems: 'center',
+                                borderRadius: sizes.ExtraSmall,
+                                paddingHorizontal: 5,
+                            }}>
+                                <Text style={{ color: theme.bgColor }}>{'-' + props.discount + '% discount'}</Text>
+                            </View>
+                        </View>
+                    )
+                }
             </View>
         </TouchableOpacity>
     );

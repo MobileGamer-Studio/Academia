@@ -317,7 +317,7 @@ function HomeScreen({ route, navigation }) {
                                         data={deals}
                                         renderItem={({ item }) => {
                                             return (
-                                                <DealsCard title={item.title} details={item.details} color1={item.colors.color1} color2={item.colors.color2} />
+                                                <DealsCard title={item.title} details={item.details} color1={item.colors.color1} color2={item.colors.color2} discount = {item.discount} method = {() => navigation.navigate('Deal', {dealId: item.id, id: userId})} />
                                             )
                                         }}
                                     />
@@ -543,9 +543,23 @@ function DealsCard(props) {
             <LinearGradient colors={[props.color1, props.color2]} style={{
                 height: 175,
                 width: 300,
-                borderRadius: sizes.Medium,
+                borderRadius: sizes.ExtraSmall,
                 padding: 10,
+            
             }}>
+                <View style = {{
+                    backgroundColor: theme.bgColor,
+                    borderRadius: sizes.ExtraSmall,
+                    width: 50,
+                    alignItems: 'center',
+                    alignSelf: 'flex-end',
+                }}>
+                    <Text style = {{
+                        color: props.color2,
+                        fontSize: 12,
+                        margin: 5,
+                    }}>{'-' + props.discount + '%'}</Text>
+                </View>
                 <View>
                     <Text style={{
                         color: theme.bgColor,
@@ -554,10 +568,10 @@ function DealsCard(props) {
                         margin: 5,
                     }}>{props.title}</Text>
                     {
-                    props.title.length < 15 ? (
+                    props.details.length < 100 ? (
                         <Text style={{ fontSize: 12, color: theme.bgColor, margin: 5 }}>{props.details}</Text>
                     ) : (
-                        <Text style={{ fontSize: 12, color: theme.bgColor, margin: 5 }}>{props.details.slice(0, 15) + '...'}</Text>
+                        <Text style={{ fontSize: 12, color: theme.bgColor, margin: 5 }}>{props.details.slice(0, 100) + '...'}</Text>
                     )
                     }
                 </View>
