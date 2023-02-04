@@ -1,9 +1,9 @@
 import react, {useState, useEffect}  from "react";
 import { FlatList, StyleSheet, View, StatusBar, Text, TouchableOpacity, Image } from 'react-native';
-import {colors, sizes, images} from "../constants/Data"
+import {colors, sizes, images, Chat, Message} from "../constants/Data"
 import { Header, Loading } from "../constants/Components";
 import { firestore } from "../constants/Sever";
-import { collection, onSnapshot, doc } from "firebase/firestore";
+import { collection, onSnapshot, doc, setDoc } from "firebase/firestore";
 import { Entypo, SimpleLineIcons } from '@expo/vector-icons';
 
 const theme = colors.lightTheme;
@@ -14,6 +14,7 @@ function CheckOutScreen({route, navigation}) {
     const [products, setProducts] = useState([])
     const [optionsAct, setOptionsAct] = useState(false)
     const [cart, setCart] = useState([])
+    const [chats, setChats] = useState([])
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
@@ -42,9 +43,99 @@ function CheckOutScreen({route, navigation}) {
             }
         });
 
+        const chatsSub = onSnapshot(collection(firestore, "Chats"), querySnapshot => {
+            const data = []
+            querySnapshot.forEach((doc) => {
+                data.push(doc.data())
+            });
+
+            setChats(data)
+
+
+        });
+
         
 
     }, [])
+
+    async function saveData(id, path, data) {
+        await setDoc(doc(firestore, path, id), data)
+    }
+
+    const PlaceOrder = () => {
+        let crtProducts = []
+        cart.forEach((item) => {
+            products.forEach((product) => {
+                if (item.product === product.id) {
+                    crtProducts.push(product)
+                }
+            })
+        })
+
+        crtProducts.forEach((product) => {
+            const message = user.name + ' has ordered your product ' + product.title + '\n Quantity: ' + product.quantity + '\n Price: ' + product.price + '\n Address: ' + user.location + '\n Phone: ' + user.userInfo.phone
+            if (user.chatList.includes(userId + "-" + item.id)) {
+                chats.forEach((chat) => {
+                    if (chat.id === userId + "-" + item.id) {
+                        const date = new Date();
+                        const newMessage = Message;
+                        newMessage.message = message;
+                        newMessage.time = (date.getHours() + ":" + date.getMinutes()).toString();
+                        newMessage.sender = userId;
+                        newMessage.id = userId + message + chat.messages.length.toString() ;
+
+                        chat.messages.push(newMessage)
+                        saveData(chat.id, "Chats", chat)
+                    }
+                })
+            } else if (user.chatList.includes(item.id + "-" + userId)) {
+                chats.forEach((chat) => {
+                    if (chat.id === item.id + "-" + userId) {
+                        const date = new Date();
+                        const newMessage = Message;
+                        newMessage.message = message;
+                        newMessage.time = (date.getHours() + ":" + date.getMinutes()).toString();
+                        newMessage.sender = userId;
+                        newMessage.id = userId + message + chat.messages.length.toString() ;
+
+                        chat.messages.push(newMessage)
+                        saveData(chat.id, "Chats", chat)
+                    }
+                })
+                
+            } else {
+                const newChat = Chat;
+                newChat.id = userId + "-" + item.id;
+
+                newChat.members.push(userId, item.id)
+
+                newChat.members.forEach(y => {
+                    users.forEach(x => {
+                        if (x.id === y) {
+                            x.chatList.push(newChat.id)
+                            saveData(x.id, "Users", x)
+                        }
+                    })
+                })
+
+                const date = new Date();
+                const newMessage = Message;
+                newMessage.message = message;
+                newMessage.time = (date.getHours() + ":" + date.getMinutes()).toString();
+                newMessage.sender = userId;
+                newMessage.id = userId + message + messages.length.toString() ;
+
+                messages.push(newMessage);
+                newChat.messages = messages;
+
+                saveData(newChat.id, "Chats", newChat)
+            }
+        })
+
+        firestore.collection("Users").doc(userId).update({
+            "userInfo.cart": []
+        })
+    }
 
     if (loading) {
         return (

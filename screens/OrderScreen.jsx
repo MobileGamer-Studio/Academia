@@ -1,57 +1,129 @@
 import React from 'react'
 import {FlatList, StyleSheet, Text, TouchableOpacity, View, StatusBar} from 'react-native'
 import {colors, sizes} from '../constants/Data'
-import {ProductMax} from '../constants/Components'
+import {ProductVertical, Loading, Header} from '../constants/Components'
 
 const theme = colors.lightTheme;
 const OrderScreen = ({navigation}) => {
-    let user = User;
-    return (
-        <View style={styles.container}>
-            <StatusBar
-                backgroundColor={theme.color}
-                barStyle='light-content'
-            />
-            <View>
-                <FlatList
-                    vaertical
-                    showsHorizontalScrollIndicator={false}
-                    keyExtractor={(item) => item.id}
-                    data={user.sellerInfo.orders}
-                    renderItem={({item}) => {
-                        return (
-                            <View>
-                                <FlatList
-                                    vertical
-                                    numColumns={2}
-                                    showsVerticalScrollIndicator={false}
-                                    keyExtractor={(item1) => item1.id}
-                                    data={item}
-                                    renderItem={({item1}) => {
-                                        return (
-                                            <ProductMax
-                                                product={item1}
-                                                title={item1.title}
-                                                price={item1.price}
-                                                image={item1.image}
-                                                seller={item1.seller}
-                                                method={() => navigation.navigate("Product", {item1})}
-                                            />
-                                        );
-                                    }}
-                                />
-                                <TouchableOpacity style={{
-                                    alignSelf: "flex-end"
-                                }}>
-                                    <Text>Edit Order</Text>
-                                </TouchableOpacity>
-                            </View>
-                        );
-                    }}
+    const userId = route.params.id;
+    const [user, setUser] = useState({})
+    const [users, setUsers] = useState([])
+    const [products, setProducts] = useState([])
+    const [optionsAct, setOptionsAct] = useState(false)
+    const [cart, setCart] = useState([])
+    const [loading, setLoading] = useState(true)
+
+    useEffect(() => {
+        const usersSub = onSnapshot(collection(firestore, "Users"), querySnapshot => {
+            const data = []
+            querySnapshot.forEach((doc) => {
+                data.push(doc.data())
+            });
+            setUsers(data)
+        });
+
+        const productsSub = onSnapshot(collection(firestore, "Products"), querySnapshot => {
+            const data = []
+            querySnapshot.forEach((doc) => {
+                data.push(doc.data())
+            });
+            setProducts(data)
+        });
+
+        const userSub = onSnapshot(doc(firestore, "Users", userId), (item) => {
+            setUser(item.data())
+
+            setCart(item.data().userInfo.cart)
+
+            if (user !== {}) {
+                setLoading(false)
+            }
+            
+        });
+
+        
+    }, [])
+
+    if (loading === true) {
+        return (
+            <View style={styles.container}>
+                <StatusBar
+                    backgroundColor={theme.color}
+                    barStyle='light-content'
                 />
+                <Header method={() => navigation.goBack()} text={'Cart'} />
+                <Loading />
             </View>
-        </View>
-    );
+        )
+    }else{
+
+        let ordersProducts = []
+        orders.forEach((cart) => {
+            cart.forEach((item) => {
+                products.forEach((product) => {
+                    if (item.product === product.id) {
+                        ordersProducts.push(product)
+                    }
+                })
+            })
+        })
+
+        return (
+            <View style={styles.container}>
+                <StatusBar
+                    backgroundColor={theme.color}
+                    barStyle='light-content'
+                />
+                <Header method={() => navigation.goBack()} text={"Orders"} />
+                {
+                    orders.length !== 0 ? (
+                        <View>
+                            <FlatList
+                                vertical
+                                showsHorizontalScrollIndicator={false}
+                                keyExtractor={(item) => item.id}
+                                data={crtProducts}
+                                renderItem={({ item }) => {
+                                    return (
+                                        <Product title={item.title} image={item.image} price={item.price} discount={item.discount} seller={item.seller} rating={item.ratings} method={() => navigation.navigate('Product', { id: userId, productId: item.id })} />
+                                    );
+                                }}
+                            />
+                        </View>
+                    ) : (
+                        <View style = {{
+                            flex: 1,
+                            justifyContent: "center",
+                            alignItems: "center",
+                        }}>
+                                <View style={{
+                                    height: 300,
+                                    width: 300,
+                                    alignItems: "center",
+                                }}>
+                                    <Image
+                                        source={images.empty_cart}
+                                        style={{
+                                            height: 300,
+                                            width: 300,
+                                            flex: 1,
+                                        }}
+                                        resizeMode="contain"
+                                    />
+                                </View>
+                                <Text style={{ fontSize: sizes.Medium }}>It looks like your cart is empty</Text>
+                                <Button
+                                    style={{}}
+                                    method={() => navigation.navigate("Search", { id: user.id })}
+                                    text={"Find Products"}
+                                    textStyle={{ color: theme.color, fontSize: sizes.Small }}
+                                />
+                        </View>
+                    )
+                }
+            </View>
+        );
+    }
 }
 
 const styles = StyleSheet.create({
