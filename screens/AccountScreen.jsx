@@ -43,6 +43,17 @@ function AccountScreen({route, navigation}) {
             setUsers(data)
         });
 
+        const productsSub = onSnapshot(collection(firestore, "Products"), querySnapshot => {
+            const data = []
+
+            querySnapshot.forEach((doc) => {
+                data.push(doc.data())
+            });
+            //console.log("Current data: ", data);
+            setProducts(data)
+        });
+
+
         const userSub = onSnapshot(doc(firestore, "Users", userId), (doc) => {
             setUser(doc.data())
 
@@ -267,11 +278,14 @@ function AccountScreen({route, navigation}) {
                 </View>
             </View>
 
-            <ScrollView>
+            <ScrollView style={{
+                backgroundColor: colors.color,
+                bottom: 0,
+            }}>
                 {
                     list.length > 0 ? (
                         <View style={styles.section}>
-                            <SectionHeader text={'User Products'} method={() => navigation.navigate("Search", { id: userId })} />
+                            <SectionHeader text={'Your Products'} method={() => navigation.navigate("Search", { id: userId })} color = {colors.white} textColor = {theme.bgColor}/>
                             <View style={{}}>
                                 <FlatList
                                     horizontal

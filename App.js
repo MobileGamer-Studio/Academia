@@ -30,6 +30,8 @@ import UploadProductPreview from './screens/UploadProductPreview';
 import AdsScreen from './screens/AdsScreen';
 import ListScreens from './screens/ListScreens';
 import DealScreen from './screens/DealScreen';
+import SellersAgreementScreen from './screens/SellersAgreementScreen';
+import PaymentScreen from './screens/PaymentScreen';
 
 
 const Stack = createNativeStackNavigator();
@@ -184,6 +186,16 @@ function App() {
                 <Stack.Screen
                     name="Notifications"
                     component={NotificationsScreen}
+                    options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                    name="SellerAgreement"
+                    component={SellersAgreementScreen}
+                    options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                    name="Payment"
+                    component={PaymentScreen}
                     options={{ headerShown: false }}
                 />
             </Stack.Navigator>

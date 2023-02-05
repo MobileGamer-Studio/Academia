@@ -130,22 +130,26 @@ function CartScreen({route, navigation}) {
                     )
                 }
 
-                <TouchableOpacity style = {{
-                    height: 50,
-                    width: 150,
-                    backgroundColor: theme.color,
-                    borderRadius: sizes.Large,
-                    justifyContent: "space-evenly",
-                    alignItems: "center",
-                    position: "absolute",
-                    bottom: 10,
-                    right: 10,
-                    elevation: 2,
-                    flexDirection: "row",
-                }} onPress = {() => navigation.navigate('Checkout', {id: userId})}>
-                    <Text style={{color: theme.bgColor, fontSize: 18}}>Checkout</Text>
-                    <Entypo name="chevron-right" size={24} color={theme.bgColor} />
-                </TouchableOpacity>
+                {
+                    cart.length !== 0 ? (
+                        <TouchableOpacity style = {{
+                            height: 50,
+                            width: 150,
+                            backgroundColor: theme.color,
+                            borderRadius: sizes.Large,
+                            justifyContent: "space-evenly",
+                            alignItems: "center",
+                            position: "absolute",
+                            bottom: 10,
+                            right: 10,
+                            elevation: 2,
+                            flexDirection: "row",
+                        }} onPress = {() => navigation.navigate('Checkout', {id: userId})}>
+                            <Text style={{color: theme.bgColor, fontSize: 18}}>Checkout</Text>
+                            <Entypo name="chevron-right" size={24} color={theme.bgColor} />
+                        </TouchableOpacity>
+                    ) : null
+                }
             </View>
         );
     }

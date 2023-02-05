@@ -1,13 +1,13 @@
-import react, {useState, useEffect}  from "react";
+import react, { useState, useEffect } from "react";
 import { FlatList, StyleSheet, View, StatusBar, Text, TouchableOpacity, Image } from 'react-native';
-import {colors, sizes, images, Chat, Message} from "../constants/Data"
-import { Header, Loading } from "../constants/Components";
+import { colors, sizes, images, Chat, Message } from "../constants/Data"
+import { Header, Loading, Button } from "../constants/Components";
 import { firestore } from "../constants/Sever";
-import { collection, onSnapshot, doc, setDoc } from "firebase/firestore";
+import { collection, onSnapshot, doc, setDoc, updateDoc } from "firebase/firestore";
 import { Entypo, SimpleLineIcons } from '@expo/vector-icons';
 
 const theme = colors.lightTheme;
-function CheckOutScreen({route, navigation}) {
+function CheckOutScreen({ route, navigation }) {
     const userId = route.params.id;
     const [user, setUser] = useState({})
     const [users, setUsers] = useState([])
@@ -16,6 +16,7 @@ function CheckOutScreen({route, navigation}) {
     const [cart, setCart] = useState([])
     const [chats, setChats] = useState([])
     const [loading, setLoading] = useState(true)
+    const [loadingMessage, setLoadingMessage] = useState("Loading...")
 
     useEffect(() => {
         const usersSub = onSnapshot(collection(firestore, "Users"), querySnapshot => {
@@ -54,7 +55,7 @@ function CheckOutScreen({route, navigation}) {
 
         });
 
-        
+
 
     }, [])
 
@@ -62,7 +63,10 @@ function CheckOutScreen({route, navigation}) {
         await setDoc(doc(firestore, path, id), data)
     }
 
-    const PlaceOrder = () => {
+    const PlaceOrder = async () => {
+        setLoadingMessage("Placing Order...")
+        setLoading(true)
+
         let crtProducts = []
         cart.forEach((item) => {
             products.forEach((product) => {
@@ -74,40 +78,43 @@ function CheckOutScreen({route, navigation}) {
 
         crtProducts.forEach((product) => {
             const message = user.name + ' has ordered your product ' + product.title + '\n Quantity: ' + product.quantity + '\n Price: ' + product.price + '\n Address: ' + user.location + '\n Phone: ' + user.userInfo.phone
-            if (user.chatList.includes(userId + "-" + item.id)) {
+            if (user.chatList.includes(userId + "-" + product.sellersId)) {
                 chats.forEach((chat) => {
-                    if (chat.id === userId + "-" + item.id) {
+                    if (chat.id === userId + "-" + product.sellersId) {
                         const date = new Date();
                         const newMessage = Message;
                         newMessage.message = message;
                         newMessage.time = (date.getHours() + ":" + date.getMinutes()).toString();
                         newMessage.sender = userId;
-                        newMessage.id = userId + message + chat.messages.length.toString() ;
+                        newMessage.id = userId + message + chat.messages.length.toString();
 
                         chat.messages.push(newMessage)
                         saveData(chat.id, "Chats", chat)
                     }
                 })
-            } else if (user.chatList.includes(item.id + "-" + userId)) {
+            } else if (user.chatList.includes(product.sellersId + "-" + userId)) {
                 chats.forEach((chat) => {
-                    if (chat.id === item.id + "-" + userId) {
+                    if (chat.id === product.sellersId + "-" + userId) {
                         const date = new Date();
                         const newMessage = Message;
                         newMessage.message = message;
                         newMessage.time = (date.getHours() + ":" + date.getMinutes()).toString();
                         newMessage.sender = userId;
-                        newMessage.id = userId + message + chat.messages.length.toString() ;
+                        newMessage.id = userId + message + chat.messages.length.toString();
 
                         chat.messages.push(newMessage)
+
+                        
                         saveData(chat.id, "Chats", chat)
                     }
                 })
-                
+
             } else {
                 const newChat = Chat;
-                newChat.id = userId + "-" + item.id;
+                let messages = [];
+                newChat.id = userId + "-" + product.sellersId;
 
-                newChat.members.push(userId, item.id)
+                newChat.members.push(userId, product.sellersId)
 
                 newChat.members.forEach(y => {
                     users.forEach(x => {
@@ -123,18 +130,27 @@ function CheckOutScreen({route, navigation}) {
                 newMessage.message = message;
                 newMessage.time = (date.getHours() + ":" + date.getMinutes()).toString();
                 newMessage.sender = userId;
-                newMessage.id = userId + message + messages.length.toString() ;
+                newMessage.id = userId + message + messages.length.toString();
 
+                
                 messages.push(newMessage);
+
                 newChat.messages = messages;
 
                 saveData(newChat.id, "Chats", newChat)
+
             }
         })
 
-        firestore.collection("Users").doc(userId).update({
+        await updateDoc(doc(firestore, "Users", userId), {
             "userInfo.cart": []
         })
+        setLoadingMessage("Order Placed")
+        setLoading(false)
+
+        alert("Order Placed")
+
+
     }
 
     if (loading) {
@@ -142,10 +158,10 @@ function CheckOutScreen({route, navigation}) {
             <View style={styles.container}>
                 <StatusBar barStyle="light-content" />
                 <Header title="Check Out" navigation={navigation} />
-                <Loading/>
+                <Loading message  = {loadingMessage} />
             </View>
         )
-    }else{
+    } else {
 
         let crtProducts = []
         cart.forEach((item) => {
@@ -158,52 +174,88 @@ function CheckOutScreen({route, navigation}) {
 
 
         return (
-            <View style = {styles.container}>
+            <View style={styles.container}>
                 <StatusBar
                     backgroundColor={theme.color}
                     barStyle='light-content'
                 />
-                <Header method = {() => navigation.goBack()} text = {'Check Out'}/>
-                <View>
-                    <FlatList
-                        horizontal
-                        showsHorizontalScrollIndicator={false}
-                        keyExtractor={(item) => item.id}
-                        data={crtProducts}
-                        renderItem={({item}) => {
-                            return (
-                                <CartItem
-                                    title={item.title} image={item.image} price={item.price} discount={item.discount} seller={item.seller} rating={item.ratings} method={() => navigation.navigate('Product', { id: userId, productId: item.id })}
-                                />
-                            );
-                        }}
-                    />
-                </View>
+                <Header method={() => navigation.goBack()} text={'Check Out'} />
+                {
 
-                
-                <TouchableOpacity style = {{
-                    height: 50,
-                    width: 100,
-                    backgroundColor: theme.color,
-                    borderRadius: sizes.Large,
-                    justifyContent: "center",
-                    alignItems: "center",
-                    alignSelf: "center",
-                    position: "absolute",
-                    bottom: 10,
-                    elevation: 2,
-                    flexDirection: "row",
-                }} onPress = {() => console.log('')}>
-                    <Text style={{color: theme.bgColor, fontSize: 18}}>Buy</Text>
-                </TouchableOpacity>
+                    crtProducts.length !== 0 ? (
+                        <View>
+                            <FlatList
+                                vertical
+                                showsHorizontalScrollIndicator={false}
+                                keyExtractor={(item) => item.id}
+                                data={crtProducts}
+                                renderItem={({ item }) => {
+                                    return (
+                                        <CartItem
+                                            title={item.title} image={item.image} price={item.price} discount={item.discount} seller={item.seller} rating={item.ratings} method={() => navigation.navigate('Product', { id: userId, productId: item.id })}
+                                        />
+                                    );
+                                }}
+                            />
+                        </View>
+                    ) : (
+                        <View style={{
+                            flex: 1,
+                            justifyContent: "center",
+                            alignItems: "center",
+                        }}>
+                            <View style={{
+                                height: 300,
+                                width: 300,
+                                alignItems: "center",
+                            }}>
+                                <Image
+                                    source={images.empty_cart}
+                                    style={{
+                                        height: 300,
+                                        width: 300,
+                                        flex: 1,
+                                    }}
+                                    resizeMode="contain"
+                                />
+                            </View>
+                            <Text style={{ fontSize: sizes.Medium }}>It looks like your cart is empty</Text>
+                            <Button
+                                style={{}}
+                                method={() => navigation.navigate("Search", { id: user.id })}
+                                text={"Find Products"}
+                                textStyle={{ color: theme.color, fontSize: sizes.Small }}
+                            />
+                        </View>
+                    )}
+
+
+                {
+                    crtProducts.length !== 0 ? (
+                        <TouchableOpacity style={{
+                            height: 50,
+                            width: 100,
+                            backgroundColor: theme.color,
+                            borderRadius: sizes.Large,
+                            justifyContent: "center",
+                            alignItems: "center",
+                            alignSelf: "center",
+                            position: "absolute",
+                            bottom: 10,
+                            elevation: 2,
+                            flexDirection: "row",
+                        }} onPress={() => PlaceOrder()}>
+                            <Text style={{ color: theme.bgColor, fontSize: 18 }}>Buy</Text>
+                        </TouchableOpacity>): null
+                }
             </View>
         );
     }
 }
 
-function CartItem(props){
-    return(
-        <TouchableOpacity style = {styles.cartItem}>
+function CartItem(props) {
+    return (
+        <TouchableOpacity style={styles.cartItem}>
             <View style={{
                 height: 200,
                 width: 100,
@@ -226,7 +278,7 @@ function CartItem(props){
             <View style={{
                 marginHorizontal: 10,
                 marginVertical: 5,
-                backgroundColor: theme.color2,
+                //backgroundColor: theme.color2,
                 flex: 1,
                 borderRadius: sizes.ExtraSmall,
                 margin: 10,
@@ -234,14 +286,16 @@ function CartItem(props){
             }}>
                 {
                     props.title.length < 20 ? (
-                        <Text style={{ fontSize: sizes.Small, color: theme.bgColor }}>Title: {props.title}</Text>
+                        <Text style={{ fontSize: sizes.Small, color: theme.textColor }}>Title: {props.title}</Text>
                     ) : (
-                            <Text style={{ fontSize: sizes.Small, color: theme.bgColor }}>Title: {props.title.slice(0, 20) + '...'}</Text>
+                        <Text style={{ fontSize: sizes.Small, color: theme.textColor }}>Title: {props.title.slice(0, 20) + '...'}</Text>
                     )
                 }
-                <View>
-                        <Text> Price: {props.price}</Text>
-                </View>
+                <Text> Price: {props.price}</Text>
+                <Text> Discount: {props.discount}</Text>
+                <Text> Seller: {props.seller}</Text>
+                <Text> Rating: {props.rating}</Text>
+
             </View>
         </TouchableOpacity>
     )
@@ -258,10 +312,11 @@ const styles = StyleSheet.create({
     cartItem: {
         backgroundColor: theme.bgColor,
         flexDirection: "row",
-        width: 300,
+        width: '95%',
         height: 200,
         borderRadius: 10,
         elevation: 2,
         margin: 10,
+        alignSelf: "center",
     }
 })

@@ -186,6 +186,16 @@ export const User = {
         productList: [],
         orders: [],
         amountSelling: "0",
+        amountSold: "0",
+        info: {
+            status: 'inactive',
+            bank: '',
+            accountNumber: '',
+            accountName: '',
+            accountType: '',
+            accountAddress: '',
+            accountPhone: '',
+        }
     },
     userInfo: {
         tags: [],

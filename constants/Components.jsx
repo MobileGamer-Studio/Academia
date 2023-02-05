@@ -296,14 +296,14 @@ export function SectionHeader(props) {
             <Text style={{
                 marginHorizontal: 10,
                 fontSize: 20,
-                color: theme.color2,
+                color: props.textColor,
             }}>{props.text}</Text>
             <TouchableOpacity style={{
                 marginHorizontal: 10,
                 flexDirection: 'row',
                 alignItems: 'center',
             }} onPress={props.method}>
-                <Text style={{ fontSize: 12, color: theme.outline }}>See More</Text>
+                <Text style={{ fontSize: 12, color: props.color }}>See More</Text>
                 <MaterialIcons name="arrow-forward-ios" size={10} color={theme.outline} style={{ marginLeft: 5 }} onPress={() => navigation.goBack()} />
             </TouchableOpacity>
         </View>

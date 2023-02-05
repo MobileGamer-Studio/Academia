@@ -196,7 +196,7 @@ function HomeScreen({ route, navigation }) {
                     {
                         sgProducts.length > 0 ? (
                             <View style={styles.section}>
-                                <SectionHeader text={'Suggested Products'} />
+                                <SectionHeader text={'Suggested Products'} color = {colors.outline} textColor = {theme.color2} />
                                 <View>
                                     <FlatList
                                         horizontal
@@ -214,7 +214,7 @@ function HomeScreen({ route, navigation }) {
                             </View>
                         ) : (
                             <View style={styles.section}>
-                                <SectionHeader text={'Suggested Products'} method={() => navigation.navigate("Search", { id: userId })} />
+                                <SectionHeader text={'Suggested Products'} color = {colors.outline} textColor = {theme.color2} method={() => navigation.navigate("Search", { id: userId })} />
                                 {
                                     defaultProducts.length === 0 ? (
                                         <TouchableOpacity style={{
@@ -308,7 +308,7 @@ function HomeScreen({ route, navigation }) {
                     {
                         deals.length > 0 ? (
                             <View>
-                                <SectionHeader text={'Deals'} method={() => navigation.navigate("Search", { id: userId })} />
+                                <SectionHeader text={'Deals & Events'} method={() => navigation.navigate("Search", { id: userId })} />
                                 <View style={{}}>
                                     <FlatList
                                         horizontal
