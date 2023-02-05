@@ -188,13 +188,10 @@ export const User = {
         amountSelling: "0",
         amountSold: "0",
         info: {
-            status: 'inactive',
+            status: false,
+            lastPaymentDate: '',
+            nextPaymentDate: '',
             bank: '',
-            accountNumber: '',
-            accountName: '',
-            accountType: '',
-            accountAddress: '',
-            accountPhone: '',
         }
     },
     userInfo: {

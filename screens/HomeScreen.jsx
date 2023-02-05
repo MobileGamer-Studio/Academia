@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FlatList, ScrollView, Image, StyleSheet, Text, TouchableOpacity, View, StatusBar, SafeAreaView } from 'react-native';
+import { FlatList, ScrollView, Image, StyleSheet, Text, TouchableOpacity, View, StatusBar, SafeAreaView, Modal } from 'react-native';
 import { categories, colors, sizes, suggestedProducts, images } from '../constants/Data';
 import { NavBar, Loading, ProductHorizontal, ProductVertical, Button, ProfilePicture, SectionHeader } from '../constants/Components';
 import { firestore } from "../constants/Sever";
@@ -26,6 +26,7 @@ function HomeScreen({ route, navigation }) {
     const [cart, setCart] = useState([])
     const [bestSellers, setBestSellers] = useState([])
     const [likedList, setLikedList] = useState([])
+    const [bsModalVisible, setBsModalVisible] = useState(false)
 
 
 
@@ -115,7 +116,7 @@ function HomeScreen({ route, navigation }) {
 
         suggestedUsers.forEach((item) => {
             users.forEach((user) => {
-                if (item === user.id) {
+                if (item === user.id && user.id !== userId) {
                     sgUsers.push(user)
                 }
             })
@@ -184,6 +185,37 @@ function HomeScreen({ route, navigation }) {
                     barStyle='dark-content'
                 />
                 <Header method={() => navigation.navigate('Notifications', { id: userId })} />
+                <Modal
+
+                    visible={bsModalVisible}
+                    animationType="slide"
+                    transparent={true}
+                >
+                    <View style = {{
+                        backgroundColor: theme.bgColor,
+                        //height: '40%',
+                        width: '70%',
+                        elevation: 2,
+                        alignSelf: 'center',
+                        marginTop: '50%',
+                        borderRadius: sizes.Medium,
+                        padding: 10,
+                        //alignItems: 'center',
+                        justifyContent: 'center'
+                    }}>
+                        <Text style = {{fontSize: 17, alignSelf: 'center', margin: 5, color: theme.outline}}>You are not yet a seller</Text>
+                        <View style = {{margin: 10}}>
+                            <TouchableOpacity style = {{backgroundColor: theme.color2, padding: 10, borderRadius: sizes.Small, alignItems: 'center'}} onPress = {() => {setBsModalVisible(false); navigation.navigate('SellersAgreement', {id: userId}); }}>
+                                <Text style = {{color: colors.white}}>Become a seller</Text>
+                            </TouchableOpacity>
+                        </View>
+                        <View style = {{margin: 10}}>
+                            <TouchableOpacity style = {{backgroundColor: '#FF8BA0', padding: 10, borderRadius: sizes.Small, alignItems: 'center'}} onPress = {() => setBsModalVisible(false)}>
+                                <Text style = {{color: colors.white}}>Cancle</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </Modal>
                 <ScrollView showsVerticalScrollIndicator={false}>
                     <View>
                         {/* <BannerAd
@@ -196,7 +228,7 @@ function HomeScreen({ route, navigation }) {
                     {
                         sgProducts.length > 0 ? (
                             <View style={styles.section}>
-                                <SectionHeader text={'Suggested Products'} color = {colors.outline} textColor = {theme.color2} />
+                                <SectionHeader text={'Suggested Products'} color={theme.outline} textColor={theme.color2} />
                                 <View>
                                     <FlatList
                                         horizontal
@@ -214,7 +246,7 @@ function HomeScreen({ route, navigation }) {
                             </View>
                         ) : (
                             <View style={styles.section}>
-                                <SectionHeader text={'Suggested Products'} color = {colors.outline} textColor = {theme.color2} method={() => navigation.navigate("Search", { id: userId })} />
+                                <SectionHeader text={'Suggested Products'} color={theme.outline} textColor={theme.color2} method={() => navigation.navigate("Search", { id: userId })} />
                                 {
                                     defaultProducts.length === 0 ? (
                                         <TouchableOpacity style={{
@@ -256,7 +288,7 @@ function HomeScreen({ route, navigation }) {
                     {
                         sgUsers.length > 0 ? (
                             <View style={styles.section}>
-                                <SectionHeader text={'Suggested Users'} method={() => navigation.navigate("Search", { id: userId })} />
+                                <SectionHeader text={'Suggested Users'} color={theme.outline} textColor={theme.color2} method={() => navigation.navigate("Search", { id: userId })} />
                                 <View>
                                     <FlatList
                                         horizontal
@@ -308,7 +340,7 @@ function HomeScreen({ route, navigation }) {
                     {
                         deals.length > 0 ? (
                             <View>
-                                <SectionHeader text={'Deals & Events'} method={() => navigation.navigate("Search", { id: userId })} />
+                                <SectionHeader text={'Deals & Events'} color={theme.outline} textColor={theme.color2} method={() => navigation.navigate("Search", { id: userId })} />
                                 <View style={{}}>
                                     <FlatList
                                         horizontal
@@ -317,7 +349,7 @@ function HomeScreen({ route, navigation }) {
                                         data={deals}
                                         renderItem={({ item }) => {
                                             return (
-                                                <DealsCard title={item.title} details={item.details} color1={item.colors.color1} color2={item.colors.color2} discount = {item.discount} method = {() => navigation.navigate('Deal', {dealId: item.id, id: userId})} />
+                                                <DealsCard title={item.title} details={item.details} color1={item.colors.color1} color2={item.colors.color2} discount={item.discount} method={() => navigation.navigate('Deal', { dealId: item.id, id: userId })} />
                                             )
                                         }}
                                     />
@@ -328,7 +360,7 @@ function HomeScreen({ route, navigation }) {
                     {
                         bs.length > 0 ? (
                             <View style={styles.section}>
-                                <SectionHeader text={'Best Sellers'} method={() => navigation.navigate("Search", { id: userId })} />
+                                <SectionHeader text={'Best Sellers'} color={theme.outline} textColor={theme.color2} method={() => navigation.navigate("Search", { id: userId })} />
                                 <View style={{}}>
                                     <FlatList
                                         horizontal
@@ -348,7 +380,7 @@ function HomeScreen({ route, navigation }) {
                     {
                         sls.length > 0 ? (
                             <View style={styles.section}>
-                                <SectionHeader text={'On Sales'} method={() => navigation.navigate("Search", { id: userId })} />
+                                <SectionHeader text={'On Sales'} color={theme.outline} textColor={theme.color2} method={() => navigation.navigate("Search", { id: userId })} />
                                 <View style={{}}>
                                     <FlatList
                                         horizontal
@@ -368,7 +400,7 @@ function HomeScreen({ route, navigation }) {
                     {
                         newP.length > 0 ? (
                             <View style={styles.section}>
-                                <SectionHeader text={'New Products'} method={() => navigation.navigate("Search", { id: userId })} />
+                                <SectionHeader text={'New Products'} color={theme.outline} textColor={theme.color2} method={() => navigation.navigate("Search", { id: userId })} />
                                 <View style={{}}>
                                     <FlatList
                                         horizontal
@@ -388,7 +420,7 @@ function HomeScreen({ route, navigation }) {
                     {
                         liked.length > 0 ? (
                             <View style={styles.section}>
-                                <SectionHeader text={'Your Liked Products'} method={() => navigation.navigate("Search", { id: userId })} />
+                                <SectionHeader text={'Your Liked Products'} color={theme.outline} textColor={theme.color2} method={() => navigation.navigate("Search", { id: userId })} />
                                 <View style={{}}>
                                     <FlatList
                                         horizontal
@@ -408,7 +440,7 @@ function HomeScreen({ route, navigation }) {
                     {
                         crt.length > 0 ? (
                             <View style={styles.section}>
-                                <SectionHeader text={'Your Cart'} method={() => navigation.navigate("Search", { id: userId })} />
+                                <SectionHeader text={'Your Cart'} color={theme.outline} textColor={theme.color2} method={() => navigation.navigate("Search", { id: userId })} />
                                 <View style={{}}>
                                     <FlatList
                                         horizontal
@@ -480,10 +512,17 @@ function HomeScreen({ route, navigation }) {
                 <NavBar
                     home={() => navigation.navigate("Home", { id: userId })}
                     search={() => navigation.navigate("Search", { id: userId })}
-                    add={() => navigation.navigate("UploadProduct", { id: userId })}
+                    //add={() => navigation.navigate("UploadProduct", { id: userId })}
                     cart={() => navigation.navigate("Cart", { id: userId })}
                     profile={() => navigation.navigate("UserAccount", { id: userId, user: user })}
                     image={user.profilePicture}
+                    add = {() => {
+                        if (user.sellerInfo.info.status === false) {
+                            setBsModalVisible(true)
+                        } else {
+                            navigation.navigate("UploadProduct", { id: userId })
+                        }
+                    }}
                 />
             </SafeAreaView>
         );
@@ -534,27 +573,27 @@ function Header(props) {
 
 function DealsCard(props) {
     return (
-        <TouchableOpacity 
-        style = {{
-            margin: 10,
-            elevation: 2,
-        }}
-        onPress={props.method}>
+        <TouchableOpacity
+            style={{
+                margin: 10,
+                elevation: 2,
+            }}
+            onPress={props.method}>
             <LinearGradient colors={[props.color1, props.color2]} style={{
                 height: 175,
                 width: 300,
                 borderRadius: sizes.ExtraSmall,
                 padding: 10,
-            
+
             }}>
-                <View style = {{
+                <View style={{
                     backgroundColor: theme.bgColor,
                     borderRadius: sizes.ExtraSmall,
                     width: 50,
                     alignItems: 'center',
                     alignSelf: 'flex-end',
                 }}>
-                    <Text style = {{
+                    <Text style={{
                         color: props.color2,
                         fontSize: 12,
                         margin: 5,
@@ -568,11 +607,11 @@ function DealsCard(props) {
                         margin: 5,
                     }}>{props.title}</Text>
                     {
-                    props.details.length < 100 ? (
-                        <Text style={{ fontSize: 12, color: theme.bgColor, margin: 5 }}>{props.details}</Text>
-                    ) : (
-                        <Text style={{ fontSize: 12, color: theme.bgColor, margin: 5 }}>{props.details.slice(0, 100) + '...'}</Text>
-                    )
+                        props.details.length < 100 ? (
+                            <Text style={{ fontSize: 12, color: theme.bgColor, margin: 5 }}>{props.details}</Text>
+                        ) : (
+                            <Text style={{ fontSize: 12, color: theme.bgColor, margin: 5 }}>{props.details.slice(0, 100) + '...'}</Text>
+                        )
                     }
                 </View>
             </LinearGradient>

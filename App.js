@@ -189,7 +189,7 @@ function App() {
                     options={{ headerShown: false }}
                 />
                 <Stack.Screen
-                    name="SellerAgreement"
+                    name="SellersAgreement"
                     component={SellersAgreementScreen}
                     options={{ headerShown: false }}
                 />

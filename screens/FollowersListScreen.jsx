@@ -31,9 +31,7 @@ function FollowersListScreen({ route, navigation }) {
 
             setFollowersList(doc.data().followers)
 
-            if (user !== {}) {
-                setLoading(false)
-            }
+            
         });
 
     }, [])
