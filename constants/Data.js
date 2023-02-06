@@ -189,6 +189,7 @@ export const User = {
         amountSold: "0",
         info: {
             status: false,
+            trial: false,
             lastPaymentDate: '',
             nextPaymentDate: '',
             bank: '',
