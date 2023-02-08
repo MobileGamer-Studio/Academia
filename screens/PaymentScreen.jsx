@@ -4,7 +4,7 @@ import { firestore } from "../constants/Sever";
 import { onSnapshot, doc, } from "firebase/firestore";
 import { Header, Loading } from '../constants/Components';
 import { colors, currency, sizes } from "../constants/Data";
-import { PayWithFlutterwave, FlutterwaveInit, FlutterwaveButton } from 'flutterwave-react-native';
+//import { PayWithFlutterwave, FlutterwaveInit, FlutterwaveButton } from 'flutterwave-react-native';
 
 
 const theme = colors.lightTheme;
@@ -51,18 +51,18 @@ export default function PaymentScreen({ route, navigation }) {
     const Pay = async () => {
         try {
             // initialize payment
-            const paymentLink = await FlutterwaveInit({
-                tx_ref: generateTransactionRef(),
-                authorization: publicKey,
-                amount: amount,
-                currency: 'NGN',
-                customer: {
-                    email: user.loginDetails.email,
-                },
-                payment_options: 'card',
-            });
-            // use payment link
-            usePaymentLink(paymentLink);
+            // const paymentLink = await FlutterwaveInit({
+            //     tx_ref: generateTransactionRef(),
+            //     authorization: publicKey,
+            //     amount: amount,
+            //     currency: 'NGN',
+            //     customer: {
+            //         email: user.loginDetails.email,
+            //     },
+            //     payment_options: 'card',
+            // });
+            // // use payment link
+            // usePaymentLink(paymentLink);
         } catch (error) {
             // handle payment error
             alert(error.message);
