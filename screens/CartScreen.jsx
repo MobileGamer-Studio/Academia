@@ -3,7 +3,7 @@ import {FlatList, StyleSheet, View, Image, Text, StatusBar, TouchableOpacity} fr
 import {colors, sizes, images} from '../constants/Data';
 import { firestore } from "../constants/Sever";
 import { getDocs, collection, setDoc, doc, onSnapshot } from "firebase/firestore";
-import { Entypo, SimpleLineIcons } from '@expo/vector-icons';
+import { Entypo, SimpleLineIcons, AntDesign } from '@expo/vector-icons';
 import { Header, Loading, Button } from '../constants/Components';
 
 const theme = colors.lightTheme;
@@ -84,6 +84,7 @@ function CartScreen({route, navigation}) {
                 />
                 <Header method={() => navigation.goBack()} text={"Cart"} />
                 {
+                    
                     cart.length !== 0 ? (
                         <View>
                             <FlatList
@@ -156,6 +157,7 @@ function CartScreen({route, navigation}) {
 }
 
 function Product(props) {
+    const [amountSellected, setAmountSellected] = useState(1);
     return (
         <TouchableOpacity style={{
             flexDirection: 'row',
@@ -215,7 +217,7 @@ function Product(props) {
                                 borderRadius: sizes.Small,
                                 alignItems: 'center',
                                 justifyContent: 'center',
-                                width: '100%',
+                                // width: '100%',
                             }}>
                                 <Text style={{ color: theme.bgColor }}>{'-' + props.discount + '% discount'}</Text>
                             </View>
@@ -231,11 +233,26 @@ function Product(props) {
                     margin: 5,
                     borderRadius: sizes.Small,
                     alignItems: 'center',
-                    justifyContent: 'center',
-                    width: '100%',
+                    justifyContent: 'space-around',
+                    // width: '100%',
                 }}>
-                    <SimpleLineIcons name="like" size={12} color={theme.color2} style={{ marginHorizontal: 10 }} onPress={props.method} />
-                    <Text style={{ color: theme.color2, fontSize: 12 }}>Likes</Text>
+                    <TouchableOpacity style = {{
+                        backgroundColor: theme.color2,
+                        borderRadius: sizes.ExtraLarge,
+                    }} onPress = {() => {
+                        setAmountSellected(amountSellected - 1)
+                    }}>
+                        <AntDesign name="minus" size={24} color={theme.bgColor} />
+                    </TouchableOpacity>
+                    <Text style={{ marginHorizontal: 10, fontSize: sizes.Small, color: theme.color2 }}>{amountSellected}</Text>
+                    <TouchableOpacity style = {{
+                        backgroundColor: theme.color2,
+                        borderRadius: sizes.ExtraLarge,
+                    }} onPress = {() => {
+                        setAmountSellected(amountSellected + 1)
+                    }}>
+                        <AntDesign name="plus" size={24} color={theme.bgColor} />
+                    </TouchableOpacity>
                 </View>
             </View>
             {/* <TouchableOpacity style={{
