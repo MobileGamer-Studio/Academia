@@ -167,7 +167,10 @@ function CheckOutScreen({ route, navigation }) {
         cart.forEach((item) => {
             products.forEach((product) => {
                 if (item.product === product.id) {
-                    crtProducts.push(product)
+                    crtProducts.push({
+                        info: item,
+                        product: product,
+                    })
                 }
             })
         })
@@ -187,12 +190,12 @@ function CheckOutScreen({ route, navigation }) {
                             <FlatList
                                 vertical
                                 showsHorizontalScrollIndicator={false}
-                                keyExtractor={(item) => item.id}
+                                keyExtractor={(item) => item.info.id}
                                 data={crtProducts}
                                 renderItem={({ item }) => {
                                     return (
                                         <CartItem
-                                            title={item.title} image={item.image} price={item.price} discount={item.discount} seller={item.seller} rating={item.ratings} method={() => navigation.navigate('Product', { id: userId, productId: item.id })}
+                                            title={item.product.title} image={item.product.image} price={item.product.price} discount={item.product.discount} seller={item.product.seller} rating={item.product.ratings} method={() => navigation.navigate('Product', { id: userId, productId: item.id })}
                                         />
                                     );
                                 }}
@@ -286,15 +289,16 @@ function CartItem(props) {
             }}>
                 {
                     props.title.length < 20 ? (
-                        <Text style={{ fontSize: sizes.Small, color: theme.textColor }}>Title: {props.title}</Text>
+                        <Text style={{ fontSize: sizes.Small, color: theme.color2 }}>Title: {props.title}</Text>
                     ) : (
-                        <Text style={{ fontSize: sizes.Small, color: theme.textColor }}>Title: {props.title.slice(0, 20) + '...'}</Text>
+                        <Text style={{ fontSize: sizes.Small, color: theme.color2}}>Title: {props.title.slice(0, 20) + '...'}</Text>
                     )
                 }
-                <Text> Price: {props.price}</Text>
-                <Text> Discount: {props.discount}</Text>
-                <Text> Seller: {props.seller}</Text>
-                <Text> Rating: {props.rating}</Text>
+                <Text style = {{color: theme.color2}}> Price: {props.price}</Text>
+                <Text style = {{color: theme.color2}}> Discount: {props.discount}</Text>
+                <Text style = {{color: theme.color2}}> Seller: {props.seller}</Text>
+                <Text style = {{color: theme.color2}}> Rating: {props.rating}</Text>
+                <Text style = {{color: theme.color2}}>Amount Sellected{props.amountSellected}</Text>
 
             </View>
         </TouchableOpacity>

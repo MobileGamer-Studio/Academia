@@ -68,13 +68,20 @@ function CartScreen({route, navigation}) {
     } else {
 
         let crtProducts = []
+        let no = 0
         cart.forEach((item) => {
+            
             products.forEach((product) => {
                 if (item.product === product.id) {
-                    crtProducts.push(product)
+                    crtProducts.push({
+                        info: item,
+                        product: product,
+                    })
                 }
             })
         })
+
+        console.log(crtProducts)
 
         return (
             <View style={styles.container}>
@@ -90,11 +97,11 @@ function CartScreen({route, navigation}) {
                             <FlatList
                                 vertical
                                 showsHorizontalScrollIndicator={false}
-                                keyExtractor={(item) => item.id}
+                                keyExtractor={(item) => item.info.id}
                                 data={crtProducts}
                                 renderItem={({ item }) => {
                                     return (
-                                        <Product title={item.title} image={item.image} price={item.price} discount={item.discount} seller={item.seller} rating={item.ratings} method={() => navigation.navigate('Product', { id: userId, productId: item.id })} />
+                                        <Product title={item.product.title} image={item.product.image} price={item.product.price} discount={item.product.discount} seller={item.product.seller} rating={item.product.ratings} quantity = {item.info.amountSellected} method={() => navigation.navigate('Product', { id: userId, productId: item.id })} />
                                     );
                                 }}
                             />
@@ -157,7 +164,7 @@ function CartScreen({route, navigation}) {
 }
 
 function Product(props) {
-    const [amountSellected, setAmountSellected] = useState(1);
+    const [amountSellected, setAmountSellected] = useState(props.quantity);
     return (
         <TouchableOpacity style={{
             flexDirection: 'row',
@@ -189,6 +196,7 @@ function Product(props) {
             <View style={{
                 marginHorizontal: 10,
                 marginVertical: 5,
+                flex: 1,
             }}>
                 {
                     props.title.length < 25 ? (
@@ -205,10 +213,9 @@ function Product(props) {
                         </View>
                     ) : (
                         <View>
-                            <Text style={{ color: theme.color2, fontSize: 12, textDecorationLine: 'line-through', textDecorationStyle: 'solid' }}>{'₦'+props.price}</Text>
-                            <Text style={{ color: theme.color2, fontSize: 12 }}>{'₦'+(props.price - (props.discount / 100 * props.price))}</Text>
+                            <Text style={{color: theme.color2, fontSize: 14 }}>{'₦'+(props.price - (props.discount / 100 * props.price))}</Text>
 
-                            <View style={{
+                            {/* <View style={{
                                 flexDirection: 'row',
                                 backgroundColor: theme.color2,
                                 elevation: 1,
@@ -217,10 +224,10 @@ function Product(props) {
                                 borderRadius: sizes.Small,
                                 alignItems: 'center',
                                 justifyContent: 'center',
-                                // width: '100%',
+                                width: 50,
                             }}>
-                                <Text style={{ color: theme.bgColor }}>{'-' + props.discount + '% discount'}</Text>
-                            </View>
+                                <Text style={{ color: theme.bgColor }}>{'-' + props.discount}</Text>
+                            </View> */}
                         </View>
                     )
                 }
@@ -230,8 +237,8 @@ function Product(props) {
                     backgroundColor: theme.bgColor,
                     elevation: 1,
                     padding: 10,
-                    margin: 5,
-                    borderRadius: sizes.Small,
+                    margin: 10,
+                    borderRadius: sizes.Large,
                     alignItems: 'center',
                     justifyContent: 'space-around',
                     // width: '100%',
@@ -240,6 +247,7 @@ function Product(props) {
                         backgroundColor: theme.color2,
                         borderRadius: sizes.ExtraLarge,
                     }} onPress = {() => {
+                        
                         setAmountSellected(amountSellected - 1)
                     }}>
                         <AntDesign name="minus" size={24} color={theme.bgColor} />
