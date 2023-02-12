@@ -256,7 +256,7 @@ function UserAccount({ route, navigation }) {
                 {
                     list.length > 0 ? (
                         <View style={styles.section}>
-                            <SectionHeader text={'Your Products'} method={() => navigation.navigate("Search", { id: userId })} />
+                            <SectionHeader text={'Your Products'} color={theme.outline} textColor={theme.color2} method={() => navigation.navigate("Search", { id: userId })} />
                             <View style={{}}>
                                 <FlatList
                                     horizontal
