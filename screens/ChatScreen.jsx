@@ -181,6 +181,7 @@ function Chat(props) {
                     <View style={{
                         flexDirection: "column",
                         marginHorizontal: 5,
+                        alignSelf: 'flex-start',
                     }}>
                         <Text style={{ color: colors.white, fontSize: 10, }}>{props.time}</Text>
                     </View>
