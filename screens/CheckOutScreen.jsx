@@ -156,8 +156,11 @@ function CheckOutScreen({ route, navigation }) {
     if (loading) {
         return (
             <View style={styles.container}>
-                <StatusBar barStyle="light-content" />
-                <Header title="Check Out" navigation={navigation} />
+                <StatusBar
+                    backgroundColor={theme.color}
+                    barStyle='light-content'
+                />
+                <Header method={() => navigation.goBack()} text={'Check Out'} />
                 <Loading message  = {loadingMessage} />
             </View>
         )
