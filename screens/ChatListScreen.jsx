@@ -99,6 +99,7 @@ function ChatListScreen({ navigation, route }) {
             }
         });
 
+
         return (
             <View style={styles.container}>
                 <StatusBar
@@ -247,7 +248,9 @@ function ChatListScreen({ navigation, route }) {
                                                 <View>
                                                     <Text style={{ color: theme.textColor, fontSize: sizes.Small }}>{acc.name}</Text>
                                                     {
-                                                        item.messages.length > 0 ? (<Text style={{ color: theme.textColor, fontSize: sizes.ExtraSmall }}>{item.messages[item.messages.length - 1].message}</Text>) : null
+                                                        item.messages.length > 0 ? (<Text style={{ color: theme.textColor, fontSize: sizes.ExtraSmall }}>{
+                                                            item.messages[item.messages.length - 1].message.length > 20 ? item.messages[item.messages.length - 1].message.substring(0, 20) + "..." : item.messages[item.messages.length - 1].message
+                                                        }</Text>) : null
                                                     }
                                                 </View>
                                             </TouchableOpacity>

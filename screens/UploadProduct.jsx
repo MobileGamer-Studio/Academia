@@ -74,7 +74,7 @@ const UploadProduct = ({route, navigation}) => {
             <Header method={() => navigation.goBack()} text={'Upload Product'} />
             <ScrollView showsVerticalScrollIndicator = {false}>
                 <View style={styles.field}>
-                    <Text style={{ marginHorizontal: 5 }}>{"Product: " + title}</Text>
+                    <Text style={{ marginHorizontal: 5, color: theme.color }}>{"Product: " + title}</Text>
                     <InfoInput
                         method={(val) => setTitle(val)}
                         placeholder={"Item name"}
@@ -82,7 +82,7 @@ const UploadProduct = ({route, navigation}) => {
 
                 </View>
                 <View style={styles.field}>
-                    <Text style={{ marginHorizontal: 5 }}>{"Details: " + description}</Text>
+                    <Text style={{ marginHorizontal: 5, color: theme.color}}>{"Details: " + description}</Text>
                     <InfoInput
                         method={(val) => setDescription(val)}
                         placeholder={"Item description"}
@@ -90,7 +90,7 @@ const UploadProduct = ({route, navigation}) => {
 
                 </View>
                 <View style={styles.field}>
-                    <Text>{'₦' + price}</Text>
+                    <Text style = {{color: theme.color}}>{'₦' + price}</Text>
                     <InfoInput
                         method={(val) => setPrice(val)}
                         placeholder={"Price"}
@@ -103,8 +103,8 @@ const UploadProduct = ({route, navigation}) => {
                         flexDirection: "row",
                         justifyContent: "space-between",
                     }}>
-                        <Text style={{ marginHorizontal: 5 }}>{"Discount: -" + discount + '%'}</Text>
-                        <Text style={{ marginHorizontal: 5 }}>{"NewPrice: ₦" + (price - (discount / 100 * price)).toString()}</Text>
+                        <Text style={{ marginHorizontal: 5 ,color: theme.color }}>{"Discount: -" + discount + '%'}</Text>
+                        <Text style={{ marginHorizontal: 5 ,color: theme.color}}>{"NewPrice: ₦" + (price - (discount / 100 * price)).toString()}</Text>
                     </View>
                     <InfoInput
                         method={(val) => setDiscount(val)}
@@ -114,7 +114,7 @@ const UploadProduct = ({route, navigation}) => {
 
                 </View>
                 <View style={styles.field}>
-                    <Text style={{ marginHorizontal: 5 }}>{"Number Available: " + numAvailable}</Text>
+                    <Text style={{ marginHorizontal: 5, color: theme.color }}>{"Number Available: " + numAvailable}</Text>
                     <InfoInput
                         method={(val) => setNumAvailable(val)}
                         placeholder={"Number of items currently available"}
@@ -126,7 +126,7 @@ const UploadProduct = ({route, navigation}) => {
                         flexDirection: "row",
                         
                     }}>
-                        <Text style={{ marginHorizontal: 5 }}>{"Tags: "}</Text>
+                        <Text style={{ marginHorizontal: 5, color: theme.color }}>{"Tags: "}</Text>
                         <FlatList
                             horizontal
                             showsHorizontalScrollIndicator={false}

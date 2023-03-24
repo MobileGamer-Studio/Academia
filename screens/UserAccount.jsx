@@ -4,7 +4,7 @@ import { colors, sizes } from '../constants/Data'
 import { RoundButton, ProductHorizontal, SectionHeader } from "../constants/Components";
 import { firestore, logOut } from "../constants/Sever";
 import { collection, doc, onSnapshot } from "firebase/firestore";
-import { MaterialIcons, Entypo } from "@expo/vector-icons";
+import { MaterialIcons, Entypo, FontAwesome } from "@expo/vector-icons";
 import { LineChart, ProgressChart } from 'react-native-chart-kit';
 import { LinearGradient } from 'expo-linear-gradient';
 
@@ -124,19 +124,19 @@ function UserAccount({ route, navigation }) {
                         </View>
                         <View showsVerticalScrollIndicator={false}>
                             <TouchableOpacity style = {styles.popUpSection} onPress = {() => {setOptionsAct(false); navigation.navigate("Settings", {id: userId})}}>
-                                <MaterialIcons name="settings" size={24} color={colors.defaultBG} />
+                                <MaterialIcons name="settings" size={24} color={colors.defaultBG} style = {{marginHorizontal: 5}}/>
                                 <Text style={{ color: theme.outline, marginHorizontal: 2.5 }}>Settings</Text>
                             </TouchableOpacity>
                             <TouchableOpacity style={styles.popUpSection} onPress={() => { setOptionsAct(false); navigation.navigate("Saved", { id: userId })}}>
-                                <MaterialIcons name="bookmark" size={24} color={colors.defaultBG} />
+                                <MaterialIcons name="bookmark" size={24} color={colors.defaultBG} style = {{marginHorizontal: 5}}/>
                                 <Text style={{ color: theme.outline, marginHorizontal: 2.5 }}>Saved</Text>
                             </TouchableOpacity>
                             <TouchableOpacity style={styles.popUpSection} onPress={() => { setOptionsAct(false); navigation.navigate("Checkout", { id: userId })}}>
-                                <MaterialIcons name="cart" size={24} color={colors.defaultBG} />
+                            <FontAwesome name="shopping-basket" size={20} color={colors.defaultBG} style = {{marginHorizontal: 5}}/>
                                 <Text style={{ color: theme.outline, marginHorizontal: 2.5 }}>Check Out</Text>
                             </TouchableOpacity>
                             <TouchableOpacity style={styles.popUpSection} onPress={() => { setOptionsAct(false); navigation.navigate("EditProfile", { id: userId })}}>
-                                <MaterialIcons name="edit" size={24} color={colors.defaultBG} />
+                                <MaterialIcons name="edit" size={24} color={colors.defaultBG} style = {{marginHorizontal: 5}}/>
                                 <Text style={{ color: theme.outline, marginHorizontal: 2.5 }}>Edit Profile</Text>
                             </TouchableOpacity>
                             <TouchableOpacity style={styles.popUpSection} onPress = {async () => {
@@ -158,7 +158,7 @@ function UserAccount({ route, navigation }) {
                                     alert(error.message);
                                 }
                             }}>
-                                <MaterialIcons name="share" size={24} color={colors.defaultBG} />
+                                <MaterialIcons name="share" size={24} color={colors.defaultBG} style = {{marginHorizontal: 5}}/>
                                 <Text style={{ color: theme.outline, marginHorizontal: 2.5 }}>Share</Text>
                             </TouchableOpacity>
                             <TouchableOpacity style={styles.popUpSection} onPress={() => {
@@ -166,7 +166,7 @@ function UserAccount({ route, navigation }) {
                                 logOut()
                                 navigation.navigate("Loading");
                             }}>
-                                <MaterialIcons name="logout" size={24} color={colors.defaultBG} />
+                                <MaterialIcons name="logout" size={24} color={colors.defaultBG} style = {{marginHorizontal: 5}}/>
                                 <Text style={{ color: theme.outline, marginHorizontal: 2.5 }}>LogOut</Text>
                             </TouchableOpacity>
                         </View>
