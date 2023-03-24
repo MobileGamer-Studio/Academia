@@ -170,7 +170,7 @@ function Chat(props) {
                     backgroundColor: theme.color2,
                     padding: 8,
                     alignItems: "center",
-                    borderRadius: sizes.ExtraLarge,
+                    borderRadius: sizes.Medium,
                     alignSelf: "flex-start",
                     marginHorizontal: 20,
                     marginVertical: 5,
@@ -181,6 +181,7 @@ function Chat(props) {
                     <View style={{
                         flexDirection: "column",
                         marginHorizontal: 5,
+                        alignSelf: 'flex-start',
                     }}>
                         <Text style={{ color: colors.white, fontSize: 10, }}>{props.time}</Text>
                     </View>

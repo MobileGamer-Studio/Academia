@@ -9,6 +9,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 //import mobileAds, { BannerAd, BannerAdSize, TestIds } from 'react-native-google-mobile-ads';
 import { LinearGradient } from 'expo-linear-gradient';
 
+
+
 const theme = colors.lightTheme;
 function HomeScreen({ route, navigation }) {
     const userId = route.params.id;
@@ -27,6 +29,19 @@ function HomeScreen({ route, navigation }) {
     const [bestSellers, setBestSellers] = useState([])
     const [likedList, setLikedList] = useState([])
     const [bsModalVisible, setBsModalVisible] = useState(false)
+
+    const menu_item = [
+        {
+            title: 'Become a seller',
+            action: () => { }
+        },
+        {
+            title: '',
+            action: () => { }
+        }
+        
+    ]
+    
 
 
 
@@ -191,7 +206,7 @@ function HomeScreen({ route, navigation }) {
                     animationType="slide"
                     transparent={true}
                 >
-                    <View style = {{
+                    <View style={{
                         backgroundColor: theme.bgColor,
                         //height: '40%',
                         width: '70%',
@@ -203,15 +218,15 @@ function HomeScreen({ route, navigation }) {
                         //alignItems: 'center',
                         justifyContent: 'center'
                     }}>
-                        <Text style = {{fontSize: 17, alignSelf: 'center', margin: 5, color: theme.outline}}>You are not yet a seller</Text>
-                        <View style = {{margin: 10}}>
-                            <TouchableOpacity style = {{backgroundColor: theme.color2, padding: 10, borderRadius: sizes.Small, alignItems: 'center'}} onPress = {() => {setBsModalVisible(false); navigation.navigate('SellersAgreement', {id: userId}); }}>
-                                <Text style = {{color: colors.white}}>Become a seller</Text>
+                        <Text style={{ fontSize: 17, alignSelf: 'center', margin: 5, color: theme.outline }}>You are not yet a seller</Text>
+                        <View style={{ margin: 10 }}>
+                            <TouchableOpacity style={{ backgroundColor: theme.color2, padding: 10, borderRadius: sizes.Small, alignItems: 'center' }} onPress={() => { setBsModalVisible(false); navigation.navigate('SellersAgreement', { id: userId }); }}>
+                                <Text style={{ color: colors.white }}>Become a seller</Text>
                             </TouchableOpacity>
                         </View>
-                        <View style = {{margin: 10}}>
-                            <TouchableOpacity style = {{backgroundColor: '#FF8BA0', padding: 10, borderRadius: sizes.Small, alignItems: 'center'}} onPress = {() => setBsModalVisible(false)}>
-                                <Text style = {{color: colors.white}}>Cancle</Text>
+                        <View style={{ margin: 10 }}>
+                            <TouchableOpacity style={{ backgroundColor: '#FF8BA0', padding: 10, borderRadius: sizes.Small, alignItems: 'center' }} onPress={() => setBsModalVisible(false)}>
+                                <Text style={{ color: colors.white }}>Cancle</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -516,7 +531,7 @@ function HomeScreen({ route, navigation }) {
                     cart={() => navigation.navigate("Cart", { id: userId })}
                     profile={() => navigation.navigate("UserAccount", { id: userId, user: user })}
                     image={user.profilePicture}
-                    add = {() => {
+                    add={() => {
                         if (user.sellerInfo.info.status === false) {
                             setBsModalVisible(true)
                         } else {
