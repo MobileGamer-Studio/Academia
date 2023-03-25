@@ -96,7 +96,7 @@ function SavedScreen({ navigation, route }) {
                         liked.length !== 0 ? (
                             <View>
                                 <View style={styles.section}>
-                                    <SectionHeader text={'Liked Products'} />
+                                    <SectionHeader text={'Liked Products'} color={theme.outline} textColor={theme.color2} method={() => navigation.navigate("Search", { id: userId })}/>
                                     <View>
                                         <FlatList
                                             horizontal
