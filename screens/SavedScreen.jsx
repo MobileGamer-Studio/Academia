@@ -111,6 +111,7 @@ function SavedScreen({ navigation, route }) {
                                         />
                                     </View>
                                 </View>
+                                
                             </View>
                         ) : null
                 ) : (
