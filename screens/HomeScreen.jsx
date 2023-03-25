@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FlatList, ScrollView, Image, StyleSheet, Text, TouchableOpacity, View, StatusBar, SafeAreaView, Modal } from 'react-native';
 import { categories, colors, sizes, suggestedProducts, images } from '../constants/Data';
-import { NavBar, Loading, ProductHorizontal, ProductVertical, Button, ProfilePicture, SectionHeader } from '../constants/Components';
+import { ButtomMenu, NavBar, Loading, ProductHorizontal, ProductVertical, Button, ProfilePicture, SectionHeader } from '../constants/Components';
 import { firestore } from "../constants/Sever";
 import { collection, setDoc, doc, onSnapshot } from "firebase/firestore";
 import { Entypo, MaterialIcons, Ionicons } from '@expo/vector-icons';
@@ -28,16 +28,20 @@ function HomeScreen({ route, navigation }) {
     const [cart, setCart] = useState([])
     const [bestSellers, setBestSellers] = useState([])
     const [likedList, setLikedList] = useState([])
-    const [bsModalVisible, setBsModalVisible] = useState(false)
+    const [menu_visibility, set_menu_visibility] = useState(false)
 
     const menu_item = [
         {
             title: 'Become a seller',
-            action: () => { }
+            action: () => { },
+            icon: 'store',
+            id: '0'
         },
         {
             title: '',
-            action: () => { }
+            action: () => { },
+            icon: '',
+            id: '1'
         }
         
     ]
@@ -200,37 +204,7 @@ function HomeScreen({ route, navigation }) {
                     barStyle='dark-content'
                 />
                 <Header method={() => navigation.navigate('Notifications', { id: userId })} />
-                <Modal
-
-                    visible={bsModalVisible}
-                    animationType="slide"
-                    transparent={true}
-                >
-                    <View style={{
-                        backgroundColor: theme.bgColor,
-                        //height: '40%',
-                        width: '70%',
-                        elevation: 2,
-                        alignSelf: 'center',
-                        marginTop: '50%',
-                        borderRadius: sizes.Medium,
-                        padding: 10,
-                        //alignItems: 'center',
-                        justifyContent: 'center'
-                    }}>
-                        <Text style={{ fontSize: 17, alignSelf: 'center', margin: 5, color: theme.outline }}>You are not yet a seller</Text>
-                        <View style={{ margin: 10 }}>
-                            <TouchableOpacity style={{ backgroundColor: theme.color2, padding: 10, borderRadius: sizes.Small, alignItems: 'center' }} onPress={() => { setBsModalVisible(false); navigation.navigate('SellersAgreement', { id: userId }); }}>
-                                <Text style={{ color: colors.white }}>Become a seller</Text>
-                            </TouchableOpacity>
-                        </View>
-                        <View style={{ margin: 10 }}>
-                            <TouchableOpacity style={{ backgroundColor: '#FF8BA0', padding: 10, borderRadius: sizes.Small, alignItems: 'center' }} onPress={() => setBsModalVisible(false)}>
-                                <Text style={{ color: colors.white }}>Cancle</Text>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                </Modal>
+                
                 <ScrollView showsVerticalScrollIndicator={false}>
                     <View>
                         {/* <BannerAd
@@ -533,12 +507,13 @@ function HomeScreen({ route, navigation }) {
                     image={user.profilePicture}
                     add={() => {
                         if (user.sellerInfo.info.status === false) {
-                            setBsModalVisible(true)
+                            set_menu_visibility(true)
                         } else {
                             navigation.navigate("UploadProduct", { id: userId })
                         }
                     }}
                 />
+                <ButtomMenu title = {'Become a seller'} show = {menu_visibility} close = {() => set_menu_visibility(false)} item_list = {menu_item}/>
             </SafeAreaView>
         );
     }

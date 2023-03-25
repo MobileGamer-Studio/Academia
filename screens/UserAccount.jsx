@@ -1,7 +1,7 @@
-import React, { useState, useEffect} from 'react'
+import React, { useState, useEffect } from 'react'
 import { StyleSheet, Text, TouchableOpacity, View, ScrollView, FlatList, Modal, Share, StatusBar } from 'react-native'
 import { colors, sizes } from '../constants/Data'
-import { RoundButton, ProductHorizontal, SectionHeader } from "../constants/Components";
+import { ButtomMenu, RoundButton, ProductHorizontal, SectionHeader } from "../constants/Components";
 import { firestore, logOut } from "../constants/Sever";
 import { collection, doc, onSnapshot } from "firebase/firestore";
 import { MaterialIcons, Entypo, FontAwesome } from "@expo/vector-icons";
@@ -10,7 +10,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 
 const theme = colors.lightTheme;
 function UserAccount({ route, navigation }) {
-    const [optionsAct, setOptionsAct] = useState(false)
+    const [menu_visibility, set_menu_visibility] = useState(false)
 
     const userId = route.params.id;
     const [users, setUsers] = useState([])
@@ -24,7 +24,69 @@ function UserAccount({ route, navigation }) {
     const [productsLength, setProductsLength] = useState(0);
 
     const [productsList, setProductsList] = useState([]);
+    const [LikedList, setLikedList] = useState([]);
 
+    const menu_item = [
+        {
+            title: 'Settings',
+            action: () => {set_menu_visibility(false); navigation.navigate("Settings", { id: userId }) },
+            icon: 'settings',
+            id: '0'
+        },
+        {
+            title: 'Saved',
+            action: () => { set_menu_visibility(false); navigation.navigate("Saved", { id: userId })},
+            icon: 'bookmark',
+            id: '1'
+        },
+        {
+            title: 'Check Out',
+            action: () => {set_menu_visibility(false); navigation.navigate("Checkout", { id: userId }) },
+            icon: 'shopping-cart',
+            id: '2'
+        },
+        {
+            title: 'Edit Profile',
+            action: () => { set_menu_visibility(false); navigation.navigate("EditProfile", { id: userId })},
+            icon: 'edit',
+            id: '3'
+        },
+        {
+            title: 'Share',
+            action: async () => {
+                set_menu_visibility(false)
+                try {
+                    const result = await Share.share({
+                        message: user.name + " is using Academia. Download it now! \n https://play.google.com/store/apps/details?id=com.academia",
+                    });
+                    if (result.action === Share.sharedAction) {
+                        if (result.activityType) {
+                            // shared with activity type of result.activityType
+                        } else {
+                            // shared
+                        }
+                    } else if (result.action === Share.dismissedAction) {
+                        // dismissed
+                    }
+                } catch (error) {
+                    alert(error.message);
+                }
+            },
+            icon: 'share',
+            id: '4'
+        },
+        {
+            title: 'Log Out',
+            action: () => {
+                set_menu_visibility(false)
+                logOut()
+                navigation.navigate("Loading");
+            },
+            icon: 'logout',
+            id: '5'
+        },
+
+    ]
 
     useEffect(() => {
         const usersSub = onSnapshot(collection(firestore, "Users"), querySnapshot => {
@@ -60,6 +122,7 @@ function UserAccount({ route, navigation }) {
             if (doc.data().sellerInfo.productList.length !== 0) {
                 setProductsLength(doc.data().sellerInfo.productList.length)
                 setProductsList(doc.data().sellerInfo.productList)
+                setLikedList(doc.data().userInfo.liked)
             }
 
             if (user !== {}) {
@@ -75,6 +138,19 @@ function UserAccount({ route, navigation }) {
                 products.forEach((item) => {
                     if (item.id === product) {
                         list.push(item)
+                    }
+                })
+            }
+        })
+    }
+
+    const liked = []
+    if (loading === false) {
+        LikedList.forEach((product) => {
+            if (product !== undefined) {
+                products.forEach((item) => {
+                    if (item.id === product) {
+                        liked.push(item)
                     }
                 })
             }
@@ -99,84 +175,12 @@ function UserAccount({ route, navigation }) {
                 paddingTop: 10,
                 marginBottom: 10,
             }}>
-                <Modal
-                    visible = {optionsAct}
-                    animationType = "slide"
-                    transparent = {true}
 
-                >
-                    <View style = {{
-                        backgroundColor: colors.white,
-                        elevation: 5,
-                        width: "80%",
-                        margin: 100,
-                        alignSelf: "center",
-                        borderRadius: 10,
-                    }}>
-                        <View style = {{
-                            flexDirection: "row",
-                            justifyContent: "flex-end",
-                            margin: 10,
-                        }}>
-                            <TouchableOpacity onPress={() => setOptionsAct(false)}>
-                                <MaterialIcons name="close" size={24} color={colors.defaultBG} />
-                            </TouchableOpacity>
-                        </View>
-                        <View showsVerticalScrollIndicator={false}>
-                            <TouchableOpacity style = {styles.popUpSection} onPress = {() => {setOptionsAct(false); navigation.navigate("Settings", {id: userId})}}>
-                                <MaterialIcons name="settings" size={24} color={colors.defaultBG} style = {{marginHorizontal: 5}}/>
-                                <Text style={{ color: theme.outline, marginHorizontal: 2.5 }}>Settings</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={styles.popUpSection} onPress={() => { setOptionsAct(false); navigation.navigate("Saved", { id: userId })}}>
-                                <MaterialIcons name="bookmark" size={24} color={colors.defaultBG} style = {{marginHorizontal: 5}}/>
-                                <Text style={{ color: theme.outline, marginHorizontal: 2.5 }}>Saved</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={styles.popUpSection} onPress={() => { setOptionsAct(false); navigation.navigate("Checkout", { id: userId })}}>
-                            <FontAwesome name="shopping-basket" size={20} color={colors.defaultBG} style = {{marginHorizontal: 5}}/>
-                                <Text style={{ color: theme.outline, marginHorizontal: 2.5 }}>Check Out</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={styles.popUpSection} onPress={() => { setOptionsAct(false); navigation.navigate("EditProfile", { id: userId })}}>
-                                <MaterialIcons name="edit" size={24} color={colors.defaultBG} style = {{marginHorizontal: 5}}/>
-                                <Text style={{ color: theme.outline, marginHorizontal: 2.5 }}>Edit Profile</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={styles.popUpSection} onPress = {async () => {
-                                setOptionsAct(false)
-                                try {
-                                    const result = await Share.share({
-                                        message: user.name + " is using Academia. Download it now! \n https://play.google.com/store/apps/details?id=com.academia",
-                                    });
-                                    if (result.action === Share.sharedAction) {
-                                        if (result.activityType) {
-                                            // shared with activity type of result.activityType
-                                        } else {
-                                            // shared
-                                        }
-                                    } else if (result.action === Share.dismissedAction) {
-                                        // dismissed
-                                    }
-                                } catch (error) {
-                                    alert(error.message);
-                                }
-                            }}>
-                                <MaterialIcons name="share" size={24} color={colors.defaultBG} style = {{marginHorizontal: 5}}/>
-                                <Text style={{ color: theme.outline, marginHorizontal: 2.5 }}>Share</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={styles.popUpSection} onPress={() => {
-                                setOptionsAct(false)
-                                logOut()
-                                navigation.navigate("Loading");
-                            }}>
-                                <MaterialIcons name="logout" size={24} color={colors.defaultBG} style = {{marginHorizontal: 5}}/>
-                                <Text style={{ color: theme.outline, marginHorizontal: 2.5 }}>LogOut</Text>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                </Modal>
-                <View style = {{flexDirection: 'row', justifyContent: 'space-between'}}>
-                    <MaterialIcons name="arrow-back-ios" size={24} color={colors.white} style={{ marginLeft: 10}} onPress = {() => navigation.goBack()}/>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                    <MaterialIcons name="arrow-back-ios" size={24} color={colors.white} style={{ marginLeft: 10 }} onPress={() => navigation.goBack()} />
                     <View style={{ alignSelf: "flex-end", marginBottom: 20 }}>
 
-                        <TouchableOpacity onPress={() => setOptionsAct(true)}>
+                        <TouchableOpacity onPress={() => set_menu_visibility(true)}>
                             <Entypo name="dots-three-vertical" size={24} color={colors.white} />
                         </TouchableOpacity>
                     </View>
@@ -273,6 +277,28 @@ function UserAccount({ route, navigation }) {
                         </View>
                     ) : null
                 }
+                {
+                    liked.length !== 0 ? (
+                        <View>
+                            <View style={styles.section}>
+                                <SectionHeader text={'Liked Products'} color={theme.outline} textColor={theme.color2} method={() => navigation.navigate("Search", { id: userId })}/>
+                                <View>
+                                    <FlatList
+                                        horizontal
+                                        showsHorizontalScrollIndicator={false}
+                                        keyExtractor={(item) => item.id}
+                                        data={liked}
+                                        renderItem={({ item }) => {
+                                            return (
+                                                <ProductHorizontal title={item.title} image={item.image} price={item.price} discount={item.discount} seller={item.seller} rating={item.ratings} method={() => navigation.navigate('Product', { id: userId, productId: item.id })} />
+                                            )
+                                        }}
+                                    />
+                                </View>
+                            </View>
+                        </View>
+                    ) : null
+                }
             </ScrollView>
 
             <View style={{
@@ -289,6 +315,7 @@ function UserAccount({ route, navigation }) {
                     <MaterialIcons name="chat" size={30} color={colors.white} />
                 </TouchableOpacity>
             </View>
+            <ButtomMenu title = {'Menu'} show={menu_visibility} close={() => set_menu_visibility(false)} item_list={menu_item} />
         </View>
     );
 }

@@ -440,13 +440,19 @@ export function ButtomMenu(props) {
             visible={props.show}
             animationType="slide"
             transparent={true}
+            collapsable={true}
         >
+            <View style = {{
+                flex: 1,
+                backgroundColor: "rgba(0,0,0,0.5)",
+            }}>
             <View style={styles.bt_menu}>
                 <View style={{
                     flexDirection: "row",
-                    justifyContent: "flex-end",
+                    justifyContent: "space-between",
                     margin: 10,
                 }}>
+                    <Text style={{ fontSize: 20, color: colors.defaultBG }}>{props.title}</Text>
                     <TouchableOpacity onPress={props.close}>
                         <MaterialIcons name="close" size={24} color={colors.defaultBG} />
                     </TouchableOpacity>
@@ -455,22 +461,28 @@ export function ButtomMenu(props) {
                     <FlatList
                         vertical
                         showsHorizontalScrollIndicator={false}
-                        keyExtractor={(item) => item.info.id}
-                        data={props.items_list}
+                        keyExtractor={(item) => item.id}
+                        data={props.item_list}
                         renderItem={({ item }) => {
                             return (
                                 <TouchableOpacity style={{
-                                    padding: 5,
-                                    flexDirection: 'row'
+                                    borderTopColor: theme.outline,
+                                    borderTopWidth: 1,
+                                    padding: 10,
+                                    flexDirection: "row",
+                                    alignItems: "center",
                                 }}
-
                                     onPress={item.action}>
-                                    <Text style = {{fontSize: 20}}>{item.title}</Text>
+                                    <View>
+                                        <MaterialIcons name={item.icon} size={24} color={colors.defaultBG} />
+                                    </View>
+                                    <Text style={{ fontSize: 15, paddingHorizontal: 10, color: colors.defaultBG}}>{item.title}</Text>
                                 </TouchableOpacity>
                             );
                         }}
                     />
                 </View>
+            </View>
             </View>
         </Modal>
     )
@@ -584,6 +596,8 @@ const styles = StyleSheet.create({
         borderTopRightRadius: sizes.Large,
         padding: 10,
         bottom: 0,
+        position: "absolute",
+        width: "100%",
     },
 
     button: {
