@@ -12,7 +12,7 @@ const theme = colors.lightTheme;
 const UploadProduct = ({route, navigation}) => {
     const userId = route.params.id;
     const [deals, setDeals] = useState([])
-    const [user, setUser] = useState({})
+    const [user, set_user] = useState({})
 
 
     const [title, setTitle] = useState('');
@@ -39,7 +39,7 @@ const UploadProduct = ({route, navigation}) => {
 
 
         const userSub = onSnapshot(doc(firestore, "Users", userId), (doc) => {
-            setUser(doc.data())
+            set_user(doc.data())
         });
 
     }, [])

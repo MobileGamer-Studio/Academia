@@ -13,10 +13,10 @@ function UserAccount({ route, navigation }) {
     const [menu_visibility, set_menu_visibility] = useState(false)
 
     const userId = route.params.id;
-    const [users, setUsers] = useState([])
-    const [user, setUser] = useState({})
+    const [users, set_users] = useState([])
+    const [user, set_user] = useState({})
     const [products, setProducts] = useState([])
-    const [loading, setLoading] = useState(true)
+    const [loading, set_loading] = useState(true)
 
     //
     const [followingLength, setFollowingLength] = useState(0);
@@ -95,7 +95,7 @@ function UserAccount({ route, navigation }) {
                 data.push(doc.data())
             });
             //console.log("Current data: ", data);
-            setUsers(data)
+            set_users(data)
         });
 
         const productsSub = onSnapshot(collection(firestore, "Products"), querySnapshot => {
@@ -109,7 +109,7 @@ function UserAccount({ route, navigation }) {
 
 
         const userSub = onSnapshot(doc(firestore, "Users", userId), (doc) => {
-            setUser(doc.data())
+            set_user(doc.data())
 
             if (doc.data().following.length !== 0) {
                 setFollowingLength(doc.data().following.length)
@@ -126,7 +126,7 @@ function UserAccount({ route, navigation }) {
             }
 
             if (user !== {}) {
-                setLoading(false)
+                set_loading(false)
             }
         });
 

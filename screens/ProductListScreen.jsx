@@ -9,11 +9,11 @@ import {SimpleLineIcons} from '@expo/vector-icons'
 const theme = colors.lightTheme;
 function ProductListScreen({ route, navigation }) {
     const userId = route.params.id;
-    const [users, setUsers] = useState([])
+    const [users, set_users] = useState([])
     const [products, setProducts] = useState([])
-    const [user, setUser] = useState({})
-    const [loading, setLoading] = useState(true)
-    const [loadingMessage, setLoadingMessage] = useState('')
+    const [user, set_user] = useState({})
+    const [loading, set_loading] = useState(true)
+    const [loadingMessage, set_loadingMessage] = useState('')
 
     const [productList, setProductList] = useState([])
 
@@ -24,7 +24,7 @@ function ProductListScreen({ route, navigation }) {
                 data.push(doc.data())
             });
             //console.log("Current data: ", data);
-            setUsers(data)
+            set_users(data)
         });
 
         const productsSub = onSnapshot(collection(firestore, "Products"), querySnapshot => {
@@ -37,12 +37,12 @@ function ProductListScreen({ route, navigation }) {
         });
 
         const userSub = onSnapshot(doc(firestore, "Users", userId), (doc) => {
-            setUser(doc.data())
+            set_user(doc.data())
 
             setProductList(doc.data().sellerInfo.productList)
 
             if (user !== {}) {
-                setLoading(false)
+                set_loading(false)
             }
         });
 

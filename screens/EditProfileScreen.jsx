@@ -14,11 +14,11 @@ const theme = colors.lightTheme;
 function EditProfileScreen({ route, navigation }) {
 
     const userId = route.params.id;
-    const [users, setUsers] = useState([])
-    const [user, setUser] = useState({})
+    const [users, set_users] = useState([])
+    const [user, set_user] = useState({})
     const [selectedImage, setSelectedImage] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [loadingMessage, setLoadingMessage] = useState("")
+    const [loading, set_loading] = useState(true);
+    const [loadingMessage, set_loadingMessage] = useState("")
 
     //Variables
     const [name, setName] = useState("");
@@ -33,11 +33,11 @@ function EditProfileScreen({ route, navigation }) {
             querySnapshot.forEach((doc) => {
                 data.push(doc.data())
             });
-            setUsers(data)
+            set_users(data)
         });
 
         const userSub = onSnapshot(doc(firestore, "Users", userId), (doc) => {
-            setUser(doc.data())
+            set_user(doc.data())
 
             setName(doc.data().name)
             setDescription(doc.data().description)
@@ -45,7 +45,7 @@ function EditProfileScreen({ route, navigation }) {
             setProfilePicture(doc.data().profilePicture)
 
             if (user !== {}) {
-                setLoading(false)
+                set_loading(false)
             }
         });
 
@@ -71,8 +71,8 @@ function EditProfileScreen({ route, navigation }) {
     }
 
     const GetImage = async () => {
-        setLoading(true);
-        setLoadingMessage("Getting Profile Picture")
+        set_loading(true);
+        set_loadingMessage("Getting Profile Picture")
         let result = await ImagePicker.launchImageLibraryAsync({
             allowsEditing: true,
             quality: 1,
@@ -122,12 +122,12 @@ function EditProfileScreen({ route, navigation }) {
                 ]
             )
         }
-        setLoading(false);
+        set_loading(false);
     }
 
     const UpdateProfile = async () => {
-        setLoading(true);
-        setLoadingMessage("Updating User Profile")
+        set_loading(true);
+        set_loadingMessage("Updating User Profile")
         const updatedUser = user
         updatedUser.name = name
         updatedUser.description = description
@@ -139,7 +139,7 @@ function EditProfileScreen({ route, navigation }) {
 
 
         await setDoc(doc(firestore, "Users", userId), updatedUser)
-        setLoading(false);
+        set_loading(false);
         Alert.alert(
             "Profile Updated",
             "Your profile has been updated successfully",

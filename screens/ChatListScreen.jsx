@@ -9,9 +9,9 @@ import { getDocs, collection, setDoc, doc, onSnapshot } from "firebase/firestore
 const theme = colors.lightTheme;
 function ChatListScreen({ navigation, route }) {
     const userId = route.params.id;
-    const [loading, setLoading] = useState(true)
-    const [user, setUser] = useState({})
-    const [users, setUsers] = useState([])
+    const [loading, set_loading] = useState(true)
+    const [user, set_user] = useState({})
+    const [users, set_users] = useState([])
     const [optionsAct, setOptionsAct] = useState(false)
     const [chats, setChats] = useState([])
     const [chatList, setChatList] = useState([])
@@ -24,14 +24,14 @@ function ChatListScreen({ navigation, route }) {
             querySnapshot.forEach((doc) => {
                 data.push(doc.data())
             });
-            setUsers(data)
+            set_users(data)
             setSearchResult(data)
         });
 
         const userSub = onSnapshot(doc(firestore, "Users", userId), (doc) => {
-            setUser(doc.data())
+            set_user(doc.data())
             setChatList(doc.data().chatList)
-            setLoading(false)
+            set_loading(false)
             //console.log('Chat List: ' + doc.data().chatList)
         });
 

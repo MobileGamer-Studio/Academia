@@ -15,10 +15,10 @@ export default function DealScreen({ route, navigation }) {
     const [rating, setRating] = useState(null);
     const [deal, setDeal] = useState({})
     const [deals, setDeals] = useState([])
-    const [user, setUser] = useState({})
-    const [users, setUsers] = useState([])
+    const [user, set_user] = useState({})
+    const [users, set_users] = useState([])
     const [products, setProducts] = useState([])
-    const [loading, setLoading] = useState(true)
+    const [loading, set_loading] = useState(true)
 
     const userRef = doc(firestore, "Users", userId);
     const dealRef = doc(firestore, "Deals", dealId);
@@ -30,13 +30,13 @@ export default function DealScreen({ route, navigation }) {
             setDeal(doc.data())
 
             if (deal !== {}) {
-                setLoading(false)
+                set_loading(false)
             }
 
         })
 
         const userSub = onSnapshot(doc(firestore, "Users", userId), (doc) => {
-            setUser(doc.data())
+            set_user(doc.data())
 
         });
 

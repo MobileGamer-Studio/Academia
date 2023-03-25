@@ -9,11 +9,11 @@ import { collection, doc, onSnapshot } from "firebase/firestore";
 const theme = colors.lightTheme;
 function NotificationsScreen({ route, navigation }) {
     const userId = route.params.id;
-    const [users, setUsers] = useState([])
-    const [user, setUser] = useState({})
+    const [users, set_users] = useState([])
+    const [user, set_user] = useState({})
 
     const [notificationList, setNotificationList] = useState([])
-    const [loading, setLoading] = useState(true)
+    const [loading, set_loading] = useState(true)
 
     useEffect(() => {
         const usersSub = onSnapshot(collection(firestore, "Users"), querySnapshot => {
@@ -22,16 +22,16 @@ function NotificationsScreen({ route, navigation }) {
                 data.push(doc.data())
             });
             //console.log("Current data: ", data);
-            setUsers(data)
+            set_users(data)
         });
 
         const userSub = onSnapshot(doc(firestore, "Users", userId), (doc) => {
-            setUser(doc.data())
+            set_user(doc.data())
 
             setNotificationList(doc.data().userInfo.notifications)
 
             if (user !== {}) {
-                setLoading(false)
+                set_loading(false)
             }
         });
 

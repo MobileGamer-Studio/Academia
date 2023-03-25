@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FlatList, ScrollView, Image, StyleSheet, Text, TouchableOpacity, View, StatusBar, SafeAreaView, Modal } from 'react-native';
-import { categories, colors, sizes, suggestedProducts, images } from '../constants/Data';
+import { colors, sizes, images } from '../constants/Data';
 import { ButtomMenu, NavBar, Loading, ProductHorizontal, ProductVertical, Button, ProfilePicture, SectionHeader } from '../constants/Components';
 import { firestore } from "../constants/Sever";
 import { collection, setDoc, doc, onSnapshot } from "firebase/firestore";
@@ -14,11 +14,11 @@ import { LinearGradient } from 'expo-linear-gradient';
 const theme = colors.lightTheme;
 function HomeScreen({ route, navigation }) {
     const userId = route.params.id;
-    const [users, setUsers] = useState([])
+    const [users, set_users] = useState([])
     const [products, setProducts] = useState([])
     const [deals, setDeals] = useState([])
-    const [user, setUser] = useState({})
-    const [loading, setLoading] = useState(true)
+    const [user, set_user] = useState({})
+    const [loading, set_loading] = useState(true)
 
     const [suggestedProducts, setSuggestedProducts] = useState([])
     const [suggestedUsers, setSuggestedUsers] = useState([])
@@ -58,7 +58,7 @@ function HomeScreen({ route, navigation }) {
             querySnapshot.forEach((doc) => {
                 data.push(doc.data())
             });
-            setUsers(data)
+            set_users(data)
         });
 
         const productsSub = onSnapshot(collection(firestore, "Products"), querySnapshot => {
@@ -79,7 +79,7 @@ function HomeScreen({ route, navigation }) {
 
 
         const userSub = onSnapshot(doc(firestore, "Users", userId), (doc) => {
-            setUser(doc.data())
+            set_user(doc.data())
 
             setSuggestedUsers(doc.data().userInfo.feed.suggestedUsers)
             setSuggestedProducts(doc.data().userInfo.feed.suggestedProducts)
@@ -92,7 +92,7 @@ function HomeScreen({ route, navigation }) {
 
 
             if (user !== {}) {
-                setLoading(false)
+                set_loading(false)
             }
         });
 
@@ -395,7 +395,7 @@ function HomeScreen({ route, navigation }) {
                                         horizontal
                                         showsHorizontalScrollIndicator={false}
                                         keyExtractor={(item) => item.id}
-                                        data={categories}
+                                        data={newP}
                                         renderItem={({ item }) => {
                                             return (
                                                 <ProductHorizontal title={item.title} image={item.image} price={item.price} discount={item.discount} seller={item.seller} rating={item.ratings} method={() => navigation.navigate('Product', { id: userId, productId: item.id })} />
@@ -501,7 +501,6 @@ function HomeScreen({ route, navigation }) {
                 <NavBar
                     home={() => navigation.navigate("Home", { id: userId })}
                     search={() => navigation.navigate("Search", { id: userId })}
-                    //add={() => navigation.navigate("UploadProduct", { id: userId })}
                     cart={() => navigation.navigate("Cart", { id: userId })}
                     profile={() => navigation.navigate("UserAccount", { id: userId, user: user })}
                     image={user.profilePicture}

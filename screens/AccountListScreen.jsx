@@ -9,9 +9,9 @@ import { collection, doc, onSnapshot } from "firebase/firestore";
 const theme = colors.lightTheme;
 function AccountListScreen({ navigation, route }) {
     const userId = route.params.id;
-    const [loading, setLoading] = useState(true)
-    const [users, setUsers] = useState([])
-    const [user, setUser] = useState({})
+    const [loading, set_loading] = useState(true)
+    const [users, set_users] = useState([])
+    const [user, set_user] = useState({})
     const [optionsAct, setOptionsAct] = useState(false)
 
     useEffect(() => {
@@ -20,14 +20,14 @@ function AccountListScreen({ navigation, route }) {
             querySnapshot.forEach((doc) => {
                 data.push(doc.data())
             });
-            setUsers(data)
+            set_users(data)
         });
 
         const userSub = onSnapshot(doc(firestore, "Users", userId), (doc) => {
-            setUser(doc.data())
+            set_user(doc.data())
 
             if (user !== {}) {
-                setLoading(false)
+                set_loading(false)
             }
         });
 

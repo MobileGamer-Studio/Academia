@@ -11,8 +11,8 @@ import { getDocs, collection, setDoc, doc, onSnapshot } from "firebase/firestore
 const theme = colors.lightTheme;
 function SettingScreen({route, navigation}) {
     const userId = route.params.id;
-    const [users, setUsers] = useState([])
-    const [user, setUser] = useState({})
+    const [users, set_users] = useState([])
+    const [user, set_user] = useState({})
     const [settings, setSettings] = useState({});  
 
 
@@ -27,12 +27,12 @@ function SettingScreen({route, navigation}) {
                 data.push(doc.data())
             });
             //console.log("Current data: ", data);
-            setUsers(data)
-            //setUser(ans.data)
+            set_users(data)
+            //set_user(ans.data)
         });
 
         const userSub = onSnapshot(doc(firestore, "Users", userId), (doc) => {
-            setUser(doc.data())
+            set_user(doc.data())
             setName(doc.data().name)
             setEmail(doc.data().loginDetails.email)
         });

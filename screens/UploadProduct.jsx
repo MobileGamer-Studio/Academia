@@ -24,7 +24,7 @@ const UploadProduct = ({route, navigation}) => {
 
     const userId = route.params.id;
     const [products, setProducts] = useState([])
-    const [user, setUser] = useState({})
+    const [user, set_user] = useState({})
 
 
     useEffect(() => {
@@ -37,7 +37,7 @@ const UploadProduct = ({route, navigation}) => {
         });
 
         const userSub = onSnapshot(doc(firestore, "Users", userId), (doc) => {
-            setUser(doc.data())
+            set_user(doc.data())
         });
 
     }, [])

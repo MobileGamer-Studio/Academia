@@ -10,9 +10,9 @@ const theme = colors.lightTheme;
 function FollowersListScreen({ route, navigation }) {
 
     const userId = route.params.id;
-    const [users, setUsers] = useState([])
-    const [user, setUser] = useState({})
-    const [loading, setLoading] = useState(true)
+    const [users, set_users] = useState([])
+    const [user, set_user] = useState({})
+    const [loading, set_loading] = useState(true)
 
     const [followersList, setFollowersList] = useState([])
 
@@ -23,11 +23,11 @@ function FollowersListScreen({ route, navigation }) {
                 data.push(doc.data())
             });
             console.log("Current data: ", data);
-            setUsers(data)
+            set_users(data)
         });
 
         const userSub = onSnapshot(doc(firestore, "Users", userId), (doc) => {
-            setUser(doc.data())
+            set_user(doc.data())
 
             setFollowersList(doc.data().followers)
 

@@ -6,12 +6,12 @@ import {ProductVertical, Loading, Header} from '../constants/Components'
 const theme = colors.lightTheme;
 const OrderScreen = ({navigation}) => {
     const userId = route.params.id;
-    const [user, setUser] = useState({})
-    const [users, setUsers] = useState([])
+    const [user, set_user] = useState({})
+    const [users, set_users] = useState([])
     const [products, setProducts] = useState([])
     const [optionsAct, setOptionsAct] = useState(false)
     const [cart, setCart] = useState([])
-    const [loading, setLoading] = useState(true)
+    const [loading, set_loading] = useState(true)
 
     useEffect(() => {
         const usersSub = onSnapshot(collection(firestore, "Users"), querySnapshot => {
@@ -19,7 +19,7 @@ const OrderScreen = ({navigation}) => {
             querySnapshot.forEach((doc) => {
                 data.push(doc.data())
             });
-            setUsers(data)
+            set_users(data)
         });
 
         const productsSub = onSnapshot(collection(firestore, "Products"), querySnapshot => {
@@ -31,12 +31,12 @@ const OrderScreen = ({navigation}) => {
         });
 
         const userSub = onSnapshot(doc(firestore, "Users", userId), (item) => {
-            setUser(item.data())
+            set_user(item.data())
 
             setCart(item.data().userInfo.cart)
 
             if (user !== {}) {
-                setLoading(false)
+                set_loading(false)
             }
             
         });

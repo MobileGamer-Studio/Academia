@@ -13,8 +13,8 @@ function ChatScreen({ route, navigation }) {
     const recId = route.params.recId;
 
 
-    const [users, setUsers] = useState([])
-    const [user, setUser] = useState({})
+    const [users, set_users] = useState([])
+    const [user, set_user] = useState({})
     const [receiver, setReceiver] = useState({})
     const [chat, setChat] = useState({})
     const [messages, setMessages] = useState([])
@@ -27,12 +27,12 @@ function ChatScreen({ route, navigation }) {
                 data.push(doc.data())
             });
             //console.log("Current data: ", data);
-            setUsers(data)
-            //setUser(ans.data)
+            set_users(data)
+            //set_user(ans.data)
         });
 
         const userSub = onSnapshot(doc(firestore, "Users", userId), (doc) => {
-            setUser(doc.data())
+            set_user(doc.data())
         });
 
         const recSub = onSnapshot(doc(firestore, "Users", recId), (doc) => {

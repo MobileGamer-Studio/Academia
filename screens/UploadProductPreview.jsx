@@ -21,9 +21,9 @@ function UploadProductPreview({ route, navigation }) {
     const product = route.params.product;
     const userId = route.params.id;
 
-    const [loading, setLoading] = react.useState(true);
-    const [loadingMessage, setLoadingMessage] = react.useState('');
-    const [user, setUser] = react.useState({});
+    const [loading, set_loading] = react.useState(true);
+    const [loadingMessage, set_loadingMessage] = react.useState('');
+    const [user, set_user] = react.useState({});
 
     //
     // const [expoPushToken, setExpoPushToken] = useState('');
@@ -34,10 +34,10 @@ function UploadProductPreview({ route, navigation }) {
 
     useEffect(() => {
         const userSub = onSnapshot(doc(firestore, "Users", userId), (doc) => {
-            setUser(doc.data())
+            set_user(doc.data())
             
             if (user !== {}){
-                setLoading(false)
+                set_loading(false)
             }
 
         });
@@ -60,8 +60,8 @@ function UploadProductPreview({ route, navigation }) {
     }, [])
 
     const uploadProduct = async () => {
-        setLoading(true);
-        setLoadingMessage('Uploading Product...')
+        set_loading(true);
+        set_loadingMessage('Uploading Product...')
         const newProduct = Product;
         newProduct.title = product.title;
         newProduct.details = product.details;
@@ -106,7 +106,7 @@ function UploadProductPreview({ route, navigation }) {
 
             await setDoc(doc(firestore, "Users", userId), user);
             await setDoc(doc(firestore, "Products", newProduct.id), newProduct);
-            setLoading(false);
+            set_loading(false);
             Alert.alert(
                 "Product Uploaded",
                 'Your product has been uploaded successfully',
@@ -118,7 +118,7 @@ function UploadProductPreview({ route, navigation }) {
                 ]
             )
         } else {
-            setLoading(false);
+            set_loading(false);
             Alert.alert(
                 "Product Already Exists",
                 'You have already uploaded a product with this name',

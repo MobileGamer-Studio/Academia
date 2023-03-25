@@ -6,7 +6,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import LoadingScreen from './screens/LoadingScreen';
 import HomeScreen from './screens/HomeScreen';
 import AccountScreen from './screens/AccountScreen';
-import CartScreen from "./screens/CartScreen"
+import CartScreen from "./screens/CartScreen";
 import ProductScreen from './screens/ProductScreen';
 import SettingScreen from './screens/SettingScreen';
 import SearchScreen from './screens/SearchScreen';
@@ -40,16 +40,10 @@ function App() {
     return (
         <NavigationContainer>
             <Stack.Navigator>
-                {/* <Stack.Screen
-                    name="Ads"
-                    component={AdsScreen}
-                    options={{ headerShown: false }}
-                /> */}
                 <Stack.Screen
                     name="Loading"
                     component={LoadingScreen}
                     options={{headerShown: false, }}
-                    
                 />
                 <Stack.Screen
                     name="Landing"
@@ -145,8 +139,6 @@ function App() {
                     options={{ headerShown: false }}
                 />
 
-
-                {/*  */}
                 <Stack.Screen
                     name="Settings"
                     component={SettingScreen}

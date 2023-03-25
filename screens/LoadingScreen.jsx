@@ -8,10 +8,10 @@ import { LinearGradient } from 'expo-linear-gradient';
 const theme = colors.lightTheme;
 //
 const LoadingScreen = ({route, navigation}) => {   
-    const [loadingMessage, setLoadingMessage] = useState('Getting user data...')
+    const [loadingMessage, set_loadingMessage] = useState('Getting user data...')
     onAuthStateChanged(auth, (user) => {
         if (user) {
-            setLoadingMessage('Starting App')
+            set_loadingMessage('Starting App')
             navigation.navigate("Home", { id : user.uid });
         } else {
             navigation.navigate("Landing");

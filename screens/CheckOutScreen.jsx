@@ -9,14 +9,14 @@ import { Entypo, SimpleLineIcons } from '@expo/vector-icons';
 const theme = colors.lightTheme;
 function CheckOutScreen({ route, navigation }) {
     const userId = route.params.id;
-    const [user, setUser] = useState({})
-    const [users, setUsers] = useState([])
+    const [user, set_user] = useState({})
+    const [users, set_users] = useState([])
     const [products, setProducts] = useState([])
     const [optionsAct, setOptionsAct] = useState(false)
     const [cart, setCart] = useState([])
     const [chats, setChats] = useState([])
-    const [loading, setLoading] = useState(true)
-    const [loadingMessage, setLoadingMessage] = useState("Loading...")
+    const [loading, set_loading] = useState(true)
+    const [loadingMessage, set_loadingMessage] = useState("Loading...")
 
     useEffect(() => {
         const usersSub = onSnapshot(collection(firestore, "Users"), querySnapshot => {
@@ -24,7 +24,7 @@ function CheckOutScreen({ route, navigation }) {
             querySnapshot.forEach((doc) => {
                 data.push(doc.data())
             });
-            setUsers(data)
+            set_users(data)
         });
 
         const productsSub = onSnapshot(collection(firestore, "Products"), querySnapshot => {
@@ -36,11 +36,11 @@ function CheckOutScreen({ route, navigation }) {
         });
 
         const userSub = onSnapshot(doc(firestore, "Users", userId), (item) => {
-            setUser(item.data())
+            set_user(item.data())
             setCart(item.data().userInfo.cart)
 
             if (user !== {}) {
-                setLoading(false)
+                set_loading(false)
             }
         });
 
@@ -64,8 +64,8 @@ function CheckOutScreen({ route, navigation }) {
     }
 
     const PlaceOrder = async () => {
-        setLoadingMessage("Placing Order...")
-        setLoading(true)
+        set_loadingMessage("Placing Order...")
+        set_loading(true)
 
         let crtProducts = []
         cart.forEach((item) => {
@@ -145,8 +145,8 @@ function CheckOutScreen({ route, navigation }) {
         await updateDoc(doc(firestore, "Users", userId), {
             "userInfo.cart": []
         })
-        setLoadingMessage("Order Placed")
-        setLoading(false)
+        set_loadingMessage("Order Placed")
+        set_loading(false)
 
         alert("Order Placed")
 

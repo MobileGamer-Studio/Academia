@@ -8,11 +8,11 @@ const theme = colors.lightTheme;
 function ListScreens({route, navigation}) {
     const userId = route.params.id;
     const list = route.params.list;
-    const [user, setUser] = useState({})
-    const [users, setUsers] = useState([])
+    const [user, set_user] = useState({})
+    const [users, set_users] = useState([])
     const [products, setProducts] = useState([])
     const [optionsAct, setOptionsAct] = useState(false)
-    const [loading, setLoading] = useState(true)
+    const [loading, set_loading] = useState(true)
 
     useEffect(() => {
         const usersSub = onSnapshot(collection(firestore, "Users"), querySnapshot => {
@@ -20,7 +20,7 @@ function ListScreens({route, navigation}) {
             querySnapshot.forEach((doc) => {
                 data.push(doc.data())
             });
-            setUsers(data)
+            set_users(data)
         });
 
         const productsSub = onSnapshot(collection(firestore, "Products"), querySnapshot => {
@@ -32,10 +32,10 @@ function ListScreens({route, navigation}) {
         });
 
         const userSub = onSnapshot(doc(firestore, "Users", userId), (item) => {
-            setUser(item.data())
+            set_user(item.data())
 
             if (user !== {}) {
-                setLoading(false)
+                set_loading(false)
             }
 
         });

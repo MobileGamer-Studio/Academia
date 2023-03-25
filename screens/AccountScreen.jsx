@@ -12,14 +12,14 @@ function AccountScreen({route, navigation}) {
 
     const userId = route.params.id;
     const accId = route.params.accId
-    const [users, setUsers] = useState([])
+    const [users, set_users] = useState([])
     const [products, setProducts] = useState([])
-    const [user, setUser] = useState({})
+    const [user, set_user] = useState({})
     const [acc, setAcc] = useState({})
     const [chats, setChats] = useState([])
     const [chatList, setChatList] = useState([])
     const [optionsAct, setOptionsAct] = useState(false)
-    const [loading, setLoading] = useState(true)
+    const [loading, set_loading] = useState(true)
 
     const userRef = doc(firestore, "Users", userId);
     const accRef = doc(firestore, "Users", accId);
@@ -40,7 +40,7 @@ function AccountScreen({route, navigation}) {
                 data.push(doc.data())
             });
             //console.log("Current data: ", data);
-            setUsers(data)
+            set_users(data)
         });
 
         const productsSub = onSnapshot(collection(firestore, "Products"), querySnapshot => {
@@ -55,7 +55,7 @@ function AccountScreen({route, navigation}) {
 
 
         const userSub = onSnapshot(doc(firestore, "Users", userId), (doc) => {
-            setUser(doc.data())
+            set_user(doc.data())
 
             setFollowing(doc.data().following.includes(accId))
 
@@ -81,7 +81,7 @@ function AccountScreen({route, navigation}) {
             }
 
             if(acc !== {}){
-                setLoading(false)
+                set_loading(false)
             }
         });
 

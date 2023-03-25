@@ -9,16 +9,16 @@ const theme = colors.lightTheme
 export default function SellersAgreementScreen({ route, navigation }) {
   const userId = route.params.id;
   const userRef = doc(firestore, "Users", userId)
-  const [user, setUser] = useState({})
-  const [loading, setLoading] = useState(true)
-  const [loadingMessage, setLoadingMessage] = useState("Loading")
+  const [user, set_user] = useState({})
+  const [loading, set_loading] = useState(true)
+  const [loadingMessage, set_loadingMessage] = useState("Loading")
 
   useEffect(() => {
     const userSub = onSnapshot(userRef, (item) => {
-      setUser(item.data())
+      set_user(item.data())
 
       if (user !== {}) {
-        setLoading(false)
+        set_loading(false)
       }
     });
   }, [])
