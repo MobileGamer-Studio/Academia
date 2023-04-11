@@ -142,6 +142,16 @@ function CheckOutScreen({ route, navigation }) {
             }
         })
 
+        crtProducts.forEach( async (product) => {
+            const productRef = doc(firestore, "Products", product.id)
+            await updateDoc(productRef, {
+                sold: increment(1),
+                amountAvailable: increment(-1)
+            })
+        })
+
+
+
         await updateDoc(doc(firestore, "Users", userId), {
             "userInfo.cart": []
         })
@@ -301,7 +311,7 @@ function CartItem(props) {
                 <Text style = {{color: theme.color2}}> Discount: {props.discount}</Text>
                 <Text style = {{color: theme.color2}}> Seller: {props.seller}</Text>
                 <Text style = {{color: theme.color2}}> Rating: {props.rating}</Text>
-                <Text style = {{color: theme.color2}}>Amount Sellected{props.amountSellected}</Text>
+                <Text style = {{color: theme.color2}}>Amount Sellected: {1}</Text>
 
             </View>
         </TouchableOpacity>

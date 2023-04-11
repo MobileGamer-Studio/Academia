@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { FlatList, ScrollView, Image, StyleSheet, Text, TouchableOpacity, View, StatusBar, SafeAreaView, Modal } from 'react-native';
+import { Appearance, FlatList, ScrollView, Image, StyleSheet, Text, TouchableOpacity, View, StatusBar, SafeAreaView, Modal } from 'react-native';
 import { colors, sizes, images } from '../constants/Data';
 import { ButtomMenu, NavBar, Loading, ProductHorizontal, ProductVertical, Button, ProfilePicture, SectionHeader } from '../constants/Components';
 import { firestore } from "../constants/Sever";
 import { collection, setDoc, doc, onSnapshot } from "firebase/firestore";
 import { Entypo, MaterialIcons, Ionicons } from '@expo/vector-icons';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 //import mobileAds, { BannerAd, BannerAdSize, TestIds } from 'react-native-google-mobile-ads';
 import { LinearGradient } from 'expo-linear-gradient';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 
@@ -19,6 +19,7 @@ function HomeScreen({ route, navigation }) {
     const [deals, setDeals] = useState([])
     const [user, set_user] = useState({})
     const [loading, set_loading] = useState(true)
+    const [isDarkMode, set_isDarkMode] = useState(false)
 
     const [suggestedProducts, setSuggestedProducts] = useState([])
     const [suggestedUsers, setSuggestedUsers] = useState([])
@@ -32,25 +33,29 @@ function HomeScreen({ route, navigation }) {
 
     const menu_item = [
         {
-            title: 'Become a seller',
-            action: () => { },
+            title: 'Seller portal',
+            action: () => { navigation.navigate('SellersAgreement') },
             icon: 'store',
             id: '0'
         },
         {
-            title: '',
+            title: 'Terms and Coditions',
             action: () => { },
             icon: '',
             id: '1'
         }
-        
+
     ]
-    
-
-
 
     const bannerAdId = 'ca-app-pub-4268026028349874/3147738671';
 
+    // const colorScheme = Appearance.getColorScheme();
+
+    // if (colorScheme === 'dark') {
+    //     set_isDarkMode(true)
+    // }else{
+    //     set_isDarkMode(false)
+    // }
 
     useEffect(() => {
         const usersSub = onSnapshot(collection(firestore, "Users"), querySnapshot => {
@@ -103,7 +108,7 @@ function HomeScreen({ route, navigation }) {
 
     if (loading === true) {
         return (
-            <SafeAreaView style={styles.container}>
+            <SafeAreaView style={styles.container_light}>
                 <StatusBar
                     backgroundColor={theme.bgColor}
                     barStyle='dark-content'
@@ -198,13 +203,13 @@ function HomeScreen({ route, navigation }) {
         })
 
         return (
-            <SafeAreaView style={styles.container}>
+            <SafeAreaView style={styles.container_light}>
                 <StatusBar
                     backgroundColor={theme.bgColor}
                     barStyle='dark-content'
                 />
                 <Header method={() => navigation.navigate('Notifications', { id: userId })} />
-                
+
                 <ScrollView showsVerticalScrollIndicator={false}>
                     <View>
                         {/* <BannerAd
@@ -277,7 +282,7 @@ function HomeScreen({ route, navigation }) {
                     {
                         sgUsers.length > 0 ? (
                             <View style={styles.section}>
-                                <SectionHeader text={'Suggested Users'} color={theme.outline} textColor={theme.color2} method={() => navigation.navigate("Search", { id: userId })} />
+                                <SectionHeader text={'Suggested Users'} color={theme.outline} textColor={theme.color2} method={() => navigation.navigate("Accounts", { id: userId })} />
                                 <View>
                                     <FlatList
                                         horizontal
@@ -512,7 +517,7 @@ function HomeScreen({ route, navigation }) {
                         }
                     }}
                 />
-                <ButtomMenu title = {'Become a seller'} show = {menu_visibility} close = {() => set_menu_visibility(false)} item_list = {menu_item}/>
+                <ButtomMenu title={'Become a seller'} show={menu_visibility} close={() => set_menu_visibility(false)} item_list={menu_item} />
             </SafeAreaView>
         );
     }
@@ -610,9 +615,14 @@ function DealsCard(props) {
 
 
 const styles = StyleSheet.create({
-    container: {
+    container_light: {
         flex: 1,
         backgroundColor: theme.bgColor,
+    },
+
+    container_dark: {
+        flex: 1,
+        backgroundColor: colors,
     },
 
     section: {

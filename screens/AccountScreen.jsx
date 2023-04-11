@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
-import {FlatList, ScrollView, StyleSheet, Text, View, TouchableOpacity, Modal, StatusBar} from 'react-native';
+import {FlatList, ScrollView, StyleSheet, Text, View, TouchableOpacity, Modal, StatusBar, Share} from 'react-native';
 import {colors, sizes,      Chat} from '../constants/Data';
-import {Button, ProductSmall, ProfilePicture, ProductHorizontal, SectionHeader} from '../constants/Components';
+import {Button, ProductSmall, ProfilePicture, ProductHorizontal, SectionHeader, ButtomMenu} from '../constants/Components';
 import { firestore } from "../constants/Sever";
 import { setDoc, collection, onSnapshot, doc, updateDoc, arrayRemove, arrayUnion} from "firebase/firestore";
 import { Entypo, MaterialIcons} from '@expo/vector-icons';
@@ -18,7 +18,7 @@ function AccountScreen({route, navigation}) {
     const [acc, setAcc] = useState({})
     const [chats, setChats] = useState([])
     const [chatList, setChatList] = useState([])
-    const [optionsAct, setOptionsAct] = useState(false)
+    const [menu_visibility, set_menu_visibility] = useState(false)
     const [loading, set_loading] = useState(true)
 
     const userRef = doc(firestore, "Users", userId);
@@ -32,6 +32,39 @@ function AccountScreen({route, navigation}) {
     const [following, setFollowing] = useState(false)
 
     const [productsList, setProductsList] = useState([])
+
+    const menu_item = [
+        {
+            title: 'Saved',
+            action: () => { set_menu_visibility(false); navigation.navigate("Saved", { id: userId })},
+            icon: 'bookmark',
+            id: '0'
+        },
+        {
+            title: 'Share',
+            action: async () => {
+                set_menu_visibility(false)
+                try {
+                    const result = await Share.share({
+                        message: user.name + " is using Academia. Download it now! \n https://play.google.com/store/apps/details?id=com.academia",
+                    });
+                    if (result.action === Share.sharedAction) {
+                        if (result.activityType) {
+                            // shared with activity type of result.activityType
+                        } else {
+                            // shared
+                        }
+                    } else if (result.action === Share.dismissedAction) {
+                        // dismissed
+                    }
+                } catch (error) {
+                    alert(error.message);
+                }
+            },
+            icon: 'share',
+            id: '0'
+        },
+    ]
 
     useEffect(() => {
         const usersSub = onSnapshot(collection(firestore, "Users"), querySnapshot => {
@@ -138,46 +171,12 @@ function AccountScreen({route, navigation}) {
     return (
         <View style={styles.container}>
             <StatusBar  backgroundColor={theme.bgColor} barStyle = 'light-content'/>
-            <Modal
-                visible={optionsAct}
-                animationType="slide"
-                transparent={true}
-            >
-                <View style={{
-                    backgroundColor: colors.white,
-                    elevation: 5,
-                    width: "80%",
-                    margin: 100,
-                    alignSelf: "center",
-                    borderRadius: 10,
-                }}>
-                    <View style={{
-                        flexDirection: "row",
-                        justifyContent: "flex-end",
-                        margin: 10,
-                    }}>
-                        <TouchableOpacity onPress={() => setOptionsAct(false)}>
-                            <MaterialIcons name="close" size={24} color={colors.defaultBG} />
-                        </TouchableOpacity>
-                    </View>
-                    <View showsVerticalScrollIndicator={false}>
-                        <TouchableOpacity style={styles.popUpSection} onPress={() => navigation.navigate("Saved", { id: userId })}>
-                            <MaterialIcons name="bookmark" size={24} color={colors.defaultBG} />
-                            <Text style={{ color: theme.outline, marginHorizontal: 2.5 }}>Saved</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.popUpSection}>
-                            <MaterialIcons name="share" size={24} color={colors.defaultBG} />
-                            <Text style={{ color: theme.outline, marginHorizontal: 2.5 }}>Share</Text>
-                        </TouchableOpacity>
-                    </View>
-                </View>
-            </Modal>
             <View style = {styles.userProfile}>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                     <MaterialIcons name="arrow-back-ios" size={24} color={theme.color} style={{ marginLeft: 10 }} onPress={() => navigation.goBack()} />
                     <View style={{ alignSelf: "flex-end", marginBottom: 20 }}>
 
-                        <TouchableOpacity onPress={() => setOptionsAct(true)}>
+                        <TouchableOpacity onPress={() => set_menu_visibility(true)}>
                             <Entypo name="dots-three-vertical" size={24} color={theme.color} />
                         </TouchableOpacity>
                     </View>
@@ -303,7 +302,7 @@ function AccountScreen({route, navigation}) {
                     ) : null
                 }
             </ScrollView>
-            
+            <ButtomMenu title = {'Menu'} show={menu_visibility} close={() => set_menu_visibility(false)} item_list={menu_item} />
         </View>
     );
 }
@@ -317,7 +316,17 @@ const styles = StyleSheet.create({
     follow: {
         borderRadius: sizes.ExtraLarge,
         padding: 5,
-        backgroundColor: theme.color,
+        backgroundColor: colors.lightTheme.color,
+        marginHorizontal: 5,
+        marginTop: 20,
+        width: 150,
+        alignItems: "center",
+    },
+
+    follow_dark: {
+        borderRadius: sizes.ExtraLarge,
+        padding: 5,
+        backgroundColor: colors.darkTheme.color,
         marginHorizontal: 5,
         marginTop: 20,
         width: 150,
@@ -329,6 +338,17 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         padding: 5,
         borderColor: theme.color,
+        marginHorizontal: 5,
+        marginTop: 20,
+        width: 150,
+        alignItems: "center",
+    },
+
+    unfollow_dark: {
+        borderRadius: sizes.ExtraLarge,
+        borderWidth: 1,
+        padding: 5,
+        borderColor: colors.darkTheme.color,
         marginHorizontal: 5,
         marginTop: 20,
         width: 150,

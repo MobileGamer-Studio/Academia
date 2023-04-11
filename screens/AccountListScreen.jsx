@@ -1,10 +1,11 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image, StatusBar } from 'react-native';
 import { Chat, colors, sizes } from '../constants/Data';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Header, Loading, SearchBar, ProfilePicture } from '../constants/Components';
 import { firestore } from "../constants/Sever";
 import { collection, doc, onSnapshot } from "firebase/firestore";
+import { LinearGradient } from 'expo-linear-gradient';
 
 const theme = colors.lightTheme;
 function AccountListScreen({ navigation, route }) {
@@ -12,7 +13,6 @@ function AccountListScreen({ navigation, route }) {
     const [loading, set_loading] = useState(true)
     const [users, set_users] = useState([])
     const [user, set_user] = useState({})
-    const [optionsAct, setOptionsAct] = useState(false)
 
     useEffect(() => {
         const usersSub = onSnapshot(collection(firestore, "Users"), querySnapshot => {
@@ -41,51 +41,61 @@ function AccountListScreen({ navigation, route }) {
                     barStyle='light-content'
                 />
                 <Header text={"Accounts"} method={() => navigation.goBack()} />
-                <Loading/>
+                <Loading />
             </View>
         )
-    }else{
+    } else {
         return (
             <View style={styles.container}>
-                <Header text = {"Accounts"} method = {() => navigation.goBack()}/>
-                <View style={{ marginVertical: 10, paddingHorizontal: 10 }}><SearchBar /></View>
+                <StatusBar
+                    backgroundColor={theme.color}
+                    barStyle='light-content'
+                />
+                <Header text={"Accounts"} method={() => navigation.goBack()} />
                 <View>
                     <FlatList
                         vertical
+                        numColumns={3}
                         showsHorizontalScrollIndicator={false}
                         keyExtractor={(item) => item.id}
                         data={users}
                         renderItem={({ item }) => {
                             return (
-                                <View>
-                                    <TouchableOpacity
-                                        style={{
-                                            borderBottomColor: theme.outline,
-                                            borderBottomWidth: 1,
-                                            padding: 10,
-                                            flexDirection: "row",
-                                            alignItems: "center"
-                                        }}
-                                        onPress={() => {
-                                            if(item.id === userId){
-                                                navigation.navigate("UserAccount", { id: user.id})
-                                            }else{
-                                                navigation.navigate("Account", { id: user.id, accId: item.id })
-                                            }
-                                        }}>
+                                <TouchableOpacity
+                                    style={{
+                                        elevation: 2,
+                                        width: "30%",
+                                        margin: 5,
+                                    }}
+
+                                    onPress={() => {
+                                        if (item.id === userId) {
+                                            navigation.navigate("UserAccount", { id: userId })
+                                        } else {
+                                            navigation.navigate('Account', { id: userId, accId: item.id })
+                                        }
+                                    }}>
+                                    <LinearGradient colors={[theme.color, theme.color2]} style={{
+                                        //backgroundColor: theme.color2,
+
+                                        height: 150,
+                                        width: 100,
+                                        borderRadius: sizes.Small,
+                                        alignSelf: 'center',
+                                        alignItems: 'center',
+                                        justifyContent: 'space-evenly',
+                                    }}>
+
+                                        <ProfilePicture image={item.profilePicture} height={70} width={70} />
                                         <View style={{
-                                            marginHorizontal: 10
+                                            alignItems: 'center',
+
                                         }}>
-                                            <ProfilePicture
-                                                image={item.profilePicture}
-                                                height={sizes.Large}
-                                                width={sizes.Large}
-                                                color={colors.white}
-                                            />
+                                            <Text style={{ color: theme.bgColor }}>{item.name}</Text>
                                         </View>
-                                        <Text style={{ color: theme.textColor, fontSize: sizes.Small }}>{item.name}</Text>
-                                    </TouchableOpacity>
-                                </View>
+
+                                    </LinearGradient>
+                                </TouchableOpacity>
                             )
                         }}
                     />

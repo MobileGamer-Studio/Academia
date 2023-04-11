@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, Text, TouchableOpacity, View, ScrollView, StatusBar} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View, ScrollView, StatusBar, Share} from 'react-native';
 import { colors, themeData, User} from '../constants/Data'
 import {logOut} from "../constants/Sever"
 import {MaterialIcons} from "@expo/vector-icons"
@@ -69,7 +69,7 @@ function SettingScreen({route, navigation}) {
                         try {
                             const result = await Share.share({
                                 message:
-                                    'React Native | A framework for building native apps using React',
+                                    '',
                             });
                             if (result.action === Share.sharedAction) {
                                 if (result.activityType) {
