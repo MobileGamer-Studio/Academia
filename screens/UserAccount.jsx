@@ -160,10 +160,14 @@ function UserAccount({ route, navigation }) {
     //Return
     return (
         <View style={styles.container}>
-            <StatusBar
-                backgroundColor={theme.color}
-                barStyle='light-content'
-            />
+            {
+                menu_visibility === false ?
+                    <StatusBar
+                        backgroundColor={theme.color}
+                        barStyle='light-content'
+                    />
+                    : null
+            }
             <LinearGradient colors={[theme.color, theme.color2]} style={{
                 flexDirection: 'column',
                 padding: sizes.Small,

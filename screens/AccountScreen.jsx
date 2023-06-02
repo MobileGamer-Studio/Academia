@@ -170,7 +170,9 @@ function AccountScreen({route, navigation}) {
 
     return (
         <View style={styles.container}>
-            <StatusBar  backgroundColor={theme.bgColor} barStyle = 'light-content'/>
+            {
+                menu_visibility === false ? <StatusBar backgroundColor={theme.bgColor} barStyle='light-content' /> : null
+            }
             <View style = {styles.userProfile}>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                     <MaterialIcons name="arrow-back-ios" size={24} color={theme.color} style={{ marginLeft: 10 }} onPress={() => navigation.goBack()} />

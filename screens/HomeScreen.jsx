@@ -204,10 +204,13 @@ function HomeScreen({ route, navigation }) {
 
         return (
             <SafeAreaView style={styles.container_light}>
-                <StatusBar
-                    backgroundColor={theme.bgColor}
-                    barStyle='dark-content'
-                />
+                {
+                    menu_visibility === flase ?
+                        <StatusBar
+                            backgroundColor={theme.bgColor}
+                            barStyle='dark-content'
+                        /> : null
+                }
                 <Header method={() => navigation.navigate('Notifications', { id: userId })} />
 
                 <ScrollView showsVerticalScrollIndicator={false}>
