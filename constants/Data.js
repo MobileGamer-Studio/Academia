@@ -214,6 +214,7 @@ export const User = {
         },
         rating: 0,
         amountSpent: "0",
+        searchHistory: [],
         
     },
     appInfo: {
