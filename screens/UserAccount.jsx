@@ -166,7 +166,10 @@ function UserAccount({ route, navigation }) {
                         backgroundColor={theme.color}
                         barStyle='light-content'
                     />
-                    : null
+                    : <StatusBar
+                        backgroundColor={'#008069'}
+                        barStyle='light-content'
+                    /> 
             }
             <LinearGradient colors={[theme.color, theme.color2]} style={{
                 flexDirection: 'column',

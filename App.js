@@ -1,6 +1,9 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
+import {colors} from './constants/Data';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+
 
 //Screens
 import LoadingScreen from './screens/LoadingScreen';
@@ -37,6 +40,36 @@ import PaymentScreen from './screens/PaymentScreen';
 const Stack = createNativeStackNavigator();
 
 function App() {
+    const [theme, setTheme] = useState(null);
+
+    useEffect(() => {
+        getTheme();
+    }, []);
+
+    const getTheme = async () => {
+        try {
+            const value = await AsyncStorage.getItem('theme');
+            if (value !== null) {
+
+                setTheme(JSON.parse(value));
+            } else {
+                setTheme(colors.light);
+            }
+        } catch (e) {
+            console.log(e);
+        }
+    }; 
+    
+    const setThemeValue = async (value) => {
+        try {
+            await AsyncStorage.setItem('theme', JSON.stringify(value));
+            setTheme(value);
+        } catch (e) {
+            console.log(e);
+        }
+    };
+
+
     return (
         <NavigationContainer>
             <Stack.Navigator>
@@ -44,26 +77,31 @@ function App() {
                     name="Loading"
                     component={LoadingScreen}
                     options={{headerShown: false, }}
+                    initialParams={{theme: theme}}
                 />
                 <Stack.Screen
                     name="Landing"
                     component={LandingScreen}
                     options={{headerShown: false}}
+                    initialParams={{theme: theme}}
                 />
                 <Stack.Screen
                     name="SignIn"
                     component={SignInScreen}
                     options={{ headerShown: false }}
+                    initialParams={{ theme: theme }}
                 />
                 <Stack.Screen
                     name="SignUp"
                     component={SignUpScreen}
                     options={{ headerShown: false }}
+                    initialParams={{ theme: theme }}
                 />
                 <Stack.Screen
                     name="Home"
                     component={HomeScreen}
                     options={{headerShown: false}}
+                    initialParams={{ theme: theme }}
                 />
 
                 {/* Accounts */}
@@ -71,6 +109,7 @@ function App() {
                     name="UserAccount"
                     component={UserAccount}
                     options={{ headerShown: false }}
+                    initialParams={{ theme: theme }}
                 />
                 <Stack.Screen
                     name="Account"
@@ -88,107 +127,127 @@ function App() {
                     name="Product"
                     component={ProductScreen}
                     options={{ headerShown: false }}
+                    initialParams={{ theme: theme }}
                 />
                 <Stack.Screen
                     name="ProductPreview"
                     component={UploadProductPreview}
                     options={{ headerShown: false }}
+                    initialParams={{ theme: theme }}
                 />
                 <Stack.Screen
                     name="UploadProduct"
                     component={UploadProduct}
                     options={{ headerShown: false }}
+                    initialParams={{ theme: theme }}
                 />
                 <Stack.Screen
                     name="ProductList"
                     component={ProductListScreen}
                     options={{ headerShown: false }}
+                    initialParams={{ theme: theme }}
                 />
 
                 <Stack.Screen
                     name="Deal"
                     component={DealScreen}
                     options={{ headerShown: false }}
+                    initialParams={{ theme: theme }}
                 />
 
                 <Stack.Screen
                     name="Following"
                     component={FollowingListScreen}
                     options={{ headerShown: false }}
+                    initialParams={{ theme: theme }}
                 />
 
                 <Stack.Screen
                     name="Followers"
                     component={FollowersListScreen}
                     options={{ headerShown: false }}
+                    initialParams={{ theme: theme }}
                 />
 
                 <Stack.Screen
                     name="Checkout"
                     component={CheckOutScreen}
                     options={{ headerShown: false }}
+                    initialParams={{ theme: theme }}
                 />
                 <Stack.Screen
                     name="Cart"
                     component={CartScreen}
                     options={{ headerShown: false }}
+                    initialParams={{ theme: theme }}
                 />                
                 <Stack.Screen
                     name="Orders"
                     component={OrderScreen}
                     options={{ headerShown: false }}
+                    initialParams={{ theme: theme }}
                 />
 
                 <Stack.Screen
                     name="Settings"
                     component={SettingScreen}
                     options={{ headerShown: false }}
+                    initialParams={{ theme: theme }}
                 />
                 <Stack.Screen
                     name="Search"
                     component={SearchScreen}
                     options={{headerShown: false}}
+                    initialParams={{ theme: theme }}
                 />
 
                 <Stack.Screen
                     name="Chats"
                     component={ChatListScreen}
                     options={{ headerShown: false }}
+                    initialParams={{ theme: theme }}
                 />
                 <Stack.Screen
                     name="Chat"
                     component={ChatScreen}
                     options={{ headerShown: false }}
+                    initialParams={{ theme: theme }}
                 />
                 <Stack.Screen
                     name="Accounts"
                     component={AccountListScreen}
                     options={{ headerShown: false }}
+                    initialParams={{ theme: theme }}
                 />
                 <Stack.Screen
                     name="Saved"
                     component={SavedScreen}
                     options={{ headerShown: false }}
+                    initialParams={{ theme: theme }}
                 />
                 <Stack.Screen
                     name="List"
                     component={ListScreens}
                     options={{ headerShown: false }}
+                    initialParams={{ theme: theme }}
                 />
                 <Stack.Screen
                     name="Notifications"
                     component={NotificationsScreen}
                     options={{ headerShown: false }}
+                    initialParams={{ theme: theme }}
                 />
                 <Stack.Screen
                     name="SellersAgreement"
                     component={SellersAgreementScreen}
                     options={{ headerShown: false }}
+                    initialParams={{ theme: theme }}
                 />
                 <Stack.Screen
                     name="Payment"
                     component={PaymentScreen}
                     options={{ headerShown: false }}
+                    initialParams={{ theme: theme }}
                 />
             </Stack.Navigator>
         </NavigationContainer>

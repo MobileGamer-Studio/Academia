@@ -110,26 +110,25 @@ export default function SearchScreen({navigation, route}) {
                 <View style={{
                     flexDirection: "row",
                     alignItems: "center",
+                    //justifyContent: "space-between",
                     backgroundColor: theme.color,
                     marginBottom: 10,
                     elevation: 10,
                     padding: 10,
                 }}>
                     <MaterialIcons name="arrow-back-ios" size={24} color={colors.white} onPress={() => navigation.goBack()} />
-                    <View>
-                        <TextInput
-                            onChangeText={val => setSearchText(val)}
-                            style={{
-                                borderRadius: sizes.ExtraLarge,
-                                paddingHorizontal: sizes.Small,
-                                backgroundColor: theme.bgColor,
-                                height: 40,
-                                width: 350,
-                                marginHorizontal: sizes.ExtraSmall,
-                            }}
-                            placeholder="snacks, assignments, stationary..."
-                        />
-                    </View>
+                    <TextInput
+                        onChangeText={val => setSearchText(val)}
+                        style={{
+                            borderRadius: sizes.ExtraLarge,
+                            paddingHorizontal: sizes.Small,
+                            backgroundColor: theme.bgColor,
+                            height: 40,
+                            width: '90%',
+                            marginHorizontal: sizes.ExtraSmall,
+                        }}
+                        placeholder="snacks, assignments, stationary..."
+                    />
                 </View>
                 {
                     searchResult.length !== 0 ? (

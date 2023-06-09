@@ -202,14 +202,18 @@ function HomeScreen({ route, navigation }) {
             })
         })
 
+        //808080
         return (
             <SafeAreaView style={styles.container_light}>
                 {
-                    menu_visibility === flase ?
+                    menu_visibility === false ?
                         <StatusBar
                             backgroundColor={theme.bgColor}
                             barStyle='dark-content'
-                        /> : null
+                        /> : <StatusBar
+                            backgroundColor={'#808080'}
+                            barStyle='dark-content'
+                        />
                 }
                 <Header method={() => navigation.navigate('Notifications', { id: userId })} />
 

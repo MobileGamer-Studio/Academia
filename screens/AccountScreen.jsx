@@ -1,14 +1,14 @@
-import React, {useState, useEffect} from 'react';
-import {FlatList, ScrollView, StyleSheet, Text, View, TouchableOpacity, Modal, StatusBar, Share} from 'react-native';
-import {colors, sizes,      Chat} from '../constants/Data';
-import {Button, ProductSmall, ProfilePicture, ProductHorizontal, SectionHeader, ButtomMenu} from '../constants/Components';
+import React, { useState, useEffect } from 'react';
+import { FlatList, ScrollView, StyleSheet, Text, View, TouchableOpacity, Modal, StatusBar, Share } from 'react-native';
+import { colors, sizes, Chat } from '../constants/Data';
+import { Button, ProductSmall, ProfilePicture, ProductHorizontal, SectionHeader, ButtomMenu } from '../constants/Components';
 import { firestore } from "../constants/Sever";
-import { setDoc, collection, onSnapshot, doc, updateDoc, arrayRemove, arrayUnion} from "firebase/firestore";
-import { Entypo, MaterialIcons} from '@expo/vector-icons';
+import { setDoc, collection, onSnapshot, doc, updateDoc, arrayRemove, arrayUnion } from "firebase/firestore";
+import { Entypo, MaterialIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 
 const theme = colors.lightTheme;
-function AccountScreen({route, navigation}) {
+function AccountScreen({ route, navigation }) {
 
     const userId = route.params.id;
     const accId = route.params.accId
@@ -36,7 +36,7 @@ function AccountScreen({route, navigation}) {
     const menu_item = [
         {
             title: 'Saved',
-            action: () => { set_menu_visibility(false); navigation.navigate("Saved", { id: userId })},
+            action: () => { set_menu_visibility(false); navigation.navigate("Saved", { id: userId }) },
             icon: 'bookmark',
             id: '0'
         },
@@ -96,7 +96,7 @@ function AccountScreen({route, navigation}) {
         });
 
         const accSub = onSnapshot(doc(firestore, "Users", accId), (doc) => {
-            
+
             setAcc(doc.data())
             console.log(doc.data());
 
@@ -113,7 +113,7 @@ function AccountScreen({route, navigation}) {
                 setProductsList(doc.data().sellerInfo.productList)
             }
 
-            if(acc !== {}){
+            if (acc !== {}) {
                 set_loading(false)
             }
         });
@@ -126,7 +126,7 @@ function AccountScreen({route, navigation}) {
             setChats(data)
         });
 
-        
+
     }, [])
 
     async function follow() {
@@ -139,7 +139,7 @@ function AccountScreen({route, navigation}) {
                 followers: arrayRemove(userId)
             })
 
-        }else if(following === false && user.following.includes(accId) === false){
+        } else if (following === false && user.following.includes(accId) === false) {
             await updateDoc(userRef, {
                 following: arrayUnion(accId)
             })
@@ -147,7 +147,7 @@ function AccountScreen({route, navigation}) {
             await updateDoc(accRef, {
                 followers: arrayUnion(userId)
             })
-            
+
         }
     }
 
@@ -171,9 +171,12 @@ function AccountScreen({route, navigation}) {
     return (
         <View style={styles.container}>
             {
-                menu_visibility === false ? <StatusBar backgroundColor={theme.bgColor} barStyle='light-content' /> : null
+                menu_visibility === false ? <StatusBar backgroundColor={theme.bgColor} barStyle='dark-content' /> : <StatusBar
+                    backgroundColor={'#808080'}
+                    barStyle='dark-content'
+                />
             }
-            <View style = {styles.userProfile}>
+            <View style={styles.userProfile}>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                     <MaterialIcons name="arrow-back-ios" size={24} color={theme.color} style={{ marginLeft: 10 }} onPress={() => navigation.goBack()} />
                     <View style={{ alignSelf: "flex-end", marginBottom: 20 }}>
@@ -183,10 +186,10 @@ function AccountScreen({route, navigation}) {
                         </TouchableOpacity>
                     </View>
                 </View>
-                <View style = {{
+                <View style={{
                     alignItems: "center",
                 }}>
-                    <ProfilePicture color={theme.bgColor} image={acc.profilePicture} height = {100} width = {100}/>
+                    <ProfilePicture color={theme.bgColor} image={acc.profilePicture} height={100} width={100} />
                     <Text style={{ color: theme.color, fontSize: 20 }}>{acc.name}</Text>
                 </View>
                 <View style={{
@@ -204,8 +207,8 @@ function AccountScreen({route, navigation}) {
                             alignItems: 'center',
                             marginHorizontal: 10,
                         }}
-                        
-                        onPress = {() => navigation.navigate("Following", {id: accId})}>
+
+                            onPress={() => navigation.navigate("Following", { id: accId })}>
                             <Text style={{ color: theme.color }}>Following</Text>
                             <Text style={{ color: theme.color }}>{followingLength}</Text>
                         </TouchableOpacity>
@@ -213,16 +216,16 @@ function AccountScreen({route, navigation}) {
                             alignItems: 'center',
                             marginHorizontal: 10,
                         }}
-                        
-                        onPress = {() => navigation.navigate("Followers", {id: accId})}>
+
+                            onPress={() => navigation.navigate("Followers", { id: accId })}>
                             <Text style={{ color: theme.color }}>Followers</Text>
-                            <Text style={{ color: theme.color }}>{ followersLength }</Text>
+                            <Text style={{ color: theme.color }}>{followersLength}</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={{
                             alignItems: 'center',
                             marginHorizontal: 10,
                         }}
-                        
+
                             onPress={() => navigation.navigate("ProductList", { id: accId })}>
                             <Text style={{ color: theme.color }}>Products</Text>
                             <Text style={{ color: theme.color }}>{productsLength}</Text>
@@ -232,7 +235,7 @@ function AccountScreen({route, navigation}) {
                     <View>
                         <Text style={{ color: theme.color }}>{acc.description}</Text>
                     </View>
-                    <View style = {{flexDirection: "row"}}>
+                    <View style={{ flexDirection: "row" }}>
                         {following === true ? <Button
                             style={styles.unfollow}
                             method={() => follow()}
@@ -248,10 +251,10 @@ function AccountScreen({route, navigation}) {
                             style={styles.message_btn}
                             method={() => {
                                 if (chatList.includes(userId + "-" + accId)) {
-                                    navigation.navigate('Chat', { chatId: userId + "-" + accId, id: userId, recId: accId})
+                                    navigation.navigate('Chat', { chatId: userId + "-" + accId, id: userId, recId: accId })
                                 } else if (chatList.includes(accId + "-" + userId)) {
                                     navigation.navigate('Chat', { chatId: accId + "-" + userId, id: userId, recId: accId })
-                                } else{
+                                } else {
                                     const newChat = Chat;
                                     newChat.id = userId + "-" + accId;
 
@@ -271,9 +274,9 @@ function AccountScreen({route, navigation}) {
                             }}
                             text={"Message"}
                             textStyle={{ color: theme.color, fontSize: sizes.Medium }}
-                            // icon = {"chat"}
-                            // iconColor ={theme.color}
-                            // iconSize = {sizes.Medium}
+                        // icon = {"chat"}
+                        // iconColor ={theme.color}
+                        // iconSize = {sizes.Medium}
                         />
                     </View>
                 </View>
@@ -286,7 +289,7 @@ function AccountScreen({route, navigation}) {
                 {
                     list.length > 0 ? (
                         <View style={styles.section}>
-                            <SectionHeader text={'Your Products'} method={() => navigation.navigate("Search", { id: userId })} color = {colors.white} textColor = {theme.bgColor}/>
+                            <SectionHeader text={'Your Products'} method={() => navigation.navigate("Search", { id: userId })} color={colors.white} textColor={theme.bgColor} />
                             <View style={{}}>
                                 <FlatList
                                     horizontal
@@ -304,7 +307,7 @@ function AccountScreen({route, navigation}) {
                     ) : null
                 }
             </ScrollView>
-            <ButtomMenu title = {'Menu'} show={menu_visibility} close={() => set_menu_visibility(false)} item_list={menu_item} />
+            <ButtomMenu title={'Menu'} show={menu_visibility} close={() => set_menu_visibility(false)} item_list={menu_item} />
         </View>
     );
 }

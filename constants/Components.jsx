@@ -3,6 +3,7 @@ import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View, ActivityInd
 import { colors, images, sizes } from "./Data";
 import { MaterialIcons } from "@expo/vector-icons";
 import { FlatList } from 'react-native-gesture-handler';
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 
 const theme = colors.lightTheme;
